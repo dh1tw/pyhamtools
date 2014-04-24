@@ -9,4 +9,8 @@ setup(name='pyhamtools',
       author_email='Tobias@dh1tw.de',
       url='http://github.com/dh1tw',
       packages=['pyhamtools'],
+      install_requires=[
+          "pytz", 
+          "requests",
+      ]
      )
