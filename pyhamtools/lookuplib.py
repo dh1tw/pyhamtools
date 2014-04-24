@@ -14,8 +14,8 @@ from requests.exceptions import ConnectionError, HTTPError, Timeout
 import pytz
 
 
-from pyhamtools.consts import LookupConventions as const
-from pyhamtools.exceptions import LookupError, APIKeyMissingError, NoResult
+from consts import LookupConventions as const
+from exceptions import LookupError, APIKeyMissingError, NoResult
 
 UTC = pytz.UTC
 timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
