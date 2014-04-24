@@ -34,7 +34,7 @@ sys.path.insert(0,"/Users/user/projects/pyhamtools/pyhamtools")
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'numpydoc',
+    'sphinxcontrib.napoleon',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

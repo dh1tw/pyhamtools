@@ -93,26 +93,18 @@ class LookupLib(object):
     def lookup_entity(self, entity=None):
         """Returns lookup data of a ADIF Entity
 
-        Parameters
-        ----------
-        entity : int
-            ADIF identifier of country
+        Args:
+            entity (int): ADIF identifier of country
 
-        Returns
-        -------
-        dict
-            Dictionary containing the country specific data
+        Returns:
+            dict: Dictionary containing the country specific data
 
-        Raises
-        ------
-        NoResult
-            No matching entity found
+        Raises:
+            NoResult: No matching entity found
 
-        Notes
-        -----
-        This method is available for:
-
-        - clublogxml
+        Note:
+            This method is available for:
+                - clublogxml
 
         """
 
