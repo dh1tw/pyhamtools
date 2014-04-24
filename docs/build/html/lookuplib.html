@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LookupLib &mdash; pyhamtools 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pyhamtools 0.1 documentation" href="index.html" />
+    <link rel="prev" title="PyHamTools" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="PyHamTools"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pyhamtools 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="lookuplib">
+<h1>LookupLib<a class="headerlink" href="#lookuplib" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<span class="target" id="module-pyhamtools.lookuplib"></span><dl class="class">
+<dt id="pyhamtools.lookuplib.LookupLib">
+<em class="property">class </em><tt class="descclassname">pyhamtools.lookuplib.</tt><tt class="descname">LookupLib</tt><big>(</big><em>lookuptype='clublogxml'</em>, <em>apikey=None</em>, <em>filename=None</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class provides a homogeneous interface to three different Amateur Radio Callsign lookup sources:</p>
+<ol class="arabic simple">
+<li>Clublog.org (daily updated XML File)</li>
+<li>Clublog.org (HTTPS lookup)</li>
+<li>Country-files.com (infrequently updated PLIST File)</li>
+</ol>
+<p>The class provides getters to access the data in a structured way. Even the interface is the same
+for all lookup sources, the returning data can be different. The documentation of the various
+methods provide more detail.</p>
+<p>By default, LookupLib requires an Internet connection to download the libraries or perform the
+lookup against the Clublog API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lookuptype</strong> : str</p>
+<blockquote>
+<div><p>&#8220;clublogxml&#8221; or &#8220;clublogapi&#8221; or &#8220;countryfile&#8221;</p>
+</div></blockquote>
+<p><strong>apikey</strong> : str</p>
+<blockquote>
+<div><p>Clublog API Key</p>
+</div></blockquote>
+<p><strong>filename</strong> : str, optional</p>
+<blockquote>
+<div><p>Filename for Clublog XML or Country-files.com cty.plist file</p>
+</div></blockquote>
+<p><strong>logger</strong> : logging.getLogger(__name__), optional</p>
+<blockquote class="last">
+<div><p>Python logger</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="pyhamtools.lookuplib.LookupLib.is_invalid_operation">
+<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>1</em>, <em>26</em>, <em>14</em>, <em>12004</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if an operations is known as invalid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>callsign</strong> : string</p>
+<blockquote>
+<div><p>Amateur Radio callsign</p>
+</div></blockquote>
+<p><strong>timestamp</strong> : datetime, optional</p>
+<blockquote>
+<div><p>datetime in UTC (tzinfo=pytz.UTC)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>bool</strong> :</p>
+<blockquote>
+<div><p>True if a record exists for this callsign (at the given time)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>NoResult</strong> :</p>
+<blockquote>
+<div><p>No matching callsign found</p>
+</div></blockquote>
+<p><strong>APIKeyMissingError</strong> :</p>
+<blockquote class="last">
+<div><p>API Key for Clublog missing or incorrect</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is available for:</p>
+<ul class="simple">
+<li>clublogxml</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.lookuplib.LookupLib.lookup_callsign">
+<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>1</em>, <em>26</em>, <em>14</em>, <em>11988</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns lookup data if an exception exists for a callsign</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>callsign</strong> : string</p>
+<blockquote>
+<div><p>Amateur radio callsign</p>
+</div></blockquote>
+<p><strong>timestamp</strong> : datetime, optional</p>
+<blockquote>
+<div><p>datetime in UTC (tzinfo=pytz.UTC)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dict</strong> :</p>
+<blockquote>
+<div><p>Dictionary containing the country specific data of the callsign</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>NoResult</strong> :</p>
+<blockquote>
+<div><p>No matching callsign found</p>
+</div></blockquote>
+<p><strong>APIKeyMissingError</strong> :</p>
+<blockquote class="last">
+<div><p>API Key for Clublog missing or incorrect</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is available for:</p>
+<ul class="simple">
+<li>clublogxml</li>
+<li>clublogapi</li>
+<li>countryfile</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.lookuplib.LookupLib.lookup_entity">
+<tt class="descname">lookup_entity</tt><big>(</big><em>entity=None</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns lookup data of a ADIF Entity</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>entity</strong> : int</p>
+<blockquote>
+<div><p>ADIF identifier of country</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dict</strong> :</p>
+<blockquote>
+<div><p>Dictionary containing the country specific data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>NoResult</strong> :</p>
+<blockquote class="last">
+<div><p>No matching entity found</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is available for:</p>
+<ul class="simple">
+<li>clublogxml</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.lookuplib.LookupLib.lookup_prefix">
+<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>1</em>, <em>26</em>, <em>14</em>, <em>11988</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns lookup data of a Prefix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>prefix</strong> : string</p>
+<blockquote>
+<div><p>Prefix of a Amateur Radio callsign</p>
+</div></blockquote>
+<p><strong>timestamp</strong> : datetime, optional</p>
+<blockquote>
+<div><p>datetime in UTC (tzinfo=pytz.UTC)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dict</strong> :</p>
+<blockquote>
+<div><p>Dictionary containing the country specific data of the Prefix</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>NoResult</strong> :</p>
+<blockquote>
+<div><p>No matching Prefix found</p>
+</div></blockquote>
+<p><strong>APIKeyMissingError</strong> :</p>
+<blockquote class="last">
+<div><p>API Key for Clublog missing or incorrect</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is available for:</p>
+<ul class="simple">
+<li>clublogxml</li>
+<li>countryfile</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.lookuplib.LookupLib.lookup_zone_exception">
+<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>1</em>, <em>26</em>, <em>14</em>, <em>12009</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a CQ Zone if an exception exists for the given callsign</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>callsign</strong> : string</p>
+<blockquote>
+<div><p>Amateur radio callsign</p>
+</div></blockquote>
+<p><strong>timestamp</strong> : datetime, optional</p>
+<blockquote>
+<div><p>datetime in UTC (tzinfo=pytz.UTC)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>int</strong> :</p>
+<blockquote>
+<div><p>Value of the the CQ Zone exception which exists for this callsign (at the given time)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>NoResult</strong> :</p>
+<blockquote>
+<div><p>No matching callsign found</p>
+</div></blockquote>
+<p><strong>APIKeyMissingError</strong> :</p>
+<blockquote class="last">
+<div><p>API Key for Clublog missing or incorrect</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is available for:</p>
+<ul class="simple">
+<li>clublogxml</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">PyHamTools</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/LookupLib.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="PyHamTools"
+             >previous</a> |</li>
+        <li><a href="index.html">pyhamtools 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Tobias Wellnitz, DH1TW.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
