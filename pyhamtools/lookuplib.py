@@ -37,20 +37,11 @@ class LookupLib(object):
     By default, LookupLib requires an Internet connection to download the libraries or perform the
     lookup against the Clublog API.
 
-    Parameters
-    ----------
-    lookuptype : str
-        "clublogxml" or "clublogapi" or "countryfile"
-
-    apikey : str
-        Clublog API Key
-
-    filename : str, optional
-        Filename for Clublog XML or Country-files.com cty.plist file
-
-    logger : logging.getLogger(__name__), optional
-        Python logger
-
+    Args:
+        lookuptype (str) : "clublogxml" or "clublogapi" or "countryfile"
+        apikey (str): Clublog API Key
+        filename (str, optional): Filename for Clublog XML or Country-files.com cty.plist file
+        logger (logging.getLogger(__name__), optional): Python logger
 
     """
     def __init__(self, lookuptype = "clublogxml", apikey=None, filename=None, logger=None):
@@ -103,8 +94,9 @@ class LookupLib(object):
             NoResult: No matching entity found
 
         Note:
-            This method is available for:
-                - clublogxml
+            This method is available for the following lookup type
+
+            - clublogxml
 
         """
 
@@ -125,34 +117,23 @@ class LookupLib(object):
         """
         Returns lookup data if an exception exists for a callsign
 
-        Parameters
-        ----------
-        callsign : string
-            Amateur radio callsign
+        Args:
+            callsign (string): Amateur radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
 
-        timestamp : datetime, optional
-            datetime in UTC (tzinfo=pytz.UTC)
+        Returns:
+            dict: Dictionary containing the country specific data of the callsign
 
-        Returns
-        -------
-        dict
-            Dictionary containing the country specific data of the callsign
+        Raises:
+            NoResult: No matching callsign found
+            APIKeyMissingError: API Key for Clublog missing or incorrect
 
-        Raises
-        ------
-        NoResult
-            No matching callsign found
+        Note:
+            This method is available for
 
-        APIKeyMissingError
-            API Key for Clublog missing or incorrect
-
-        Notes
-        -----
-        This method is available for:
-
-        - clublogxml
-        - clublogapi
-        - countryfile
+            - clublogxml
+            - clublogapi
+            - countryfile
 
         """
         callsign = callsign.strip().upper()
@@ -195,33 +176,22 @@ class LookupLib(object):
         """
         Returns lookup data of a Prefix
 
-        Parameters
-        ----------
-        prefix : string
-            Prefix of a Amateur Radio callsign
+        Args:
+            prefix (string): Prefix of a Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
 
-        timestamp : datetime, optional
-            datetime in UTC (tzinfo=pytz.UTC)
+        Returns:
+            dict: Dictionary containing the country specific data of the Prefix
 
-        Returns
-        -------
-        dict
-            Dictionary containing the country specific data of the Prefix
+        Raises:
+            NoResult: No matching Prefix found
+            APIKeyMissingError: API Key for Clublog missing or incorrect
 
-        Raises
-        ------
-        NoResult
-            No matching Prefix found
+        Note:
+            This method is available for
 
-        APIKeyMissingError
-            API Key for Clublog missing or incorrect
-
-        Notes
-        -----
-        This method is available for:
-
-        - clublogxml
-        - countryfile
+            - clublogxml
+            - countryfile
 
         """
 
@@ -257,32 +227,21 @@ class LookupLib(object):
         """
         Returns True if an operations is known as invalid
 
-        Parameters
-        ----------
-        callsign : string
-            Amateur Radio callsign
+        Args:
+            callsign (string): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
 
-        timestamp : datetime, optional
-            datetime in UTC (tzinfo=pytz.UTC)
+        Returns:
+            bool: True if a record exists for this callsign (at the given time)
 
-        Returns
-        -------
-        bool
-            True if a record exists for this callsign (at the given time)
+        Raises:
+            NoResult: No matching callsign found
+            APIKeyMissingError: API Key for Clublog missing or incorrect
 
-        Raises
-        ------
-        NoResult
-            No matching callsign found
+        Note:
+            This method is available for
 
-        APIKeyMissingError
-            API Key for Clublog missing or incorrect
-
-        Notes
-        -----
-        This method is available for:
-
-        - clublogxml
+            - clublogxml
 
         """
 
@@ -323,32 +282,21 @@ class LookupLib(object):
         """
         Returns a CQ Zone if an exception exists for the given callsign
 
-        Parameters
-        ----------
-        callsign : string
-            Amateur radio callsign
+        Args:
+        callsign (string): Amateur radio callsign
+        timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
 
-        timestamp : datetime, optional
-            datetime in UTC (tzinfo=pytz.UTC)
+        Returns:
+            int: Value of the the CQ Zone exception which exists for this callsign (at the given time)
 
-        Returns
-        -------
-        int
-            Value of the the CQ Zone exception which exists for this callsign (at the given time)
+        Raises:
+            NoResult: No matching callsign found
+            APIKeyMissingError: API Key for Clublog missing or incorrect
 
-        Raises
-        ------
-        NoResult
-            No matching callsign found
+        Note:
+            This method is available for
 
-        APIKeyMissingError
-            API Key for Clublog missing or incorrect
-
-        Notes
-        -----
-        This method is available for:
-
-        - clublogxml
+            - clublogxml
 
         """
 

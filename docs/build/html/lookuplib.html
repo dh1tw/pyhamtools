@@ -84,7 +84,7 @@ lookup against the Clublog API.</p>
 </table>
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.is_invalid_operation">
-<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>3</em>, <em>44</em>, <em>979191</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956076</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if an operations is known as invalid</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -103,25 +103,27 @@ lookup against the Clublog API.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211;
+<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
 No matching callsign found</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211;
+<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>This method is available for:</p>
-<ul class="simple">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This method is available for</p>
+<ul class="last simple">
 <li>clublogxml</li>
 </ul>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_callsign">
-<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>3</em>, <em>44</em>, <em>979170</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956058</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data if an exception exists for a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -140,22 +142,24 @@ API Key for Clublog missing or incorrect</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211;
+<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
 No matching callsign found</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211;
+<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>This method is available for:</p>
-<ul class="simple">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This method is available for</p>
+<ul class="last simple">
 <li>clublogxml</li>
 <li>clublogapi</li>
 <li>countryfile</li>
 </ul>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -179,19 +183,16 @@ No matching entity found</td>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<dl class="last docutils">
-<dt>This method is available for:</dt>
-<dd><ul class="first last simple">
+<p>This method is available for the following lookup type</p>
+<ul class="last simple">
 <li>clublogxml</li>
 </ul>
-</dd>
-</dl>
 </div>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_prefix">
-<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>3</em>, <em>44</em>, <em>979170</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956058</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data of a Prefix</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -210,58 +211,59 @@ No matching entity found</td>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211;
+<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
 No matching Prefix found</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211;
+<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>This method is available for:</p>
-<ul class="simple">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This method is available for</p>
+<ul class="last simple">
 <li>clublogxml</li>
 <li>countryfile</li>
 </ul>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_zone_exception">
-<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>3</em>, <em>44</em>, <em>979197</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956082</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a CQ Zone if an exception exists for the given callsign</p>
+<p>Args:
+callsign (string): Amateur radio callsign
+timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>callsign</strong> (<em>string</em>) &#8211; Amateur radio callsign</li>
-<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Value of the the CQ Zone exception which exists for this callsign (at the given time)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Value of the the CQ Zone exception which exists for this callsign (at the given time)</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211;
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
 No matching callsign found</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211;
+<li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>This method is available for:</p>
-<ul class="simple">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This method is available for</p>
+<ul class="last simple">
 <li>clublogxml</li>
 </ul>
+</div>
 </dd></dl>
 
 </dd></dl>
