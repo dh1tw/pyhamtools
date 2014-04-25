@@ -1,6 +1,9 @@
 import pytest
 import tempfile
 import os
+
+
+from apikey import APIKEY
 # 
 # @pytest.fixture()
 # def cleandir():
@@ -44,10 +47,10 @@ def fixNone(request):
 
 
 
-API_KEY = ""
+
 @pytest.fixture(scope="session")
 def fixApiKey(request):
-    return(API_KEY)
+    return(APIKEY)
 
 @pytest.fixture(scope="module", params=["clublogapi", "clublogxml", "countryfile"])
 def fixGeneralApi(request, fixApiKey):

@@ -15,7 +15,7 @@ import pytz
 
 
 from consts import LookupConventions as const
-from exceptions import LookupError, APIKeyMissingError, NoResult
+from exceptions import APIKeyMissingError
 
 UTC = pytz.UTC
 timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
@@ -24,15 +24,18 @@ timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
 class LookupLib(object):
     """
 
-    This class provides a homogeneous interface to three different Amateur Radio Callsign lookup sources:
+    This class is a wrapper for the following three Amateur Radio databases:
 
     1. Clublog.org (daily updated XML File)
     2. Clublog.org (HTTPS lookup)
     3. Country-files.com (infrequently updated PLIST File)
 
-    The class provides getters to access the data in a structured way. Even the interface is the same
-    for all lookup sources, the returning data can be different. The documentation of the various
-    methods provide more detail.
+    It's aim is to provide a homogeneous interface to different data sources.
+
+    Typically it is injected as a dependency in the Callinfo class, but can also be used directly.
+
+    Even the interface is the same for all lookup sources, the returning data can be different.
+    The documentation of the various methods provide more detail.
 
     By default, LookupLib requires an Internet connection to download the libraries or perform the
     lookup against the Clublog API.
@@ -44,7 +47,7 @@ class LookupLib(object):
         logger (logging.getLogger(__name__), optional): Python logger
 
     """
-    def __init__(self, lookuptype = "clublogxml", apikey=None, filename=None, logger=None):
+    def __init__(self, lookuptype = "countryfile", apikey=None, filename=None, logger=None):
 
         self._logger = None
         if logger:
@@ -70,12 +73,10 @@ class LookupLib(object):
         self._zone_exceptions = {}
         self._lookuptype = lookuptype
 
-
-
         if self._lookuptype == "clublogxml":
             self._load_clublogXML(apikey=self._apikey, cty_file=self._lib_filename)
         elif self._lookuptype == "countryfile":
-            self._load_countryfile()
+            self._load_countryfile(cty_file=self._lib_filename)
         elif self._lookuptype == "clublogapi":
             pass
         else:
@@ -91,7 +92,25 @@ class LookupLib(object):
             dict: Dictionary containing the country specific data
 
         Raises:
-            NoResult: No matching entity found
+            KeyError: No matching entity found
+
+        Example:
+           The following code queries the the Clublog XML database for the ADIF entity Turkmenistan, which has
+           the id 273.
+
+           >>> from pyhamtools import LookupLib
+           >>> my_lookuplib = LookupLib(lookuptype="clublogapi", apikey="myapikey")
+           >>> print my_lookuplib.lookup_entity(273)
+           {
+            'deleted': False,
+            'country': 'TURKMENISTAN',
+            'longitude': -58.4,
+            'cqz': 17,
+            'prefix': 'EZ',
+            'latitude': 38.0,
+            'continent': 'AS'
+           }
+
 
         Note:
             This method is available for the following lookup type
@@ -100,18 +119,14 @@ class LookupLib(object):
 
         """
 
-
-        if entity is None:
-            raise LookupError
-
         try:
             entity = int(entity)
             if entity in self._entities:
                 return self._entities[entity]
             else:
-                raise NoResult
+                raise KeyError
         except:
-            raise NoResult
+            raise KeyError
 
     def lookup_callsign(self, callsign=None, timestamp=timestamp_now):
         """
@@ -125,8 +140,26 @@ class LookupLib(object):
             dict: Dictionary containing the country specific data of the callsign
 
         Raises:
-            NoResult: No matching callsign found
+            KeyError: No matching callsign found
             APIKeyMissingError: API Key for Clublog missing or incorrect
+
+        Example:
+           The following code queries the the online Clublog API for the callsign "VK9XO" on a specific date.
+
+           >>> from pyhamtools import LookupLib
+           >>> from datetime import datetime
+           >>> import pytz
+           >>> my_lookuplib = LookupLib(lookuptype="clublogapi", apikey="myapikey")
+           >>> timestamp = datetime(year=1962, month=7, day=7, tzinfo=pytz.UTC)
+           >>> print my_lookuplib.lookup_callsign("VK9XO", timestamp)
+           {
+            'country': 'CHRISTMAS ISLAND',
+            'longitude': -105.7,
+            'cqz': 29,
+            'adif': 35,
+            'latitude': -10.5,
+            'continent': 'OC'
+           }
 
         Note:
             This method is available for
@@ -170,7 +203,7 @@ class LookupLib(object):
                         return self._callsign_exceptions[item]
 
         # no matching case
-        raise NoResult
+        raise KeyError
 
     def lookup_prefix(self, prefix, timestamp=timestamp_now):
         """
@@ -184,8 +217,25 @@ class LookupLib(object):
             dict: Dictionary containing the country specific data of the Prefix
 
         Raises:
-            NoResult: No matching Prefix found
+            KeyError: No matching Prefix found
             APIKeyMissingError: API Key for Clublog missing or incorrect
+
+        Example:
+           The following code shows how to obtain the information for the prefix "DH" from the countryfile.com
+           database (default database).
+
+           >>> from pyhamtools import LookupLib
+           >>> myLookupLib = LookupLib()
+           >>> print myLookupLib.lookup_prefix("DH")
+           {
+            'adif': 230,
+            'country': 'Fed. Rep. of Germany',
+            'longitude': -10.0,
+            'cqz': 14,
+            'ituz': 28,
+            'latitude': 51.0,
+            'continent': 'EU'
+           }
 
         Note:
             This method is available for
@@ -221,7 +271,7 @@ class LookupLib(object):
                     else:
                         return self._prefixes[item]
 
-        raise NoResult
+        raise KeyError
 
     def is_invalid_operation(self, callsign, timestamp=datetime.utcnow().replace(tzinfo=UTC)):
         """
@@ -235,8 +285,24 @@ class LookupLib(object):
             bool: True if a record exists for this callsign (at the given time)
 
         Raises:
-            NoResult: No matching callsign found
+            KeyError: No matching callsign found
             APIKeyMissingError: API Key for Clublog missing or incorrect
+
+        Example:
+           The following code checks the Clublog XML database if the operation is valid for two dates.
+
+           >>> from pyhamtools import LookupLib
+           >>> from datetime import datetime
+           >>> import pytz
+           >>> my_lookuplib = LookupLib(lookuptype="clublogxml", apikey="myapikey")
+           >>> print my_lookuplib.is_invalid_operation("5W1CFN")
+           True
+           >>> try:
+           >>>   timestamp = datetime(year=2012, month=1, day=31).replace(tzinfo=pytz.UTC)
+           >>>   my_lookuplib.is_invalid_operation("5W1CFN", timestamp)
+           >>> except KeyError:
+           >>>   print "Seems to be invalid operation before 31.1.2012"
+           Seems to be an invalid operation before 31.1.2012
 
         Note:
             This method is available for
@@ -275,7 +341,7 @@ class LookupLib(object):
                         return True
 
         #no matching case
-        raise NoResult
+        raise KeyError
 
 
     def lookup_zone_exception(self, callsign, timestamp=datetime.utcnow().replace(tzinfo=UTC)):
@@ -290,8 +356,19 @@ class LookupLib(object):
             int: Value of the the CQ Zone exception which exists for this callsign (at the given time)
 
         Raises:
-            NoResult: No matching callsign found
+            KeyError: No matching callsign found
             APIKeyMissingError: API Key for Clublog missing or incorrect
+
+        Example:
+           The following code checks the Clublog XML database if a CQ Zone exception exists for the callsign DP0GVN.
+
+           >>> from pyhamtools import LookupLib
+           >>> my_lookuplib = LookupLib(lookuptype="clublogxml", apikey="myapikey")
+           >>> print my_lookuplib.lookup_zone_exception("DP0GVN")
+           38
+
+           The prefix "DP" It is assigned to Germany, but the station is located in Antarctica, and therefore
+           in CQ Zone 38
 
         Note:
             This method is available for
@@ -328,7 +405,7 @@ class LookupLib(object):
                         return self._zone_exceptions[item][const.CQZ]
 
         #no matching case
-        raise NoResult
+        raise KeyError
 
     def _lookup_clublogAPI(self, callsign=None, timestamp=timestamp_now, url="https://secure.clublog.org/dxcc", apikey=None):
         """ Set up the Lookup object for Clublog Online API
@@ -362,7 +439,7 @@ class LookupLib(object):
             elif item == "Continent": lookup[const.CONTINENT] = str(jsonLookup["Continent"])
 
         if lookup[const.ADIF] == 0:
-            raise NoResult
+            raise KeyError
         else:
             return lookup
 
@@ -406,10 +483,6 @@ class LookupLib(object):
 
         cwdFile = os.path.abspath(os.path.join(os.getcwd(), country_mapping_filename))
         pkgFile = os.path.abspath(os.path.join(os.path.dirname(__file__), country_mapping_filename))
-
-        print cwdFile
-        print pkgFile
-
 
         # from cwd
         if os.path.exists(cwdFile):
@@ -851,8 +924,9 @@ class LookupLib(object):
         if response.status_code == requests.codes.ok:
             return True
         else:
-            self._logger.error("HTTP Repsonse: " + str(response.text))
+            err_str = "HTTP Status Code: " + str(response.status_code) + " HTTP Response: " + str(response.text)
+            self._logger.error(err_str)
             if response.text.strip() == error1 or response.text.strip() == error2:
                 raise APIKeyMissingError
             else:
-                raise LookupError
+                raise LookupError(err_str)

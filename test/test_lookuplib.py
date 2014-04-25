@@ -10,12 +10,8 @@ def fixAnyValue(request):
 
 
 class TestlookupLib:
-    
-    def test_construction_without_kwargs(self):
-        """Load with non without any args & kwargs"""
-        with pytest.raises(APIKeyMissingError):
-            LookupLib()
-        
+
+
     def test_construction_with_invalid_kwargs(self, fixAnyValue):
         """Load with non without any args & kwargs"""
         with pytest.raises(AttributeError):

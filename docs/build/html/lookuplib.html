@@ -56,16 +56,17 @@
 </div>
 <span class="target" id="module-pyhamtools.lookuplib"></span><dl class="class">
 <dt id="pyhamtools.lookuplib.LookupLib">
-<em class="property">class </em><tt class="descclassname">pyhamtools.lookuplib.</tt><tt class="descname">LookupLib</tt><big>(</big><em>lookuptype='clublogxml'</em>, <em>apikey=None</em>, <em>filename=None</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class provides a homogeneous interface to three different Amateur Radio Callsign lookup sources:</p>
+<em class="property">class </em><tt class="descclassname">pyhamtools.lookuplib.</tt><tt class="descname">LookupLib</tt><big>(</big><em>lookuptype='countryfile'</em>, <em>apikey=None</em>, <em>filename=None</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is a wrapper for the following three Amateur Radio databases:</p>
 <ol class="arabic simple">
 <li>Clublog.org (daily updated XML File)</li>
 <li>Clublog.org (HTTPS lookup)</li>
 <li>Country-files.com (infrequently updated PLIST File)</li>
 </ol>
-<p>The class provides getters to access the data in a structured way. Even the interface is the same
-for all lookup sources, the returning data can be different. The documentation of the various
-methods provide more detail.</p>
+<p>It&#8217;s aim is to provide a homogeneous interface to different data sources.</p>
+<p>Typically it is injected as a dependency in the Callinfo class, but can also be used directly.</p>
+<p>Even the interface is the same for all lookup sources, the returning data can be different.
+The documentation of the various methods provide more detail.</p>
 <p>By default, LookupLib requires an Internet connection to download the libraries or perform the
 lookup against the Clublog API.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -84,7 +85,7 @@ lookup against the Clublog API.</p>
 </table>
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.is_invalid_operation">
-<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956076</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>25</em>, <em>21</em>, <em>44</em>, <em>34</em>, <em>169942</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if an operations is known as invalid</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -103,7 +104,7 @@ lookup against the Clublog API.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
+<li><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
 No matching callsign found</li>
 <li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
@@ -112,6 +113,22 @@ API Key for Clublog missing or incorrect</li>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Example</p>
+<p>The following code checks the Clublog XML database if the operation is valid for two dates.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;clublogxml&quot;</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s">&quot;myapikey&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">my_lookuplib</span><span class="o">.</span><span class="n">is_invalid_operation</span><span class="p">(</span><span class="s">&quot;5W1CFN&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">2012</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">31</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">my_lookuplib</span><span class="o">.</span><span class="n">is_invalid_operation</span><span class="p">(</span><span class="s">&quot;5W1CFN&quot;</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="k">print</span> <span class="s">&quot;Seems to be invalid operation before 31.1.2012&quot;</span>
+<span class="go">Seems to be an invalid operation before 31.1.2012</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>This method is available for</p>
@@ -123,7 +140,7 @@ API Key for Clublog missing or incorrect</li>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_callsign">
-<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956058</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>25</em>, <em>21</em>, <em>44</em>, <em>34</em>, <em>169924</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data if an exception exists for a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -142,7 +159,7 @@ API Key for Clublog missing or incorrect</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
+<li><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
 No matching callsign found</li>
 <li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
@@ -151,6 +168,24 @@ API Key for Clublog missing or incorrect</li>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Example</p>
+<p>The following code queries the the online Clublog API for the callsign &#8220;VK9XO&#8221; on a specific date.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;clublogapi&quot;</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s">&quot;myapikey&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">1962</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">my_lookuplib</span><span class="o">.</span><span class="n">lookup_callsign</span><span class="p">(</span><span class="s">&quot;VK9XO&quot;</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go"> &#39;country&#39;: &#39;CHRISTMAS ISLAND&#39;,</span>
+<span class="go"> &#39;longitude&#39;: -105.7,</span>
+<span class="go"> &#39;cqz&#39;: 29,</span>
+<span class="go"> &#39;adif&#39;: 35,</span>
+<span class="go"> &#39;latitude&#39;: -10.5,</span>
+<span class="go"> &#39;continent&#39;: &#39;OC&#39;</span>
+<span class="go">}</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>This method is available for</p>
@@ -176,11 +211,28 @@ API Key for Clublog missing or incorrect</li>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
 No matching entity found</td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Example</p>
+<p>The following code queries the the Clublog XML database for the ADIF entity Turkmenistan, which has
+the id 273.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;clublogapi&quot;</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s">&quot;myapikey&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">my_lookuplib</span><span class="o">.</span><span class="n">lookup_entity</span><span class="p">(</span><span class="mi">273</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go"> &#39;deleted&#39;: False,</span>
+<span class="go"> &#39;country&#39;: &#39;TURKMENISTAN&#39;,</span>
+<span class="go"> &#39;longitude&#39;: -58.4,</span>
+<span class="go"> &#39;cqz&#39;: 17,</span>
+<span class="go"> &#39;prefix&#39;: &#39;EZ&#39;,</span>
+<span class="go"> &#39;latitude&#39;: 38.0,</span>
+<span class="go"> &#39;continent&#39;: &#39;AS&#39;</span>
+<span class="go">}</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>This method is available for the following lookup type</p>
@@ -192,7 +244,7 @@ No matching entity found</td>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_prefix">
-<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956058</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>25</em>, <em>21</em>, <em>44</em>, <em>34</em>, <em>169924</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data of a Prefix</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -211,7 +263,7 @@ No matching entity found</td>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
+<li><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
 No matching Prefix found</li>
 <li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
@@ -220,6 +272,23 @@ API Key for Clublog missing or incorrect</li>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Example</p>
+<p>The following code shows how to obtain the information for the prefix &#8220;DH&#8221; from the countryfile.com
+database (default database).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myLookupLib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">myLookupLib</span><span class="o">.</span><span class="n">lookup_prefix</span><span class="p">(</span><span class="s">&quot;DH&quot;</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go"> &#39;adif&#39;: 230,</span>
+<span class="go"> &#39;country&#39;: &#39;Fed. Rep. of Germany&#39;,</span>
+<span class="go"> &#39;longitude&#39;: -10.0,</span>
+<span class="go"> &#39;cqz&#39;: 14,</span>
+<span class="go"> &#39;ituz&#39;: 28,</span>
+<span class="go"> &#39;latitude&#39;: 51.0,</span>
+<span class="go"> &#39;continent&#39;: &#39;EU&#39;</span>
+<span class="go">}</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>This method is available for</p>
@@ -232,7 +301,7 @@ API Key for Clublog missing or incorrect</li>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_zone_exception">
-<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>24</em>, <em>15</em>, <em>46</em>, <em>11</em>, <em>956082</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>25</em>, <em>21</em>, <em>44</em>, <em>34</em>, <em>169948</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a CQ Zone if an exception exists for the given callsign</p>
 <p>Args:
 callsign (string): Amateur radio callsign
@@ -248,7 +317,7 @@ timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">NoResult</span></tt> &#8211; 
+<li><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
 No matching callsign found</li>
 <li><tt class="xref py py-exc docutils literal"><span class="pre">APIKeyMissingError</span></tt> &#8211; 
 API Key for Clublog missing or incorrect</li>
@@ -257,6 +326,16 @@ API Key for Clublog missing or incorrect</li>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Example</p>
+<p>The following code checks the Clublog XML database if a CQ Zone exception exists for the callsign DP0GVN.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;clublogxml&quot;</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s">&quot;myapikey&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">my_lookuplib</span><span class="o">.</span><span class="n">lookup_zone_exception</span><span class="p">(</span><span class="s">&quot;DP0GVN&quot;</span><span class="p">)</span>
+<span class="go">38</span>
+</pre></div>
+</div>
+<p>The prefix &#8220;DP&#8221; It is assigned to Germany, but the station is located in Antarctica, and therefore
+in CQ Zone 38</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>This method is available for</p>

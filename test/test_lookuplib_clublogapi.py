@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pyhamtools.lookuplib import LookupLib
 
-from pyhamtools.exceptions import APIKeyMissingError, LookupError, NoResult
+from pyhamtools.exceptions import APIKeyMissingError
 
 #Fixtures
 #===========================================================
@@ -93,27 +93,27 @@ class TestclublogApi_Getters:
         assert fixClublogApi.lookup_callsign("DH1TW/MM") == response_Exception_DH1TW_MM
         assert fixClublogApi.lookup_callsign("DH1TW/AM") == response_Exception_DH1TW_AM
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogApi.lookup_callsign("QRM")
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogApi.lookup_callsign("")
               
     #lookup_prefix(prefix, [date])
     #===============================
     def test_lookup_callsign(self, fixClublogApi):
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogApi.lookup_prefix("DH")
     
 
     #is_invalid_operation(callsign, [date])
     #===============================
     def test_is_invalid_operation(self, fixClublogApi):
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogApi.is_invalid_operation("5W1CFN")
         
 
     #lookup_zone_exception(callsign, [date])
     #====================================    
     def test_lookup_zone_exception(self, fixClublogApi):
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogApi.lookup_zone_exception("dp0gvn")

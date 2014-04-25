@@ -4,8 +4,6 @@ import os
 
 from datetime import datetime
 
-from pyhamtools.exceptions import NoResult
-
 #Fixtures
 #===========================================================
 
@@ -91,7 +89,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
                         assert type(entity[attr] is datetime)
                         count +=1                    
                 assert len(entity) == count
-        except NoResult:
+        except KeyError:
             pass
             
     def test_lookup_callsign(self, fixGeneralApi, fixExceptions):
@@ -130,7 +128,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
                     
             #all attributes checked? 
             assert len(ex) == count
-        except NoResult:
+        except KeyError:
             pass
         except AttributeError:
             pass
@@ -172,7 +170,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
                     
             #all attributes checked? 
             assert len(prefix) == count
-        except NoResult:
+        except KeyError:
             pass
         except AttributeError:
             pass
@@ -182,7 +180,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
         try:
             invOp = fixGeneralApi.is_invalid_operation(fixInvalidOperations)
             assert type(invOp) is bool
-        except NoResult:
+        except KeyError:
             pass
         except AttributeError:
             pass
@@ -191,7 +189,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
         try:
             zEx = fixGeneralApi.lookup_zone_exception(fixZoneExceptions)
             assert type(zEx) is int
-        except NoResult:
+        except KeyError:
             pass
         except AttributeError:
             pass
@@ -201,7 +199,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
             response = fixGeneralApi.setException(fixSetExceptions)
             assert type(response) is bool
             assert fixGeneralApi.lookup_callsign(fixSetExceptions.keys()[0]) == fixSetExceptions[fixSetExceptions.keys()[0]]
-        except NoResult:
+        except KeyError:
             pass
         except AttributeError:
             pass

@@ -1,9 +1,10 @@
 import pytest
 from datetime import datetime
 import pytz
+import os
 
 from pyhamtools.lookuplib import LookupLib
-from pyhamtools.exceptions import APIKeyMissingError, LookupError, NoResult
+from pyhamtools.exceptions import APIKeyMissingError
 
 UTC = pytz.UTC
 
@@ -117,8 +118,11 @@ response_Prefix_ZD5_1964_to_1971 = {
 }
     
 @pytest.fixture(scope="function")
-def fixCtyXmlFile(request):
-    return "/Users/user/projects/pyhamtools/pyhamtools/cty.xml"
+def fix_cty_xml_file(request):
+    dir = os.path.dirname(__file__)
+    cty_file_rel = "./fixtures/cty.xml"
+    cty_file_abs = os.path.join(dir, cty_file_rel)
+    return cty_file_abs
 
 
 #TESTS
@@ -128,16 +132,16 @@ class TestClublogXML_Constructor:
 
     def test_with_invalid_api_key(self):
         with pytest.raises(APIKeyMissingError):
-            lib = LookupLib(apikey="foo")
+            lib = LookupLib(lookuptype="clublogxml", apikey="foo")
             lib.lookup_entity(230)
 
     def test_with_no_api_key(self):
         with pytest.raises(APIKeyMissingError):
-            lib = LookupLib()
+            lib = LookupLib(lookuptype="clublogxml")
             lib.lookup_entity(230)
 
-    def test_with_file(self, fixCtyXmlFile):
-        lib = LookupLib(filename=fixCtyXmlFile)
+    def test_with_file(self, fix_cty_xml_file):
+        lib = LookupLib(lookuptype="clublogxml", filename=fix_cty_xml_file)
         assert lib.lookup_entity(230) == response_Entity_230
 
 class TestclublogXML_Getters:
@@ -149,13 +153,13 @@ class TestclublogXML_Getters:
         assert fixClublogXML.lookup_entity(230) == response_Entity_230
         assert fixClublogXML.lookup_entity("230") == response_Entity_230
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_entity("foo")
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_entity(1000)
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_entity(999)
 
 
@@ -177,7 +181,7 @@ class TestclublogXML_Getters:
 
         #timestamp < startdate
         timestamp = datetime(year=1962, month=7, day=5, tzinfo=UTC)
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_callsign("vk9xo", timestamp)
 
     def test_lookup_callsign_exception_only_with_end_date(self, fixClublogXML):
@@ -187,11 +191,11 @@ class TestclublogXML_Getters:
         assert fixClublogXML.lookup_callsign("vk9xx", timestamp) == response_Exception_VK9XX_with_end_date
         
         # timestamp > enddate
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_callsign("vk9xx")
         
         timestamp = datetime(year=1975, month=9, day=16, tzinfo=UTC)
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_callsign("vk9xx", timestamp)
         
     def test_lookup_callsign_exception_no_start_nor_end_date(self, fixClublogXML):
@@ -208,10 +212,10 @@ class TestclublogXML_Getters:
     def test_lookup_prefix(self, fixClublogXML):
         assert fixClublogXML.lookup_prefix("DH") == response_Prefix_DH
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("QRM")
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("")
 
         
@@ -223,7 +227,7 @@ class TestclublogXML_Getters:
         #return empty dict - Prefix was not assigned at that time
         timestamp = datetime(year=1975, month=9, day=16).replace(tzinfo=UTC)
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("VK9", timestamp)
         
         #return new entity (Norfolk Island)
@@ -233,14 +237,14 @@ class TestclublogXML_Getters:
     def test_lookup_prefix_with_entities_having_start_and_stop(self, fixClublogXML):
 
         timestamp_before = datetime(year=1964, month=11, day=1).replace(tzinfo=UTC)
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("ZD5", timestamp_before)
 
         timestamp_valid = datetime(year=1964, month=12, day=2).replace(tzinfo=UTC)
         assert fixClublogXML.lookup_prefix("ZD5", timestamp_valid) == response_Prefix_ZD5_1964_to_1971
 
         timestamp_after = datetime(year=1971, month=8, day=1).replace(tzinfo=UTC)
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("ZD5", timestamp_after)
 
 
@@ -251,30 +255,30 @@ class TestclublogXML_Getters:
     def test_is_invalid_operations(self, fixClublogXML):
         
         #No dataset --> default Operation is True
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("dh1tw")
 
         #Invalid Operation with start and end date
         timestamp_before = datetime(year=1993, month=12, day=30).replace(tzinfo=UTC)
         timestamp = datetime(year=1994, month=12, day=30).replace(tzinfo=UTC)
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("vk0mc")
 
         assert fixClublogXML.is_invalid_operation("vk0mc", timestamp)
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("vk0mc", timestamp_before)
         
         #Invalid Operation with start date
         timestamp_before = datetime(year=2012, month=1, day=31).replace(tzinfo=UTC)
         assert fixClublogXML.is_invalid_operation("5W1CFN")
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("5W1CFN", timestamp_before)
         
         #Invalid Operation with end date
         timestamp_before = datetime(year=2004, month=04, day=02).replace(tzinfo=UTC)
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("T33C")
 
         assert fixClublogXML.is_invalid_operation("T33C", timestamp_before)
@@ -287,7 +291,7 @@ class TestclublogXML_Getters:
     def test_lookup_zone_exception(self, fixClublogXML):
 
         #No dataset --> default answer: None
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dh1tw")
 
         #zone exception with no date
@@ -299,15 +303,15 @@ class TestclublogXML_Getters:
         timestamp_after = datetime(year=1993, month=03, day=1).replace(tzinfo=UTC)
         assert fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp) == 38
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp_before)
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp_after)
 
         #zone exception with start date 
         timestamp_before = datetime(year=2013, month=12, day=26).replace(tzinfo=UTC)
         assert fixClublogXML.lookup_zone_exception("dh1hb/p")
 
-        with pytest.raises(NoResult):
+        with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dh1hb/p", timestamp_before)
