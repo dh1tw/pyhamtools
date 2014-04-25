@@ -6,7 +6,7 @@
 
 :Version:       |release|
 :Code:          https://github.com/dh1tw/pyhamtools
-:License:       BSD; see LICENSE file
+:License:       MIT; see LICENSE file
 :Issues:        https://github.com/dh1tw/pyhamtools/issues
 :Documentation: http://pyhamtools.readthedocs.org/
 :IRC:           #hamtests on webirc.deltaxray.org
@@ -26,6 +26,7 @@ Clases:
 .. toctree::
    :maxdepth: 2
 
+   Callinfo
    LookupLib
 
 

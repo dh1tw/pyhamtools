@@ -3,7 +3,7 @@ import logging
 import logging.config
 import re
 import random, string
-from datetime import datetime, timedelta
+from datetime import datetime
 import xml.etree.ElementTree as ET
 import urllib
 import json
@@ -30,9 +30,9 @@ class LookupLib(object):
     2. Clublog.org (HTTPS lookup)
     3. Country-files.com (infrequently updated PLIST File)
 
-    It's aim is to provide a homogeneous interface to different data sources.
+    It's aim is to provide a homogeneous interface to different databases.
 
-    Typically it is injected as a dependency in the Callinfo class, but can also be used directly.
+    Typically an instance of this class is injected as a dependency in the :py:class:`Callinfo` class, but it can also be used directly.
 
     Even the interface is the same for all lookup sources, the returning data can be different.
     The documentation of the various methods provide more detail.
@@ -43,7 +43,7 @@ class LookupLib(object):
     Args:
         lookuptype (str) : "clublogxml" or "clublogapi" or "countryfile"
         apikey (str): Clublog API Key
-        filename (str, optional): Filename for Clublog XML or Country-files.com cty.plist file
+        filename (str, optional): Filename for Clublog XML or Country-files.com cty.plist file. When a local file is used, no Internet connection not API Key is necessary.
         logger (logging.getLogger(__name__), optional): Python logger
 
     """
@@ -83,7 +83,7 @@ class LookupLib(object):
             raise AttributeError("Lookup type missing")
 
     def lookup_entity(self, entity=None):
-        """Returns lookup data of a ADIF Entity
+        """Returns lookup data of an ADIF Entity
 
         Args:
             entity (int): ADIF identifier of country
