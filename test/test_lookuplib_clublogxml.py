@@ -22,7 +22,6 @@ response_Entity_230 = {
           'cqz': 14,
           'prefix' : 'DL',
           'deleted' : False,
-          'start' : datetime(year=1973, month=9, day=17).replace(tzinfo=UTC)
 }
 
 response_Exception_KC6MM_1990 = { 
@@ -32,8 +31,6 @@ response_Exception_KC6MM_1990 = {
            'latitude': 9.50, 
            'longitude': -138.20, 
            'cqz': 27,
-           'start' : datetime(year=1990, month=10, day=11).replace(tzinfo=UTC),
-           'end' : datetime(year=1990, month=10, day=16, hour=23, minute=59, second=59).replace(tzinfo=UTC)
         }
 
 response_Exception_KC6MM_1992 = { 
@@ -43,8 +40,6 @@ response_Exception_KC6MM_1992 = {
            'latitude': 9.50, 
            'longitude': -138.20, 
            'cqz': 27,
-           'start' : datetime(year=1992, month=3, day=7).replace(tzinfo=UTC),
-           'end' : datetime(year=1992, month=3, day=9, hour=23, minute=59, second=59).replace(tzinfo=UTC)
         }
 
 
@@ -55,7 +50,6 @@ response_Exception_VK9XX_with_end_date = {
            'latitude': -10.50, 
            'longitude': -105.70, 
            'cqz': 29,
-           'end' : datetime(year=1975, month=9, day=15, hour=23, minute=59, second=59).replace(tzinfo=UTC)
         }
 
 response_Exception_VK9XO_with_start_date = { 
@@ -65,7 +59,6 @@ response_Exception_VK9XO_with_start_date = {
            'latitude': -10.50, 
            'longitude': -105.70, 
            'cqz': 29,
-           'start' : datetime(year=1962, month=7, day=6).replace(tzinfo=UTC)
         }
 
 response_Exception_AX9NYG = { 
@@ -93,7 +86,6 @@ response_Prefix_VK9_until_1975 = {
     'latitude': -9.40, 
     'longitude': -147.10, 
     'cqz': 28,
-    'end' : datetime(year=1975, month=9, day=15, hour=23, minute=59, second=59).replace(tzinfo=UTC)
 }
 
 response_Prefix_VK9_starting_1976 = {
@@ -103,7 +95,6 @@ response_Prefix_VK9_starting_1976 = {
     'latitude': -29.00, 
     'longitude': -168.00, 
     'cqz': 32,
-    'start' : datetime(year=1976, month=9, day=16).replace(tzinfo=UTC)
 }
 
 response_Prefix_ZD5_1964_to_1971 = {
@@ -113,8 +104,6 @@ response_Prefix_ZD5_1964_to_1971 = {
     'latitude': -26.30, 
     'longitude': -31.10, 
     'cqz': 38,
-    'start' : datetime(year=1964, month=12, day=1).replace(tzinfo=UTC),
-    'end' : datetime(year=1971, month=7, day=31, hour=23, minute=59, second=59).replace(tzinfo=UTC)
 }
     
 @pytest.fixture(scope="function")
@@ -270,9 +259,8 @@ class TestclublogXML_Getters:
             fixClublogXML.is_invalid_operation("vk0mc", timestamp_before)
         
         #Invalid Operation with start date
-        timestamp_before = datetime(year=2012, month=1, day=31).replace(tzinfo=UTC)
         assert fixClublogXML.is_invalid_operation("5W1CFN")
-
+        timestamp_before = datetime(year=2012, month=1, day=31).replace(tzinfo=UTC)
         with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("5W1CFN", timestamp_before)
         
@@ -309,9 +297,8 @@ class TestclublogXML_Getters:
         with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp_after)
 
-        #zone exception with start date 
+        #zone exception with start date
+        assert fixClublogXML.lookup_zone_exception("dh1hb/p") == 38
         timestamp_before = datetime(year=2013, month=12, day=26).replace(tzinfo=UTC)
-        assert fixClublogXML.lookup_zone_exception("dh1hb/p")
-
         with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dh1hb/p", timestamp_before)

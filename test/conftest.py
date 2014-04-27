@@ -11,7 +11,8 @@ from apikey import APIKEY
 #     os.chdir(newpath)
 # 
 
-from pyhamtools.lookuplib import LookupLib
+from pyhamtools import LookupLib
+from pyhamtools import Callinfo
 
 @pytest.fixture(scope="session", params=["a", "", 12.5, -5, {"foo" : "bar"}, [5, "foo"]])
 def fixNonUnsignedInteger(request):
@@ -74,7 +75,8 @@ def fixCountryFile(request):
     Lib = LookupLib("countryfile")
     return(Lib)
 
-@pytest.fixture(scope="module")
-def fixRedis(request):
-    Lib = LookupLib("redis")
-    return(Lib)
+@pytest.fixture(scope="module", params=["clublogapi", "clublogxml", "countryfile"])
+def fix_callinfo(request, fixApiKey):
+    lib = LookupLib(request.param, fixApiKey)
+    callinfo = Callinfo(lib)
+    return(callinfo)

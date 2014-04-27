@@ -7,6 +7,7 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 import urllib
 import json
+import copy
 
 
 import requests
@@ -122,7 +123,19 @@ class LookupLib(object):
         try:
             entity = int(entity)
             if entity in self._entities:
-                return self._entities[entity]
+                entity_data = copy.deepcopy(self._entities[entity])
+                if const.START in entity_data:
+                    del entity_data[const.START]
+                if const.END in entity_data:
+                    del entity_data[const.END]
+                if const.WHITELIST in entity_data:
+                    del entity_data[const.WHITELIST]
+                if const.WHITELIST_START in entity_data:
+                    del entity_data[const.WHITELIST_START]
+                if const.WHITELIST_END in entity_data:
+                    del entity_data[const.WHITELIST_END]
+
+                return entity_data
             else:
                 raise KeyError
         except:
@@ -172,10 +185,11 @@ class LookupLib(object):
         callsign = callsign.strip().upper()
 
         if self._lookuptype == "clublogapi":
-            return self._lookup_clublogAPI(
-                       callsign=callsign,
-                       timestamp=timestamp,
-                       apikey=self._apikey)
+            callsign_data =  self._lookup_clublogAPI(callsign=callsign, timestamp=timestamp, apikey=self._apikey)
+            if callsign_data[const.ADIF]==1000:
+                raise KeyError
+            else:
+                return callsign_data
 
         if self._lookuptype == "clublogxml" or self._lookuptype == "countryfile":
 
@@ -185,23 +199,35 @@ class LookupLib(object):
                     # startdate < timestamp
                     if const.START in self._callsign_exceptions[item] and not const.END in self._callsign_exceptions[item]:
                         if self._callsign_exceptions[item][const.START] < timestamp:
-                            return self._callsign_exceptions[item]
+                            callsign_data = copy.deepcopy(self._callsign_exceptions[item])
+                            del callsign_data[const.START]
+                            print callsign + ": " + "here1"
+                            return callsign_data
 
                     # enddate > timestamp
                     elif not const.START in self._callsign_exceptions[item] and const.END in self._callsign_exceptions[item]:
                         if self._callsign_exceptions[item][const.END] > timestamp:
-                            return self._callsign_exceptions[item]
+                            callsign_data = copy.deepcopy(self._callsign_exceptions[item])
+                            del callsign_data[const.END]
+                            print callsign + ": " + "here2"
+                            return callsign_data
 
                     # startdate > timestamp > enddate
-                    elif const.START in self._callsign_exceptions[item].keys() and const.END in self._callsign_exceptions[item]:
+                    elif const.START in self._callsign_exceptions[item] and const.END in self._callsign_exceptions[item]:
                         if self._callsign_exceptions[item][const.START] < timestamp \
                                 and self._callsign_exceptions[item][const.END] > timestamp:
-                            return self._callsign_exceptions[item]
+                            callsign_data = copy.deepcopy(self._callsign_exceptions[item])
+                            del callsign_data[const.START]
+                            del callsign_data[const.END]
+                            print callsign + ": " + "here3"
+                            return callsign_data
 
                     # no startdate or enddate available
-                    else:
+                    elif not const.START in self._callsign_exceptions[item] and not const.END in self._callsign_exceptions[item]:
+                        print callsign + ": " + "here4"
                         return self._callsign_exceptions[item]
 
+        print callsign + ": " + "here5"
         # no matching case
         raise KeyError
 
@@ -255,17 +281,28 @@ class LookupLib(object):
                     # startdate < timestamp
                     if const.START in self._prefixes[item] and not const.END in self._prefixes[item]:
                         if self._prefixes[item][const.START] < timestamp:
-                            return self._prefixes[item]
+                            prefix_data = copy.deepcopy(self._prefixes[item])
+                            if const.START in prefix_data:
+                                del prefix_data[const.START]
+                            return prefix_data
 
                     # enddate > timestamp
                     elif not const.START in self._prefixes[item] and const.END in self._prefixes[item]:
                         if self._prefixes[item][const.END] > timestamp:
-                            return self._prefixes[item]
+                            prefix_data = copy.deepcopy(self._prefixes[item])
+                            if const.END in prefix_data:
+                                del prefix_data[const.END]
+                            return prefix_data
 
                     # startdate > timestamp > enddate
                     elif const.START in self._prefixes[item] and const.END in self._prefixes[item]:
                         if self._prefixes[item][const.START] < timestamp and self._prefixes[item][const.END] > timestamp:
-                            return self._prefixes[item]
+                            prefix_data = copy.deepcopy(self._prefixes[item])
+                            if const.START in prefix_data:
+                                del prefix_data[const.START]
+                            if const.END in prefix_data:
+                                del prefix_data[const.END]
+                            return prefix_data
 
                     # no startdate or enddate available
                     else:
