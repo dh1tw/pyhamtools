@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 import urllib
 import json
 import copy
-
+import sys
 
 import requests
 from requests.exceptions import ConnectionError, HTTPError, Timeout
@@ -21,6 +21,10 @@ from exceptions import APIKeyMissingError
 UTC = pytz.UTC
 timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
 
+if sys.version_info < (2, 7,):
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
 
 class LookupLib(object):
     """
@@ -55,7 +59,10 @@ class LookupLib(object):
             self._logger = logger
         else:
             self._logger = logging.getLogger(__name__)
-            self._logger.addHandler(logging.NullHandler())
+            if sys.version_info[:2] == (2, 6):
+                self._logger.addHandler(NullHandler())
+            else:
+                self._logger.addHandler(logging.NullHandler())
 
         self._apikey = apikey
         self._download = True
@@ -201,7 +208,6 @@ class LookupLib(object):
                         if self._callsign_exceptions[item][const.START] < timestamp:
                             callsign_data = copy.deepcopy(self._callsign_exceptions[item])
                             del callsign_data[const.START]
-                            print callsign + ": " + "here1"
                             return callsign_data
 
                     # enddate > timestamp
@@ -209,7 +215,6 @@ class LookupLib(object):
                         if self._callsign_exceptions[item][const.END] > timestamp:
                             callsign_data = copy.deepcopy(self._callsign_exceptions[item])
                             del callsign_data[const.END]
-                            print callsign + ": " + "here2"
                             return callsign_data
 
                     # startdate > timestamp > enddate
@@ -219,15 +224,12 @@ class LookupLib(object):
                             callsign_data = copy.deepcopy(self._callsign_exceptions[item])
                             del callsign_data[const.START]
                             del callsign_data[const.END]
-                            print callsign + ": " + "here3"
                             return callsign_data
 
                     # no startdate or enddate available
                     elif not const.START in self._callsign_exceptions[item] and not const.END in self._callsign_exceptions[item]:
-                        print callsign + ": " + "here4"
                         return self._callsign_exceptions[item]
 
-        print callsign + ": " + "here5"
         # no matching case
         raise KeyError
 
@@ -588,11 +590,15 @@ class LookupLib(object):
 
         # unzip file, if gz
         if os.path.splitext(download_file_path)[1][1:] == "gz":
-            with gzip.open(download_file_path, "r") as download_file:
+
+            download_file = gzip.open(download_file_path, "r")
+            try:
                 cty_file_path = os.path.join(os.path.splitext(download_file_path)[0])
                 with open(cty_file_path, "w") as cty_file:
                     cty_file.write(download_file.read())
-            self._logger.debug(str(cty_file_path) + " successfully extracted")
+                self._logger.debug(str(cty_file_path) + " successfully extracted")
+            finally:
+                download_file.close()
         else:
             cty_file_path = download_file_path
 

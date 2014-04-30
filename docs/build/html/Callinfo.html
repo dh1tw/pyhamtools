@@ -60,12 +60,348 @@
 </div>
 <span class="target" id="module-pyhamtools.callinfo"></span><dl class="class">
 <dt id="pyhamtools.callinfo.Callinfo">
-<em class="property">class </em><tt class="descclassname">pyhamtools.callinfo.</tt><tt class="descname">Callinfo</tt><big>(</big><em>lookuplib</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is going to going to return information for a callsign</p>
+<em class="property">class </em><tt class="descclassname">pyhamtools.callinfo.</tt><tt class="descname">Callinfo</tt><big>(</big><em>lookuplib</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>The purpose of this class is to return data (country, latitude, longitude, CQ Zone...etc) for an
+Amateur Radio callsign. The class can be used with any lookup database,
+provided through an Instance of <tt class="xref py py-class docutils literal"><span class="pre">LookupLib</span></tt>.
+An instance of <tt class="xref py py-class docutils literal"><span class="pre">Lookuplib</span></tt> has to be injected on object construction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lookuplib</strong> (<tt class="xref py py-class docutils literal"><span class="pre">LookupLib</span></tt>) &#8211; instance of <tt class="xref py py-class docutils literal"><span class="pre">LookupLib</span></tt></li>
+<li><strong>logger</strong> (<em>logging.getLogger(__name__), optional</em>) &#8211; Python logger</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
-<dt id="pyhamtools.callinfo.Callinfo.getHomeCall">
-<tt class="descname">getHomeCall</tt><big>(</big><em>callsign</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.getHomeCall" title="Permalink to this definition">¶</a></dt>
-<dd><p>verify call and strip off any /ea1 vp5/ /qrp etc</p>
+<dt id="pyhamtools.callinfo.Callinfo.get_adif_id">
+<tt class="descname">get_adif_id</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_adif_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns ADIF id of a callsign&#8217;s country</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">containing the country ADIF id</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
+No Country found for callsign</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.get_all">
+<tt class="descname">get_all</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup a callsign and return all data available from the underlying database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dictionary containing the callsign specific data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">dict</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
+Callsign could not be identified</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>The following code returns all available information from the country-files.com database for the
+callsign &#8220;DH1TW&#8221;</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span><span class="p">,</span> <span class="n">Callinfo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;countryfile&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span> <span class="o">=</span> <span class="n">Callinfo</span><span class="p">(</span><span class="n">my_lookuplib</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span><span class="o">.</span><span class="n">get_all</span><span class="p">(</span><span class="s">&quot;DH1TW&quot;</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">     &#39;country&#39;: &#39;Fed. Rep. of Germany&#39;,</span>
+<span class="go">     &#39;adif&#39;: 230,</span>
+<span class="go">     &#39;continent&#39;: &#39;EU&#39;,</span>
+<span class="go">     &#39;latitude&#39;: 51.0,</span>
+<span class="go">     &#39;longitude&#39;: -10.0,</span>
+<span class="go">     &#39;cqz&#39;: 14,</span>
+<span class="go">     &#39;ituz&#39;: 28</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The content of the returned data depends entirely on the injected
+<tt class="xref py py-class docutils literal"><span class="pre">LookupLib</span></tt> (and the used database). While the country-files.com provides
+for example the ITU Zone, Clublog doesn&#8217;t. Consequently, the item &#8220;ituz&#8221;
+would be missing with Clublog (API or XML) <tt class="xref py py-class docutils literal"><span class="pre">LookupLib</span></tt>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.get_continent">
+<tt class="descname">get_continent</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_continent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the continent Identifier of a callsign</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">continent identified</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
+No Continent found for callsign</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The following continent identifiers are used:</p>
+<ul class="last simple">
+<li>EU: Europe</li>
+<li>NA: North America</li>
+<li>SA: South America</li>
+<li>AS: Asia</li>
+<li>AF: Africa</li>
+<li>OC: Oceania</li>
+<li>AN: Antarctica</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.get_country_name">
+<tt class="descname">get_country_name</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_country_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the country name where the callsign is located</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">name of the Country</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
+No Country found for callsign</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Don&#8217;t rely on the country name when working with several instances of
+:Callinfo. Clublog and Country-files.org use slightly different names
+for countrys. Example:
+Country-files.com: &#8220;Fed. Rep. of Germany&#8221;
+Clublog: &#8220;FEDERAL REPUBLIC OF GERMANY&#8221;</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.get_cqz">
+<tt class="descname">get_cqz</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_cqz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns CQ Zone of a callsign</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">containing the callsign&#8217;s CQ Zone</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
+no CQ Zone found for callsign</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.get_homecall">
+<tt class="descname">get_homecall</tt><big>(</big><em>callsign</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_homecall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strips off country prefixes (<strong>HC2/**DH1TW) and activity suffixes (DH1TW</strong>/P**).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">callsign without country/activity pre/suffixes</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> &#8211; 
+No callsign found in string</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>The following code retrieves the home call for &#8220;HC2/DH1TW/P&#8221;</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span><span class="p">,</span> <span class="n">Callinfo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;countryfile&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span> <span class="o">=</span> <span class="n">Callinfo</span><span class="p">(</span><span class="n">my_lookuplib</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span><span class="o">.</span><span class="n">get_homecall</span><span class="p">(</span><span class="s">&quot;HC2/DH1TW/P&quot;</span><span class="p">)</span>
+<span class="go">DH1TW</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.get_ituz">
+<tt class="descname">get_ituz</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_ituz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns ITU Zone of a callsign</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">containing the callsign&#8217;s CQ Zone</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
+No ITU Zone found for callsign</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently, only Country-files.com lookup database contains ITU Zones</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.get_lat_long">
+<tt class="descname">get_lat_long</tt><big>(</big><em>callsign</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_lat_long" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Latitude and Longitude for a callsign</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Containing Latitude and Longitude</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">dict</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211; 
+No data found for callsign</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>The following code returns Latitude &amp; Longitude for &#8220;DH1TW&#8221;</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span><span class="p">,</span> <span class="n">Callinfo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;countryfile&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span> <span class="o">=</span> <span class="n">Callinfo</span><span class="p">(</span><span class="n">my_lookuplib</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span><span class="o">.</span><span class="n">get_lat_long</span><span class="p">(</span><span class="s">&quot;DH1TW&quot;</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">   &#39;latitude&#39;: 51.0,</span>
+<span class="go">   &#39;longitude&#39;: -10.0</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Unfortunately, in most cases the returned Latitude and Longitude are not very precise.
+Clublog and Country-files.com use the country&#8217;s capital coordinates in most cases, if no
+dedicated entry in the database exists.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhamtools.callinfo.Callinfo.is_valid_callsign">
+<tt class="descname">is_valid_callsign</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.is_valid_callsign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a callsign is valid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callsign</strong> (<em>str</em>) &#8211; Amateur Radio callsign</li>
+<li><strong>timestamp</strong> (<em>datetime, optional</em>) &#8211; datetime in UTC (tzinfo=pytz.UTC)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True / False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>The following checks if &#8220;DH1TW&#8221; is a valid callsign</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span><span class="p">,</span> <span class="n">Callinfo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;countryfile&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span> <span class="o">=</span> <span class="n">Callinfo</span><span class="p">(</span><span class="n">my_lookuplib</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cic</span><span class="o">.</span><span class="n">is_valid_callsign</span><span class="p">(</span><span class="s">&quot;DH1TW&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

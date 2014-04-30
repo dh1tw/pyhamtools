@@ -4,13 +4,6 @@ import os
 
 
 from apikey import APIKEY
-# 
-# @pytest.fixture()
-# def cleandir():
-#     newpath = tempfile.mkdtemp()
-#     os.chdir(newpath)
-# 
-
 from pyhamtools import LookupLib
 from pyhamtools import Callinfo
 

@@ -1,6 +1,7 @@
 import re
 import logging
 from datetime import datetime
+import sys
 
 
 import pytz
@@ -13,26 +14,61 @@ from pyhamtools.consts import LookupConventions as const
 UTC = pytz.UTC
 timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
 
+if sys.version_info < (2, 7, ):
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
 
 class Callinfo(object):
     """
-    This is going to going to return information for a callsign
+    The purpose of this class is to return data (country, latitude, longitude, CQ Zone...etc) for an
+    Amateur Radio callsign. The class can be used with any lookup database,
+    provided through an Instance of :py:class:`LookupLib`.
+    An instance of :py:class:`Lookuplib` has to be injected on object construction.
+
+    Args:
+        lookuplib (:py:class:`LookupLib`) : instance of :py:class:`LookupLib`
+        logger (logging.getLogger(__name__), optional): Python logger
+
     """
 
-    def __init__(self, lookuplib=LookupLib(), logger=None):
+    def __init__(self, lookuplib, logger=None):
 
         self._logger = None
         if logger:
             self._logger = logger
         else:
             self._logger = logging.getLogger(__name__)
-            self._logger.addHandler(logging.NullHandler())
+            if sys.version_info[:2] == (2, 6):
+                self._logger.addHandler(NullHandler())
+            else:
+                self._logger.addHandler(logging.NullHandler())
 
         self._lookuplib = lookuplib
         self._callsign_info = None
 
     def get_homecall(self, callsign):
-        """verify call and strip off any /ea1 vp5/ /qrp etc"""
+        """Strips off country prefixes (**HC2/**DH1TW) and activity suffixes (DH1TW**/P**).
+
+        Args:
+            callsign (str): Amateur Radio callsign
+
+        Returns:
+            str: callsign without country/activity pre/suffixes
+
+        Raises:
+            ValueError: No callsign found in string
+
+        Example:
+           The following code retrieves the home call for "HC2/DH1TW/P"
+
+           >>> from pyhamtools import LookupLib, Callinfo
+           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+           >>> cic = Callinfo(my_lookuplib)
+           >>> cic.get_homecall("HC2/DH1TW/P")
+           DH1TW
+
+        """
 
         callsign = callsign.upper()
         homecall = re.search('[\d]{0,1}[A-Z]{1,2}\d([A-Z]{1,4}|\d{3,3}|\d{1,3}[A-Z])[A-Z]{0,5}', callsign)
@@ -40,7 +76,8 @@ class Callinfo(object):
             homecall = homecall.group(0)
             return homecall
         else:
-            return
+            raise ValueError
+
 
     def _iterate_prefix(self, callsign, timestamp=timestamp_now):
         """truncate call until it corresponds to a Prefix in the database"""
@@ -55,7 +92,17 @@ class Callinfo(object):
         raise KeyError
 
     def _dismantle_callsign(self, callsign, timestamp=timestamp_now):
+        """ try to identify the callsign's identity by analyzing it in the following order:
 
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Raises:
+            KeyError: Callsign could not be identified
+
+
+        """
         entire_callsign = callsign.upper()
 
         if re.search('[/A-Z0-9\-]{3,15}', entire_callsign):  # make sure the call has at least 3 characters
@@ -150,7 +197,43 @@ class Callinfo(object):
 
 
     def get_all(self, callsign, timestamp=timestamp_now):
+        """ Lookup a callsign and return all data available from the underlying database
 
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            dict: Dictionary containing the callsign specific data
+
+        Raises:
+            KeyError: Callsign could not be identified
+
+        Example:
+           The following code returns all available information from the country-files.com database for the
+           callsign "DH1TW"
+
+           >>> from pyhamtools import LookupLib, Callinfo
+           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+           >>> cic = Callinfo(my_lookuplib)
+           >>> cic.get_all("DH1TW")
+           {
+                'country': 'Fed. Rep. of Germany',
+                'adif': 230,
+                'continent': 'EU',
+                'latitude': 51.0,
+                'longitude': -10.0,
+                'cqz': 14,
+                'ituz': 28
+           }
+
+        Note:
+            The content of the returned data depends entirely on the injected
+            :py:class:`LookupLib` (and the used database). While the country-files.com provides
+            for example the ITU Zone, Clublog doesn't. Consequently, the item "ituz"
+            would be missing with Clublog (API or XML) :py:class:`LookupLib`.
+
+        """
         callsign_data = self._lookup_callsign(callsign, timestamp_now)
 
         try:
@@ -159,18 +242,65 @@ class Callinfo(object):
         except KeyError:
             pass
 
-        print callsign_data
-
         return callsign_data
 
     def is_valid_callsign(self, callsign, timestamp=timestamp_now):
+        """ Checks if a callsign is valid
+
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            bool: True / False
+
+        Example:
+           The following checks if "DH1TW" is a valid callsign
+
+           >>> from pyhamtools import LookupLib, Callinfo
+           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+           >>> cic = Callinfo(my_lookuplib)
+           >>> cic.is_valid_callsign("DH1TW")
+           True
+
+        """
         try:
             if self.get_all(callsign, timestamp):
                 return True
-        except:
+        except KeyError:
             return False
 
     def get_lat_long(self, callsign):
+        """ Returns Latitude and Longitude for a callsign
+
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            dict: Containing Latitude and Longitude
+
+        Raises:
+            KeyError: No data found for callsign
+
+        Example:
+           The following code returns Latitude & Longitude for "DH1TW"
+
+           >>> from pyhamtools import LookupLib, Callinfo
+           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+           >>> cic = Callinfo(my_lookuplib)
+           >>> cic.get_lat_long("DH1TW")
+           {
+              'latitude': 51.0,
+              'longitude': -10.0
+           }
+
+        Note:
+            Unfortunately, in most cases the returned Latitude and Longitude are not very precise.
+            Clublog and Country-files.com use the country's capital coordinates in most cases, if no
+            dedicated entry in the database exists.
+
+        """
         callsign_data = self.get_all(callsign, timestamp=timestamp_now)
         return {
             const.LATITUDE : callsign_data[const.LATITUDE],
@@ -178,30 +308,101 @@ class Callinfo(object):
         }
 
     def get_cqz(self, callsign, timestamp=timestamp_now):
+        """ Returns CQ Zone of a callsign
+
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            int: containing the callsign's CQ Zone
+
+        Raises:
+            KeyError: no CQ Zone found for callsign
+
+        """
         return self.get_all(callsign, timestamp)[const.CQZ]
 
     def get_ituz(self, callsign, timestamp=timestamp_now):
+        """ Returns ITU Zone of a callsign
+
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            int: containing the callsign's CQ Zone
+
+        Raises:
+            KeyError: No ITU Zone found for callsign
+
+        Note:
+            Currently, only Country-files.com lookup database contains ITU Zones
+
+        """
         return self.get_all(callsign, timestamp)[const.ITUZ]
 
     def get_country_name(self, callsign, timestamp=timestamp_now):
+        """ Returns the country name where the callsign is located
+
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            str: name of the Country
+
+        Raises:
+            KeyError: No Country found for callsign
+
+        Note:
+            Don't rely on the country name when working with several instances of
+            :Callinfo. Clublog and Country-files.org use slightly different names
+            for countrys. Example:
+            Country-files.com: "Fed. Rep. of Germany"
+            Clublog: "FEDERAL REPUBLIC OF GERMANY"
+
+        """
         return self.get_all(callsign, timestamp)[const.COUNTRY]
 
     def get_adif_id(self, callsign, timestamp=timestamp_now):
+        """ Returns ADIF id of a callsign's country
+
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            int: containing the country ADIF id
+
+        Raises:
+            KeyError: No Country found for callsign
+
+        """
         return self.get_all(callsign, timestamp)[const.ADIF]
 
     def get_continent(self, callsign, timestamp=timestamp_now):
+        """ Returns the continent Identifier of a callsign
+
+        Args:
+            callsign (str): Amateur Radio callsign
+            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+
+        Returns:
+            str: continent identified
+
+        Raises:
+            KeyError: No Continent found for callsign
+
+        Note:
+            The following continent identifiers are used:
+
+            - EU: Europe
+            - NA: North America
+            - SA: South America
+            - AS: Asia
+            - AF: Africa
+            - OC: Oceania
+            - AN: Antarctica
+        """
         return self.get_all(callsign, timestamp)[const.CONTINENT]
-
-if __name__ == "__main__":
-    import logging.config
-    logging.config.fileConfig("logging.ini")
-    logger = logging.getLogger(__name__)
-
-
-    from pyhamtools import LookupLib
-    apikey = "67547d6ce7a37276373b0568e3e52c1d3e2cb0e5"
-    l = LookupLib("clublogxml", apikey=apikey)
-    c = Callinfo(l)
-    print c._iterate_prefix("DH1TW")
-    print c._iterate_prefix("QRM")
-
