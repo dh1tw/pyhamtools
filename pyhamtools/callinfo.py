@@ -270,7 +270,7 @@ class Callinfo(object):
         except KeyError:
             return False
 
-    def get_lat_long(self, callsign):
+    def get_lat_long(self, callsign, timestamp=timestamp_now):
         """ Returns Latitude and Longitude for a callsign
 
         Args:
@@ -301,7 +301,7 @@ class Callinfo(object):
             dedicated entry in the database exists.
 
         """
-        callsign_data = self.get_all(callsign, timestamp=timestamp_now)
+        callsign_data = self.get_all(callsign, timestamp=timestamp)
         return {
             const.LATITUDE : callsign_data[const.LATITUDE],
             const.LONGITUDE : callsign_data[const.LONGITUDE]
@@ -357,10 +357,11 @@ class Callinfo(object):
 
         Note:
             Don't rely on the country name when working with several instances of
-            :Callinfo. Clublog and Country-files.org use slightly different names
+            py:class:`Callinfo`. Clublog and Country-files.org use slightly different names
             for countrys. Example:
-            Country-files.com: "Fed. Rep. of Germany"
-            Clublog: "FEDERAL REPUBLIC OF GERMANY"
+
+            - Country-files.com: "Fed. Rep. of Germany"
+            - Clublog: "FEDERAL REPUBLIC OF GERMANY"
 
         """
         return self.get_all(callsign, timestamp)[const.COUNTRY]

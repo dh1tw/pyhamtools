@@ -16,12 +16,15 @@ with some modules and classes which are frequently necessary, like parsing of an
 
 Currently, PyHamtools contain the following modules and classes:
 
-Modules:
-^^^^^^^^
-
-
-Clases:
+Modules
 ^^^^^^^
+.. toctree::
+   :maxdepth: 2
+
+   utils
+
+Clases
+^^^^^^
 
 .. toctree::
    :maxdepth: 2

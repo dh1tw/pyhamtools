@@ -79,7 +79,7 @@ An instance of <tt class="xref py py-class docutils literal"><span class="pre">L
 </table>
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.get_adif_id">
-<tt class="descname">get_adif_id</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_adif_id" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_adif_id</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_adif_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns ADIF id of a callsign&#8217;s country</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -107,7 +107,7 @@ No Country found for callsign</p>
 
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.get_all">
-<tt class="descname">get_all</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_all" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_all</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup a callsign and return all data available from the underlying database</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -160,7 +160,7 @@ would be missing with Clublog (API or XML) <tt class="xref py py-class docutils 
 
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.get_continent">
-<tt class="descname">get_continent</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_continent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_continent</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_continent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the continent Identifier of a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -201,7 +201,7 @@ No Continent found for callsign</p>
 
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.get_country_name">
-<tt class="descname">get_country_name</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_country_name" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_country_name</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_country_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the country name where the callsign is located</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -227,17 +227,19 @@ No Country found for callsign</p>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Don&#8217;t rely on the country name when working with several instances of
-:Callinfo. Clublog and Country-files.org use slightly different names
-for countrys. Example:
-Country-files.com: &#8220;Fed. Rep. of Germany&#8221;
-Clublog: &#8220;FEDERAL REPUBLIC OF GERMANY&#8221;</p>
+<p>Don&#8217;t rely on the country name when working with several instances of
+py:class:<cite>Callinfo</cite>. Clublog and Country-files.org use slightly different names
+for countrys. Example:</p>
+<ul class="last simple">
+<li>Country-files.com: &#8220;Fed. Rep. of Germany&#8221;</li>
+<li>Clublog: &#8220;FEDERAL REPUBLIC OF GERMANY&#8221;</li>
+</ul>
 </div>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.get_cqz">
-<tt class="descname">get_cqz</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_cqz" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_cqz</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_cqz" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns CQ Zone of a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -295,7 +297,7 @@ No callsign found in string</td>
 
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.get_ituz">
-<tt class="descname">get_ituz</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_ituz" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_ituz</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_ituz" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns ITU Zone of a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -327,7 +329,7 @@ No ITU Zone found for callsign</p>
 
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.get_lat_long">
-<tt class="descname">get_lat_long</tt><big>(</big><em>callsign</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_lat_long" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_lat_long</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.get_lat_long" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns Latitude and Longitude for a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -373,7 +375,7 @@ dedicated entry in the database exists.</p>
 
 <dl class="method">
 <dt id="pyhamtools.callinfo.Callinfo.is_valid_callsign">
-<tt class="descname">is_valid_callsign</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>29</em>, <em>13</em>, <em>22</em>, <em>14</em>, <em>671563</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.is_valid_callsign" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">is_valid_callsign</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>4</em>, <em>30</em>, <em>7</em>, <em>25</em>, <em>25</em>, <em>699031</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.callinfo.Callinfo.is_valid_callsign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if a callsign is valid</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

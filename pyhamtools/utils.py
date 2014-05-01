@@ -2,7 +2,38 @@ from pyhamtools.consts import Modes as const
 
 
 def freq_to_band(freq):
-    """converts a frequency [kHz] into the band and looks up the mode"""
+    """converts a Frequency [kHz] into the band and mode according to the IARU bandplan
+
+        Args:
+            frequency (float): Frequency in kHz
+
+        Returns:
+            dict: Dictionary containing the band (int) and mode (str)
+
+        Raises:
+            KeyError: Wrong frequency or out of band
+
+        Example:
+           The following example converts the frequency *14005.3 kHz* into band and mode.
+
+           >>> from pyhamtools.utils import freq_to_band
+           >>> print freq_to_band(14005.3)
+           {
+                'band': 20,
+                'mode': CW
+           }
+
+        Note:
+
+            Modes are:
+
+                - CW
+                - USB
+                - LSB
+                - DIGITAL
+
+    """
+
     band = None
     mode = None
     if ((freq >= 135) and (freq <= 138)):
