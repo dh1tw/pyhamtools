@@ -48,7 +48,6 @@ response_prefix_C6A_countryfile = {
 }
 
 
-
 response_Exception_VK9XO_with_start_date = {
            'adif': 35,
            'country': 'CHRISTMAS ISLAND',
@@ -72,6 +71,24 @@ response_lat_long_dh1tw = {
     const.LONGITUDE: -10.0
 }
 
+response_maritime_mobile = {
+    'adif': 999,
+    'continent': '',
+    'country': 'MARITIME MOBILE',
+    'cqz': 0,
+    'latitude': 0.0,
+    'longitude': 0.0
+}
+
+response_aircraft_mobile = {
+    'adif': 998,
+    'continent': '',
+    'country': 'AIRCAFT MOBILE',
+    'cqz': 0,
+    'latitude': 0.0,
+    'longitude': 0.0
+}
+
 class Test_callinfo_methods:
 
     def test_callinfo_iterate_prefix(self, fix_callinfo):
@@ -87,31 +104,38 @@ class Test_callinfo_methods:
             with pytest.raises(KeyError):
                 fix_callinfo._iterate_prefix("QRM")
 
+    def test_is_maritime_mobile(self, fix_callinfo):
+        assert fix_callinfo.check_if_mm("DH1TW/MM")
+        assert not fix_callinfo.check_if_mm("DH1TW")
+
+    def test_is_aircraft_mobile(self, fix_callinfo):
+        assert fix_callinfo.check_if_am("DH1TW/AM")
+        assert not fix_callinfo.check_if_am("DH1TW")
+
+    def test_if_beacon(self, fix_callinfo):
+        assert fix_callinfo.check_if_beacon("DH1TW/B")
+        assert fix_callinfo.check_if_beacon("DH1TW/BCN")
+        assert not fix_callinfo.check_if_beacon("DH1TW")
+
     def test_get_homecall(self, fix_callinfo):
         assert fix_callinfo.get_homecall("HB9/DH1TW") == "DH1TW"
         assert fix_callinfo.get_homecall("SM3/DH1TW/P") == "DH1TW"
-        assert fix_callinfo.get_homecall("QRM") is None
+        with pytest.raises(ValueError):
+            fix_callinfo.get_homecall("QRM")
 
     def test_dismantle_callsign(self, fix_callinfo):
-        if fix_callinfo._lookuplib._lookuptype == "clublogxml" or fix_callinfo._lookuplib._lookuptype == "countryfile":
-            with pytest.raises(KeyError):
-                fix_callinfo._dismantle_callsign("DH1TW/MM")
-
-            with pytest.raises(KeyError):
-                fix_callinfo._dismantle_callsign("DH1TW/AM")
 
         if fix_callinfo._lookuplib._lookuptype == "clublogxml":
+            #assert fix_callinfo._dismantle_callsign("DH1TW/BCN")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW/QRP") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/QRPP") == response_prefix_DH_clublog
-            assert fix_callinfo._dismantle_callsign("DH1TW/BCN") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/LH") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("HC2AO/DL") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/P") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/5") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/M") == response_prefix_DH_clublog
-            assert fix_callinfo._dismantle_callsign("DH1TW/B") == response_prefix_DH_clublog
+            #assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_clublog
-            assert fix_callinfo._dismantle_callsign("DH1TW/B") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_clublog
         #    assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_Prefix_C6A
@@ -119,15 +143,14 @@ class Test_callinfo_methods:
         if fix_callinfo._lookuplib._lookuptype == "countryfile":
             assert fix_callinfo._dismantle_callsign("DH1TW/QRP") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/QRPP") == response_prefix_DH_countryfile
-            assert fix_callinfo._dismantle_callsign("DH1TW/BCN") == response_prefix_DH_countryfile
+            #assert fix_callinfo._dismantle_callsign("DH1TW/BCN")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW/LH") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("HC2AO/DL") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/P") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/5") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/M") == response_prefix_DH_countryfile
-            assert fix_callinfo._dismantle_callsign("DH1TW/B") == response_prefix_DH_countryfile
+            #assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_countryfile
-            assert fix_callinfo._dismantle_callsign("DH1TW/B") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_countryfile
         #    assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_Prefix_C6A
@@ -135,11 +158,17 @@ class Test_callinfo_methods:
 
     def test_lookup_callsign(selfself, fix_callinfo):
 
+        assert fix_callinfo._lookup_callsign("DH1TW/MM") == response_maritime_mobile
+        assert fix_callinfo._lookup_callsign("DH1TW/AM") == response_aircraft_mobile
+
         if fix_callinfo._lookuplib._lookuptype == "clublogxml" or fix_callinfo._lookuplib._lookuptype == "clublogapi":
             with pytest.raises(KeyError):
                 fix_callinfo._lookup_callsign("5W1CFN")
+
+            assert fix_callinfo._lookup_callsign("DH1TW/BCN")[const.BEACON]
             assert fix_callinfo._lookup_callsign("VK9XO") == response_Exception_VK9XO_with_start_date
             assert fix_callinfo._lookup_callsign("DH1TW") == response_prefix_DH_clublog
+
 
         elif fix_callinfo._lookuplib._lookuptype == "countryfile":
             assert fix_callinfo._lookup_callsign("DH1TW") == response_prefix_DH_countryfile
@@ -157,6 +186,8 @@ class Test_callinfo_methods:
 
         elif fix_callinfo._lookuplib._lookuptype == "countryfile":
             assert fix_callinfo.get_all("DH1TW") == response_prefix_DH_countryfile
+
+        assert fix_callinfo.get_all("DH1TW/MM") == response_maritime_mobile
 
     def test_is_valid_callsign(self, fix_callinfo):
         assert fix_callinfo.is_valid_callsign("DH1TW")

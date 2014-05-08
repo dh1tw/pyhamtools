@@ -3,6 +3,7 @@
 class LookupConventions:
     """ This class defines the constants used within the pyhamtools package """
 
+    # Mostly specific to Clublog XML File
     CALLSIGN = "callsign"
     COUNTRY = "country"
     PREFIX = "prefix"
@@ -18,19 +19,19 @@ class LookupConventions:
     WHITELIST_START = "whitelist_start"
     WHITELIST_END = "whitelist_end"
     DELETED = "deleted"
+    MARITIME_MOBILE = "mm"
+    AIRCRAFT_MOBILE = "am"
+    BEACON = "beacon"
+    SKIMMER = "skimmer"
 
-class Modes:
-    """ Constants for Operating modes """
-
+    # Modes
     CW = "CW"
     USB = "USB"
     LSB = "LSB"
     DIGITAL = "DIGITAL"
     FM = "FM"
 
-class DXSpot:
-    """ Constants used for DX Spots  """
-
+    #DX Spot
     SPOTTER = "spotter"
     DX = "dx"
     FREQUENCY = "frequency"
@@ -38,3 +39,25 @@ class DXSpot:
     TIME = "time"
     BAND = "band"
     MODE = "mode"
+
+    #DX Spider specific
+    ORIGIN_NODE = "node"
+    HOPS = "hops"
+    RAW_SPOT = "raw"
+    IP = "ip"
+    ROUTE = "route"
+    TEXT = "text"
+    SYSOP_FLAG = "sysop_flag"
+    WX_FLAG = "wx_flag"
+
+    #WWV & WCY
+    STATION = "station"
+    R = "r"
+    K = "k"
+    EXPK = "expk"
+    SFI = "sfi"
+    A = "a"
+    AURORA = "aurora"
+    SA = "sa"
+    GMF = "gmf"
+    FORECAST = "forecast"

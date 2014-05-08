@@ -142,7 +142,7 @@ class TestclublogXML_Getters:
         assert fixClublogXML.lookup_entity(230) == response_Entity_230
         assert fixClublogXML.lookup_entity("230") == response_Entity_230
 
-        with pytest.raises(KeyError):
+        with pytest.raises(ValueError):
             fixClublogXML.lookup_entity("foo")
 
         with pytest.raises(KeyError):

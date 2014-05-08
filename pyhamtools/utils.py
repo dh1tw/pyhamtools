@@ -1,4 +1,4 @@
-from pyhamtools.consts import Modes as const
+from pyhamtools.consts import LookupConventions as const
 
 
 def freq_to_band(freq):

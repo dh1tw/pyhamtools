@@ -91,6 +91,27 @@ class Callinfo(object):
                 continue
         raise KeyError
 
+    def check_if_mm(self, callsign):
+        if re.search("/MM$", callsign.upper()):
+            return True
+        else:
+            return False
+
+    def check_if_am(self, callsign):
+        if re.search("/AM$", callsign.upper()):
+            return True
+        else:
+            return False
+
+    def check_if_beacon(self, callsign):
+        if re.search("/B$", callsign.upper()):
+            return True
+        elif re.search("/BCN$", callsign.upper()):
+            return True
+        else:
+            return False
+
+
     def _dismantle_callsign(self, callsign, timestamp=timestamp_now):
         """ try to identify the callsign's identity by analyzing it in the following order:
 
@@ -121,10 +142,23 @@ class Callinfo(object):
 
                 if appendix == 'MM':  # special case Martime Mobile
                     #self._mm = True
-                    raise KeyError
+                    return  {
+                        'adif': 999,
+                        'continent': '',
+                        'country': 'MARITIME MOBILE',
+                        'cqz': 0,
+                        'latitude': 0.0,
+                        'longitude': 0.0
+                    }
                 elif appendix == 'AM':  # special case Aeronautic Mobile
-                    #self._am = True
-                    raise KeyError
+                    return  {
+                        'adif': 998,
+                        'continent': '',
+                        'country': 'AIRCAFT MOBILE',
+                        'cqz': 0,
+                        'latitude': 0.0,
+                        'longitude': 0.0
+                    }
                 elif appendix == 'QRP':  # special case QRP
                     callsign = re.sub('/QRP', '', callsign)
                     return self._iterate_prefix(callsign, timestamp)
@@ -133,8 +167,9 @@ class Callinfo(object):
                     return self._iterate_prefix(callsign, timestamp)
                 elif appendix == 'BCN':  #filter all beacons
                     callsign = re.sub('/BCN', '', callsign)
-#                    self.beacon = True
-                    return self._iterate_prefix(callsign, timestamp)
+                    data = self._iterate_prefix(callsign, timestamp).copy()
+                    data[const.BEACON] = True
+                    return data
                 elif appendix == "LH":  #Filter all Lighthouses
                     callsign = re.sub('/LH', '', callsign)
                     return self._iterate_prefix(callsign, timestamp)
@@ -149,8 +184,9 @@ class Callinfo(object):
 
                 if appendix == 'B':  #special case Beacon
                     callsign = re.sub('/B', '', callsign)
-                    return self._iterate_prefix(callsign, timestamp)
-                    # self.beacon = True
+                    data =  self._iterate_prefix(callsign, timestamp).copy()
+                    data[const.BEACON] = True
+                    return data
 
                 elif re.search('\d$', appendix):
                     area_nr = re.search('\d$', appendix).group(0)
@@ -186,9 +222,31 @@ class Callinfo(object):
             if invalid:
                 raise
 
+        if self.check_if_mm(callsign):
+            return  {
+                'adif': 999,
+                'continent': '',
+                'country': 'MARITIME MOBILE',
+                'cqz': 0,
+                'latitude': 0.0,
+                'longitude': 0.0
+            }
+        elif self.check_if_am(callsign):
+            return  {
+                'adif': 998,
+                'continent': '',
+                'country': 'AIRCAFT MOBILE',
+                'cqz': 0,
+                'latitude': 0.0,
+                'longitude': 0.0
+            }
+
         # Check if a dedicated entry exists for the callsign
         try:
-            return self._lookuplib.lookup_callsign(callsign, timestamp)
+            data = self._lookuplib.lookup_callsign(callsign, timestamp).copy()
+            if self.check_if_beacon(callsign):
+                data[const.BEACON] = True
+            return data
         except KeyError:
             pass
 

@@ -7,6 +7,7 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 import urllib
 import json
+import pickle
 import copy
 import sys
 
@@ -37,7 +38,8 @@ class LookupLib(object):
 
     It's aim is to provide a homogeneous interface to different databases.
 
-    Typically an instance of this class is injected as a dependency in the :py:class:`Callinfo` class, but it can also be used directly.
+    Typically an instance of this class is injected as a dependency in the :py:class:`Callinfo` class, but it can also
+    be used directly.
 
     Even the interface is the same for all lookup sources, the returning data can be different.
     The documentation of the various methods provide more detail.
@@ -45,14 +47,23 @@ class LookupLib(object):
     By default, LookupLib requires an Internet connection to download the libraries or perform the
     lookup against the Clublog API.
 
+    The entire lookup data can also be copied into Redis, which an extremely fast in-memory Key/Value store.
+    A LookupLib object can be instanciated to perform then all lookups in Redis, instead processing and loading
+    the data from Internet / File. This saves some time and allows several instances of :py:call:`LookupLib`
+    to query the same data concurrently.
+
     Args:
-        lookuptype (str) : "clublogxml" or "clublogapi" or "countryfile"
+        lookuptype (str) : "clublogxml" or "clublogapi" or "countryfile" or "redis"
         apikey (str): Clublog API Key
-        filename (str, optional): Filename for Clublog XML or Country-files.com cty.plist file. When a local file is used, no Internet connection not API Key is necessary.
+        filename (str, optional): Filename for Clublog XML or Country-files.com cty.plist file. When a local file is
+        used, no Internet connection not API Key is necessary.
         logger (logging.getLogger(__name__), optional): Python logger
+        redis_instance (redis.Redis(), optional): Instance of Redis
+        redis_prefix (str, optional): Prefix to identify the lookup data set in Redis
+
 
     """
-    def __init__(self, lookuptype = "countryfile", apikey=None, filename=None, logger=None):
+    def __init__(self, lookuptype = "countryfile", apikey=None, filename=None, logger=None, redis_instance=None, redis_prefix=None):
 
         self._logger = None
         if logger:
@@ -67,6 +78,8 @@ class LookupLib(object):
         self._apikey = apikey
         self._download = True
         self._lib_filename = filename
+        self._redis = redis_instance
+        self._redis_prefix = redis_prefix
 
         if self._lib_filename:
             self._download = False
@@ -87,8 +100,101 @@ class LookupLib(object):
             self._load_countryfile(cty_file=self._lib_filename)
         elif self._lookuptype == "clublogapi":
             pass
+        elif self._lookuptype == "redis":
+            import redis
         else:
             raise AttributeError("Lookup type missing")
+
+    def copy_data_in_redis(self, redis_prefix, redis_instance):
+        """
+        Copy the complete lookup data and indexes of the object into redis. Old data will be overwritten.
+
+        Args:
+            redis_prefix (str): Prefix to distinguish the data in redis for the different looktypes
+            redis_instance (str): an Instance of Redis
+
+        Returns:
+            bool: returns True when the data has been copied successfully into Redis
+
+        Example:
+           Copy the entire lookup data from the Country-files.com PLIST File into Redis. A Redis Instance
+           needs to be installed, as well as copy of the python Redis connector (pip install redis-py)
+
+           >>> from pyhamtools import LookupLib
+           >>> import redis
+           >>> r = redis.Redis()
+           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+           >>> print my_lookuplib.copy_data_in_redis(redis_prefix="CF", redis_instance=r)
+           True
+
+           Now let's create an instance of LookupLib, using Redis to query the data
+           >>> from pyhamtools import LookupLib
+           >>> import redis
+           >>> r = redis.Redis()
+           >>> my_lookuplib = LookupLib(lookuptype="countryfile", redis_instance=r, redis_prefix="CF")
+           >>> my_lookuplib.lookup_callsign("3D2RI")
+           {
+             u'adif': 460,
+             u'continent': 'OC',
+             u'country': 'Rotuma Island',
+             u'cqz': 32,
+             u'ituz': 56,
+             u'latitude': -12.48,
+             u'longitude': -177.08
+           }
+
+
+        Note:
+            This method is available for the following lookup type
+
+            - clublogxml
+            - countryfile
+        """
+
+        if redis_instance is not None:
+            self._redis = redis_instance
+
+        if self._redis is None:
+            raise AttributeError("redis_instance is missing")
+
+        if redis_prefix is None:
+            raise KeyError("redis_prefix is missing")
+
+        if self._lookuptype == "clublogxml" or self._lookuptype == "countryfile":
+
+            self._push_dict_to_redis(self._entities, redis_prefix, "_entity_")
+
+            self._push_dict_index_to_redis(self._callsign_exceptions_index, redis_prefix, "_call_ex_index_")
+            self._push_dict_to_redis(self._callsign_exceptions, redis_prefix, "_call_ex_")
+
+            self._push_dict_index_to_redis(self._prefixes_index, redis_prefix, "_prefix_index_")
+            self._push_dict_to_redis(self._prefixes, redis_prefix, "_prefix_")
+
+            self._push_dict_index_to_redis(self._invalid_operations_index, redis_prefix, "_inv_op_index_")
+            self._push_dict_to_redis(self._invalid_operations, redis_prefix, "_inv_op_")
+
+            self._push_dict_index_to_redis(self._zone_exceptions_index, redis_prefix, "_zone_ex_index_")
+            self._push_dict_to_redis(self._zone_exceptions, redis_prefix, "_zone_ex_")
+
+        return True
+
+    def _push_dict_to_redis(self, push_dict, redis_prefix, name):
+        r = self._redis
+        for i in push_dict:
+            json_data = self._serialize_data(push_dict[i])
+            r.delete(redis_prefix + name + str(i))
+            r.set(redis_prefix + name + str(i), json_data)
+        return True
+
+    def _push_dict_index_to_redis(self, index_dict, redis_prefix, name):
+        r = self._redis
+        for i in index_dict:
+            r.delete(redis_prefix + name + str(i))
+            for el in index_dict[i]:
+                r.sadd(redis_prefix + name + str(i), el)
+        return True
+
+
 
     def lookup_entity(self, entity=None):
         """Returns lookup data of an ADIF Entity
@@ -124,29 +230,47 @@ class LookupLib(object):
             This method is available for the following lookup type
 
             - clublogxml
+            - redis
 
         """
-
-        try:
+        if self._lookuptype == "clublogxml":
             entity = int(entity)
             if entity in self._entities:
-                entity_data = copy.deepcopy(self._entities[entity])
-                if const.START in entity_data:
-                    del entity_data[const.START]
-                if const.END in entity_data:
-                    del entity_data[const.END]
-                if const.WHITELIST in entity_data:
-                    del entity_data[const.WHITELIST]
-                if const.WHITELIST_START in entity_data:
-                    del entity_data[const.WHITELIST_START]
-                if const.WHITELIST_END in entity_data:
-                    del entity_data[const.WHITELIST_END]
-
-                return entity_data
+                return self._strip_metadata(self._entities[entity])
             else:
                 raise KeyError
-        except:
-            raise KeyError
+
+        elif self._lookuptype == "redis":
+
+            if self._redis_prefix is None:
+                raise KeyError ("redis_prefix is missing")
+
+            #entity = str(entity)
+            json_data = self._redis.get(self._redis_prefix + "_entity_" + str(entity))
+            if json_data is not None:
+                my_dict = self._deserialize_data(json_data)
+                return self._strip_metadata(my_dict)
+
+        # no matching case
+        raise KeyError
+
+    def _strip_metadata(self, my_dict):
+        """
+        Create a copy of dict and remove not needed data
+        """
+        new_dict = copy.deepcopy(my_dict)
+        if const.START in new_dict:
+            del new_dict[const.START]
+        if const.END in new_dict:
+            del new_dict[const.END]
+        if const.WHITELIST in new_dict:
+            del new_dict[const.WHITELIST]
+        if const.WHITELIST_START in new_dict:
+            del new_dict[const.WHITELIST_START]
+        if const.WHITELIST_END in new_dict:
+            del new_dict[const.WHITELIST_END]
+        return new_dict
+
 
     def lookup_callsign(self, callsign=None, timestamp=timestamp_now):
         """
@@ -187,6 +311,7 @@ class LookupLib(object):
             - clublogxml
             - clublogapi
             - countryfile
+            - redis
 
         """
         callsign = callsign.strip().upper()
@@ -198,40 +323,112 @@ class LookupLib(object):
             else:
                 return callsign_data
 
-        if self._lookuptype == "clublogxml" or self._lookuptype == "countryfile":
+        elif self._lookuptype == "clublogxml" or self._lookuptype == "countryfile":
 
-            if callsign in self._callsign_exceptions_index:
-                for item in self._callsign_exceptions_index[callsign]:
+            return self._check_data_for_date(callsign, timestamp, self._callsign_exceptions, self._callsign_exceptions_index)
 
-                    # startdate < timestamp
-                    if const.START in self._callsign_exceptions[item] and not const.END in self._callsign_exceptions[item]:
-                        if self._callsign_exceptions[item][const.START] < timestamp:
-                            callsign_data = copy.deepcopy(self._callsign_exceptions[item])
-                            del callsign_data[const.START]
-                            return callsign_data
+        elif self._lookuptype == "redis":
 
-                    # enddate > timestamp
-                    elif not const.START in self._callsign_exceptions[item] and const.END in self._callsign_exceptions[item]:
-                        if self._callsign_exceptions[item][const.END] > timestamp:
-                            callsign_data = copy.deepcopy(self._callsign_exceptions[item])
-                            del callsign_data[const.END]
-                            return callsign_data
-
-                    # startdate > timestamp > enddate
-                    elif const.START in self._callsign_exceptions[item] and const.END in self._callsign_exceptions[item]:
-                        if self._callsign_exceptions[item][const.START] < timestamp \
-                                and self._callsign_exceptions[item][const.END] > timestamp:
-                            callsign_data = copy.deepcopy(self._callsign_exceptions[item])
-                            del callsign_data[const.START]
-                            del callsign_data[const.END]
-                            return callsign_data
-
-                    # no startdate or enddate available
-                    elif not const.START in self._callsign_exceptions[item] and not const.END in self._callsign_exceptions[item]:
-                        return self._callsign_exceptions[item]
+            data_dict, index = self._get_dicts_from_redis("_call_ex_", "_call_ex_index_", self._redis_prefix, callsign)
+            return self._check_data_for_date(callsign, timestamp, data_dict, index)
 
         # no matching case
         raise KeyError
+
+    def _get_dicts_from_redis(self, name, index_name, redis_prefix, item):
+        """
+        Retrieve the data of an item from redis and put it in an index and data dictionary to match the
+        common query interface.
+        """
+        r = self._redis
+        data_dict = {}
+        data_index_dict = {}
+
+        if redis_prefix is None:
+            raise KeyError ("redis_prefix is missing")
+
+        if r.scard(redis_prefix + index_name + str(item)) > 0:
+            data_index_dict[item] = r.smembers(redis_prefix + index_name + str(item))
+
+            for i in data_index_dict[item]:
+                json_data = r.get(redis_prefix + name + i)
+                data_dict[i] = self._deserialize_data(json_data)
+
+            return (data_dict, data_index_dict)
+
+        raise KeyError ("No Data found in Redis for "+ item)
+
+    def _check_data_for_date(self, item, timestamp, data_dict, data_index_dict):
+        """
+        Checks if the item is found in the index. An entry in the index points to the data
+        in the data_dict. This is mainly used retrieve callsigns and prefixes.
+        In case data is found for item, a dict containing the data is returned. Otherwise a KeyError is raised.
+        """
+
+        if item in data_index_dict:
+            for item in data_index_dict[item]:
+
+                # startdate < timestamp
+                if const.START in data_dict[item] and not const.END in data_dict[item]:
+                    if data_dict[item][const.START] < timestamp:
+                        item_data = copy.deepcopy(data_dict[item])
+                        del item_data[const.START]
+                        return item_data
+
+                # enddate > timestamp
+                elif not const.START in data_dict[item] and const.END in data_dict[item]:
+                    if data_dict[item][const.END] > timestamp:
+                        item_data = copy.deepcopy(data_dict[item])
+                        del item_data[const.END]
+                        return item_data
+
+                # startdate > timestamp > enddate
+                elif const.START in data_dict[item] and const.END in data_dict[item]:
+                    if data_dict[item][const.START] < timestamp \
+                            and data_dict[item][const.END] > timestamp:
+                        item_data = copy.deepcopy(data_dict[item])
+                        del item_data[const.START]
+                        del item_data[const.END]
+                        return item_data
+
+                # no startdate or enddate available
+                elif not const.START in data_dict[item] and not const.END in data_dict[item]:
+                    return data_dict[item]
+
+        raise KeyError
+
+
+    def _check_inv_operation_for_date(self, item, timestamp, data_dict, data_index_dict):
+        """
+        Checks if the callsign is marked as an invalid operation for a given timestamp.
+        In case the operation is invalid, True is returned. Otherwise a KeyError is raised.
+        """
+
+        if item in data_index_dict:
+            for item in data_index_dict[item]:
+
+                # startdate < timestamp
+                if const.START in data_dict[item] and not const.END in data_dict[item]:
+                    if data_dict[item][const.START] < timestamp:
+                        return True
+
+                # enddate > timestamp
+                elif not const.START in data_dict[item] and const.END in data_dict[item]:
+                    if data_dict[item][const.END] > timestamp:
+                        return True
+
+                # startdate > timestamp > enddate
+                elif const.START in data_dict[item] and const.END in data_dict[item]:
+                    if data_dict[item][const.START] < timestamp \
+                            and data_dict[item][const.END] > timestamp:
+                        return True
+
+                # no startdate or enddate available
+                elif not const.START in data_dict[item] and not const.END in data_dict[item]:
+                    return True
+
+        raise KeyError
+
 
     def lookup_prefix(self, prefix, timestamp=timestamp_now):
         """
@@ -270,6 +467,7 @@ class LookupLib(object):
 
             - clublogxml
             - countryfile
+            - redis
 
         """
 
@@ -277,39 +475,14 @@ class LookupLib(object):
 
         if self._lookuptype == "clublogxml" or self._lookuptype == "countryfile":
 
-            if prefix in self._prefixes_index:
-                for item in self._prefixes_index[prefix]:
+            return self._check_data_for_date(prefix, timestamp, self._prefixes, self._prefixes_index)
 
-                    # startdate < timestamp
-                    if const.START in self._prefixes[item] and not const.END in self._prefixes[item]:
-                        if self._prefixes[item][const.START] < timestamp:
-                            prefix_data = copy.deepcopy(self._prefixes[item])
-                            if const.START in prefix_data:
-                                del prefix_data[const.START]
-                            return prefix_data
+        elif self._lookuptype == "redis":
 
-                    # enddate > timestamp
-                    elif not const.START in self._prefixes[item] and const.END in self._prefixes[item]:
-                        if self._prefixes[item][const.END] > timestamp:
-                            prefix_data = copy.deepcopy(self._prefixes[item])
-                            if const.END in prefix_data:
-                                del prefix_data[const.END]
-                            return prefix_data
+            data_dict, index = self._get_dicts_from_redis("_prefix_", "_prefix_index_", self._redis_prefix, prefix)
+            return self._check_data_for_date(prefix, timestamp, data_dict, index)
 
-                    # startdate > timestamp > enddate
-                    elif const.START in self._prefixes[item] and const.END in self._prefixes[item]:
-                        if self._prefixes[item][const.START] < timestamp and self._prefixes[item][const.END] > timestamp:
-                            prefix_data = copy.deepcopy(self._prefixes[item])
-                            if const.START in prefix_data:
-                                del prefix_data[const.START]
-                            if const.END in prefix_data:
-                                del prefix_data[const.END]
-                            return prefix_data
-
-                    # no startdate or enddate available
-                    else:
-                        return self._prefixes[item]
-
+        # no matching case
         raise KeyError
 
     def is_invalid_operation(self, callsign, timestamp=datetime.utcnow().replace(tzinfo=UTC)):
@@ -347,6 +520,7 @@ class LookupLib(object):
             This method is available for
 
             - clublogxml
+            - redis
 
         """
 
@@ -354,32 +528,47 @@ class LookupLib(object):
 
         if self._lookuptype == "clublogxml":
 
-            if callsign in self._invalid_operations_index:
-                for item in self._invalid_operations_index[callsign]:
+            return self._check_inv_operation_for_date(callsign, timestamp, self._invalid_operations, self._invalid_operations_index)
 
-                    # startdate < timestamp
-                    if const.START in self._invalid_operations[item] \
-                            and not const.END in self._invalid_operations[item]:
-                        if self._invalid_operations[item][const.START] < timestamp:
-                           return True
+        elif self._lookuptype == "redis":
 
-                    # enddate > timestamp
-                    elif not const.START in self._invalid_operations[item] \
-                            and const.END in self._invalid_operations[item]:
-                        if self._invalid_operations[item][const.END] > timestamp:
-                           return True
-
-                    # startdate > timestamp > enddate
-                    elif const.START in self._invalid_operations[item] and const.END in self._invalid_operations[item]:
-                        if self._invalid_operations[item][const.START] < timestamp \
-                                and self._invalid_operations[item][const.END] > timestamp:
-                           return True
-
-                    # no startdate or enddate available
-                    else:
-                        return True
+            data_dict, index = self._get_dicts_from_redis("_inv_op_", "_inv_op_index_", self._redis_prefix, callsign)
+            return self._check_inv_operation_for_date(callsign, timestamp, data_dict, index)
 
         #no matching case
+        raise KeyError
+
+
+    def _check_zone_exception_for_date(self, item, timestamp, data_dict, data_index_dict):
+        """
+        Checks the index and data if a cq-zone exception exists for the callsign
+        When a zone exception is found, the zone is returned. If no exception is found
+        a KeyError is raised
+
+        """
+        if item in data_index_dict:
+            for item in data_index_dict[item]:
+
+                # startdate < timestamp
+                if const.START in data_dict[item] and not const.END in data_dict[item]:
+                    if data_dict[item][const.START] < timestamp:
+                        return data_dict[item][const.CQZ]
+
+                # enddate > timestamp
+                elif not const.START in data_dict[item] and const.END in data_dict[item]:
+                    if data_dict[item][const.END] > timestamp:
+                        return data_dict[item][const.CQZ]
+
+                # startdate > timestamp > enddate
+                elif const.START in data_dict[item] and const.END in data_dict[item]:
+                    if data_dict[item][const.START] < timestamp \
+                            and data_dict[item][const.END] > timestamp:
+                        return data_dict[item][const.CQZ]
+
+                # no startdate or enddate available
+                elif not const.START in data_dict[item] and not const.END in data_dict[item]:
+                        return data_dict[item][const.CQZ]
+
         raise KeyError
 
 
@@ -413,6 +602,7 @@ class LookupLib(object):
             This method is available for
 
             - clublogxml
+            - redis
 
         """
 
@@ -420,28 +610,12 @@ class LookupLib(object):
 
         if self._lookuptype == "clublogxml":
 
-            if callsign in self._zone_exceptions_index:
-                for item in self._zone_exceptions_index[callsign]:
+            return self._check_zone_exception_for_date(callsign, timestamp, self._zone_exceptions, self._zone_exceptions_index)
 
-                    # startdate < timestamp
-                    if const.START in self._zone_exceptions[item] and not const.END in self._zone_exceptions[item]:
-                        if self._zone_exceptions[item][const.START] < timestamp:
-                            return self._zone_exceptions[item][const.CQZ]
+        elif self._lookuptype == "redis":
 
-                    # enddate > timestamp
-                    elif not const.START in self._zone_exceptions[item] and const.END in self._zone_exceptions[item]:
-                        if self._zone_exceptions[item][const.END] > timestamp:
-                            return self._zone_exceptions[item][const.CQZ]
-
-                    # startdate > timestamp > enddate
-                    elif const.START in self._zone_exceptions[item] and const.END in self._zone_exceptions[item]:
-                        if self._zone_exceptions[item][const.START] < timestamp \
-                                and self._zone_exceptions[item][const.END] > timestamp:
-                            return self._zone_exceptions[item][const.CQZ]
-
-                    # no startdate or enddate available
-                    else:
-                        return self._zone_exceptions[item][const.CQZ]
+            data_dict, index = self._get_dicts_from_redis("_zone_ex_", "_zone_ex_index_", self._redis_prefix, callsign)
+            return self._check_zone_exception_for_date(callsign, timestamp, data_dict, index)
 
         #no matching case
         raise KeyError
@@ -973,3 +1147,61 @@ class LookupLib(object):
                 raise APIKeyMissingError
             else:
                 raise LookupError(err_str)
+
+
+    def _serialize_data(self, my_dict):
+        """
+        Serialize a Dictionary into JSON
+        """
+        new_dict = {}
+        for item in my_dict:
+            if isinstance(my_dict[item], datetime):
+                new_dict[item] = my_dict[item].strftime('%Y-%m-%d%H:%M:%S')
+            else:
+                new_dict[item] = str(my_dict[item])
+
+        return json.dumps(new_dict)
+
+    def _deserialize_data(self, json_data):
+        """
+        Deserialize a JSON into a dictionary
+        """
+
+        my_dict = json.loads(json_data)
+
+        for item in my_dict:
+            if item == const.ADIF:
+                my_dict[item] = int(my_dict[item])
+            elif item == const.DELETED:
+                my_dict[item] = self._str_to_bool(my_dict[item])
+            elif item == const.CQZ:
+                my_dict[item] = int(my_dict[item])
+            elif item == const.ITUZ:
+                my_dict[item] = int(my_dict[item])
+            elif item == const.LATITUDE:
+                my_dict[item] = float(my_dict[item])
+            elif item == const.LONGITUDE:
+                my_dict[item] = float(my_dict[item])
+            elif item == const.START:
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+            elif item == const.END:
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+            elif item == const.WHITELIST_START:
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+            elif item == const.WHITELIST_END:
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+            elif item == const.WHITELIST:
+                my_dict[item] = self._str_to_bool(my_dict[item])
+            else:
+                my_dict[item] = str(my_dict[item])
+
+        return my_dict
+
+    def _str_to_bool(self, input):
+        if input.lower() == "true":
+            return True
+        elif input.lower() == "false":
+            return False
+        else:
+            raise KeyError
+

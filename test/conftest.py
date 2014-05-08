@@ -73,3 +73,8 @@ def fix_callinfo(request, fixApiKey):
     lib = LookupLib(request.param, fixApiKey)
     callinfo = Callinfo(lib)
     return(callinfo)
+
+@pytest.fixture(scope="module")
+def fix_redis():
+    import redis
+    return LookupLib(lookuptype="redis", redis_instance=redis.Redis(), redis_prefix="clx")
