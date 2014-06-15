@@ -7,7 +7,6 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 import urllib
 import json
-import pickle
 import copy
 import sys
 
@@ -49,7 +48,7 @@ class LookupLib(object):
 
     The entire lookup data can also be copied into Redis, which an extremely fast in-memory Key/Value store.
     A LookupLib object can be instanciated to perform then all lookups in Redis, instead processing and loading
-    the data from Internet / File. This saves some time and allows several instances of :py:call:`LookupLib`
+    the data from Internet / File. This saves some time and allows several instances of :py:class:`LookupLib`
     to query the same data concurrently.
 
     Args:
@@ -107,7 +106,7 @@ class LookupLib(object):
 
     def copy_data_in_redis(self, redis_prefix, redis_instance):
         """
-        Copy the complete lookup data and indexes of the object into redis. Old data will be overwritten.
+        Copy the complete lookup data into redis. Old data will be overwritten.
 
         Args:
             redis_prefix (str): Prefix to distinguish the data in redis for the different looktypes
@@ -117,8 +116,8 @@ class LookupLib(object):
             bool: returns True when the data has been copied successfully into Redis
 
         Example:
-           Copy the entire lookup data from the Country-files.com PLIST File into Redis. A Redis Instance
-           needs to be installed, as well as copy of the python Redis connector (pip install redis-py)
+           Copy the entire lookup data from the Country-files.com PLIST File into Redis. This example requires a running
+           instance of Redis, as well the python Redis connector (pip install redis-py).
 
            >>> from pyhamtools import LookupLib
            >>> import redis

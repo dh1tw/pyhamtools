@@ -3,11 +3,8 @@ import logging
 from datetime import datetime
 import sys
 
-
 import pytz
 
-
-from pyhamtools import LookupLib
 from pyhamtools.consts import LookupConventions as const
 
 
@@ -18,6 +15,7 @@ if sys.version_info < (2, 7, ):
     class NullHandler(logging.Handler):
         def emit(self, record):
             pass
+
 
 class Callinfo(object):
     """
@@ -47,7 +45,8 @@ class Callinfo(object):
         self._lookuplib = lookuplib
         self._callsign_info = None
 
-    def get_homecall(self, callsign):
+    @staticmethod
+    def get_homecall(callsign):
         """Strips off country prefixes (**HC2/**DH1TW) and activity suffixes (DH1TW**/P**).
 
         Args:
@@ -60,13 +59,13 @@ class Callinfo(object):
             ValueError: No callsign found in string
 
         Example:
-           The following code retrieves the home call for "HC2/DH1TW/P"
+            The following code retrieves the home call for "HC2/DH1TW/P"
 
-           >>> from pyhamtools import LookupLib, Callinfo
-           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
-           >>> cic = Callinfo(my_lookuplib)
-           >>> cic.get_homecall("HC2/DH1TW/P")
-           DH1TW
+            >>> from pyhamtools import LookupLib, Callinfo
+            >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+            >>> cic = Callinfo(my_lookuplib)
+            >>> cic.get_homecall("HC2/DH1TW/P")
+            DH1TW
 
         """
 
@@ -78,12 +77,11 @@ class Callinfo(object):
         else:
             raise ValueError
 
-
     def _iterate_prefix(self, callsign, timestamp=timestamp_now):
         """truncate call until it corresponds to a Prefix in the database"""
         prefix = callsign
 
-        while(len(prefix) > 0):
+        while len(prefix) > 0:
             try:
                 return self._lookuplib.lookup_prefix(prefix, timestamp)
             except KeyError:
@@ -91,26 +89,28 @@ class Callinfo(object):
                 continue
         raise KeyError
 
-    def check_if_mm(self, callsign):
+    @staticmethod
+    def check_if_mm(callsign):
         if re.search("/MM$", callsign.upper()):
             return True
         else:
             return False
 
-    def check_if_am(self, callsign):
+    @staticmethod
+    def check_if_am(callsign):
         if re.search("/AM$", callsign.upper()):
             return True
         else:
             return False
 
-    def check_if_beacon(self, callsign):
+    @staticmethod
+    def check_if_beacon(callsign):
         if re.search("/B$", callsign.upper()):
             return True
         elif re.search("/BCN$", callsign.upper()):
             return True
         else:
             return False
-
 
     def _dismantle_callsign(self, callsign, timestamp=timestamp_now):
         """ try to identify the callsign's identity by analyzing it in the following order:
@@ -142,7 +142,7 @@ class Callinfo(object):
 
                 if appendix == 'MM':  # special case Martime Mobile
                     #self._mm = True
-                    return  {
+                    return {
                         'adif': 999,
                         'continent': '',
                         'country': 'MARITIME MOBILE',
@@ -151,7 +151,7 @@ class Callinfo(object):
                         'longitude': 0.0
                     }
                 elif appendix == 'AM':  # special case Aeronautic Mobile
-                    return  {
+                    return {
                         'adif': 998,
                         'continent': '',
                         'country': 'AIRCAFT MOBILE',
@@ -165,16 +165,16 @@ class Callinfo(object):
                 elif appendix == 'QRPP':  # special case QRPP
                     callsign = re.sub('/QRPP', '', callsign)
                     return self._iterate_prefix(callsign, timestamp)
-                elif appendix == 'BCN':  #filter all beacons
+                elif appendix == 'BCN':  # filter all beacons
                     callsign = re.sub('/BCN', '', callsign)
                     data = self._iterate_prefix(callsign, timestamp).copy()
                     data[const.BEACON] = True
                     return data
-                elif appendix == "LH":  #Filter all Lighthouses
+                elif appendix == "LH":  # Filter all Lighthouses
                     callsign = re.sub('/LH', '', callsign)
                     return self._iterate_prefix(callsign, timestamp)
                 else:
-                    #check if the appendix is a valid country prefix
+                    # check if the appendix is a valid country prefix
                     return self._iterate_prefix(re.sub('/', '', appendix), timestamp)
 
             # Single character appendix (callsign/x)
@@ -182,9 +182,9 @@ class Callinfo(object):
                 appendix = re.search('/[A-Z0-9]$', callsign)
                 appendix = re.sub('/', '', appendix.group(0))
 
-                if appendix == 'B':  #special case Beacon
+                if appendix == 'B':  # special case Beacon
                     callsign = re.sub('/B', '', callsign)
-                    data =  self._iterate_prefix(callsign, timestamp).copy()
+                    data = self._iterate_prefix(callsign, timestamp).copy()
                     data[const.BEACON] = True
                     return data
 
@@ -223,7 +223,7 @@ class Callinfo(object):
                 raise
 
         if self.check_if_mm(callsign):
-            return  {
+            return {
                 'adif': 999,
                 'continent': '',
                 'country': 'MARITIME MOBILE',
@@ -232,7 +232,7 @@ class Callinfo(object):
                 'longitude': 0.0
             }
         elif self.check_if_am(callsign):
-            return  {
+            return {
                 'adif': 998,
                 'continent': '',
                 'country': 'AIRCAFT MOBILE',
@@ -253,7 +253,6 @@ class Callinfo(object):
         # Dismantel the callsign and check if the prefix is known
         return self._dismantle_callsign(callsign, timestamp)
 
-
     def get_all(self, callsign, timestamp=timestamp_now):
         """ Lookup a callsign and return all data available from the underlying database
 
@@ -268,14 +267,14 @@ class Callinfo(object):
             KeyError: Callsign could not be identified
 
         Example:
-           The following code returns all available information from the country-files.com database for the
-           callsign "DH1TW"
+            The following code returns all available information from the country-files.com database for the
+            callsign "DH1TW"
 
-           >>> from pyhamtools import LookupLib, Callinfo
-           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
-           >>> cic = Callinfo(my_lookuplib)
-           >>> cic.get_all("DH1TW")
-           {
+            >>> from pyhamtools import LookupLib, Callinfo
+            >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+            >>> cic = Callinfo(my_lookuplib)
+            >>> cic.get_all("DH1TW")
+            {
                 'country': 'Fed. Rep. of Germany',
                 'adif': 230,
                 'continent': 'EU',
@@ -283,7 +282,7 @@ class Callinfo(object):
                 'longitude': -10.0,
                 'cqz': 14,
                 'ituz': 28
-           }
+            }
 
         Note:
             The content of the returned data depends entirely on the injected
@@ -313,13 +312,13 @@ class Callinfo(object):
             bool: True / False
 
         Example:
-           The following checks if "DH1TW" is a valid callsign
+            The following checks if "DH1TW" is a valid callsign
 
-           >>> from pyhamtools import LookupLib, Callinfo
-           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
-           >>> cic = Callinfo(my_lookuplib)
-           >>> cic.is_valid_callsign("DH1TW")
-           True
+            >>> from pyhamtools import LookupLib, Callinfo
+            >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+            >>> cic = Callinfo(my_lookuplib)
+            >>> cic.is_valid_callsign("DH1TW")
+            True
 
         """
         try:
@@ -342,16 +341,16 @@ class Callinfo(object):
             KeyError: No data found for callsign
 
         Example:
-           The following code returns Latitude & Longitude for "DH1TW"
+            The following code returns Latitude & Longitude for "DH1TW"
 
-           >>> from pyhamtools import LookupLib, Callinfo
-           >>> my_lookuplib = LookupLib(lookuptype="countryfile")
-           >>> cic = Callinfo(my_lookuplib)
-           >>> cic.get_lat_long("DH1TW")
-           {
-              'latitude': 51.0,
-              'longitude': -10.0
-           }
+            >>> from pyhamtools import LookupLib, Callinfo
+            >>> my_lookuplib = LookupLib(lookuptype="countryfile")
+            >>> cic = Callinfo(my_lookuplib)
+            >>> cic.get_lat_long("DH1TW")
+            {
+                'latitude': 51.0,
+                'longitude': -10.0
+            }
 
         Note:
             Unfortunately, in most cases the returned Latitude and Longitude are not very precise.
@@ -361,8 +360,8 @@ class Callinfo(object):
         """
         callsign_data = self.get_all(callsign, timestamp=timestamp)
         return {
-            const.LATITUDE : callsign_data[const.LATITUDE],
-            const.LONGITUDE : callsign_data[const.LONGITUDE]
+            const.LATITUDE: callsign_data[const.LATITUDE],
+            const.LONGITUDE: callsign_data[const.LONGITUDE]
         }
 
     def get_cqz(self, callsign, timestamp=timestamp_now):
@@ -416,7 +415,7 @@ class Callinfo(object):
         Note:
             Don't rely on the country name when working with several instances of
             py:class:`Callinfo`. Clublog and Country-files.org use slightly different names
-            for countrys. Example:
+            for countries. Example:
 
             - Country-files.com: "Fed. Rep. of Germany"
             - Clublog: "FEDERAL REPUBLIC OF GERMANY"
