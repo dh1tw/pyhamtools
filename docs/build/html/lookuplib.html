@@ -123,22 +123,23 @@ instance of Redis, as well the python Redis connector (pip install redis-py).</p
 <span class="go">True</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s create an instance of LookupLib, using Redis to query the data
-&gt;&gt;&gt; from pyhamtools import LookupLib
-&gt;&gt;&gt; import redis
-&gt;&gt;&gt; r = redis.Redis()
-&gt;&gt;&gt; my_lookuplib = LookupLib(lookuptype=&#8221;countryfile&#8221;, redis_instance=r, redis_prefix=&#8221;CF&#8221;)
-&gt;&gt;&gt; my_lookuplib.lookup_callsign(&#8220;3D2RI&#8221;)
-{</p>
-<blockquote>
-<div>u&#8217;adif&#8217;: 460,
-u&#8217;continent&#8217;: &#8216;OC&#8217;,
-u&#8217;country&#8217;: &#8216;Rotuma Island&#8217;,
-u&#8217;cqz&#8217;: 32,
-u&#8217;ituz&#8217;: 56,
-u&#8217;latitude&#8217;: -12.48,
-u&#8217;longitude&#8217;: -177.08</div></blockquote>
-<p>}</p>
+<p>Now let&#8217;s create an instance of LookupLib, using Redis to query the data</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyhamtools</span> <span class="kn">import</span> <span class="n">LookupLib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">redis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span> <span class="o">=</span> <span class="n">LookupLib</span><span class="p">(</span><span class="n">lookuptype</span><span class="o">=</span><span class="s">&quot;countryfile&quot;</span><span class="p">,</span> <span class="n">redis_instance</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">redis_prefix</span><span class="o">=</span><span class="s">&quot;CF&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_lookuplib</span><span class="o">.</span><span class="n">lookup_callsign</span><span class="p">(</span><span class="s">&quot;3D2RI&quot;</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">  u&#39;adif&#39;: 460,</span>
+<span class="go">  u&#39;continent&#39;: &#39;OC&#39;,</span>
+<span class="go">  u&#39;country&#39;: &#39;Rotuma Island&#39;,</span>
+<span class="go">  u&#39;cqz&#39;: 32,</span>
+<span class="go">  u&#39;ituz&#39;: 56,</span>
+<span class="go">  u&#39;latitude&#39;: -12.48,</span>
+<span class="go">  u&#39;longitude&#39;: -177.08</span>
+<span class="go">}</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>This method is available for the following lookup type</p>
@@ -151,7 +152,7 @@ u&#8217;longitude&#8217;: -177.08</div></blockquote>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.is_invalid_operation">
-<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>12</em>, <em>7</em>, <em>26185</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>30</em>, <em>46</em>, <em>719586</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if an operations is known as invalid</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -207,7 +208,7 @@ API Key for Clublog missing or incorrect</li>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_callsign">
-<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>12</em>, <em>7</em>, <em>26163</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>30</em>, <em>46</em>, <em>719553</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data if an exception exists for a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -313,7 +314,7 @@ the id 273.</p>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_prefix">
-<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>12</em>, <em>7</em>, <em>26163</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>30</em>, <em>46</em>, <em>719553</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data of a Prefix</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -371,7 +372,7 @@ database (default database).</p>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_zone_exception">
-<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>12</em>, <em>7</em>, <em>26192</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>6</em>, <em>15</em>, <em>8</em>, <em>30</em>, <em>46</em>, <em>719594</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a CQ Zone if an exception exists for the given callsign</p>
 <p>Args:
 callsign (string): Amateur radio callsign

@@ -127,6 +127,7 @@ class LookupLib(object):
            True
 
            Now let's create an instance of LookupLib, using Redis to query the data
+           
            >>> from pyhamtools import LookupLib
            >>> import redis
            >>> r = redis.Redis()
