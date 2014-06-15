@@ -11,7 +11,7 @@ Currently,
 * [Redis.io](http://redis.io)
 
 are supported sources.
-All services can be accessed through a unified interface.
+All these lookup services can be accessed through a unified interface.
 
 ## References
 This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat.com), performing several thousand
@@ -24,6 +24,7 @@ Check out the full documentation at:
 ## Installation
 
 Easiest way to install pyhamtools is through the packet manager PIP:
+
 `pip install pyhamtools`
 
 ## Example: How to use pyhamtools
