@@ -248,7 +248,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'pyhamtools', u'pyhamtools Documentation',
-   u'Tobias Wellnitz, DH1TW', 'pyhamtools', 'One line description of project.',
+   u'Tobias Wellnitz, DH1TW', 'pyhamtools', 'Toolkit for ham radio software developers',
    'Miscellaneous'),
 ]
 
