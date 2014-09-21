@@ -13,9 +13,12 @@ Currently,
 are supported sources.
 All these lookup services can be accessed through a unified interface.
 
+Other modules include location based calculations (e.g. distance, heading between Maidenhead locators) or 
+frequency based calculations (e.g. frequency to band).
+
 ## References
 This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat.com), performing several thousand
-lookups per day.
+lookups and calculations per day.
 
 ## Documentation
 Check out the full documentation at:
@@ -30,6 +33,12 @@ Easiest way to install pyhamtools is through the packet manager PIP:
 ## Example: How to use pyhamtools
 
 ```
+
+>>> from pyhamtools.locator import calculate_heading
+>>> calculate_heading("JN48QM", "QF67bf")
+74.3136
+
+
 >>> from pyhamtools import LookupLib, Callinfo
 >>> my_lookuplib = LookupLib(lookuptype="countryfile")
 >>> cic = Callinfo(my_lookuplib)
