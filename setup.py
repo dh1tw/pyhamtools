@@ -8,7 +8,7 @@ if sys.version_info >= (3,):
     kw['use_2to3'] = True
 
 setup(name='pyhamtools',
-      version='0.3.1',
+      version='0.4.0',
       description='Collection of Tools for Amateur Radio developers',
       author='Tobias Wellnitz, DH1TW',
       author_email='Tobias@dh1tw.de',
@@ -18,6 +18,7 @@ setup(name='pyhamtools',
       install_requires=[
           "pytz", 
           "requests",
+          "pyephem",
       ],
       **kw
      )
