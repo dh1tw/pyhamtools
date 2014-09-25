@@ -47,7 +47,7 @@ class Callinfo(object):
 
     @staticmethod
     def get_homecall(callsign):
-        """Strips off country prefixes (**HC2/**DH1TW) and activity suffixes (DH1TW**/P**).
+        """Strips off country prefixes (HC2/DH1TW) and activity suffixes (DH1TW/P).
 
         Args:
             callsign (str): Amateur Radio callsign

@@ -13,9 +13,9 @@
 
 PyHamTools is a Python library which helps you creating Amateur Radio applications faster. It comes
 with some modules and classes which are frequently needed, like locator based calculations (distance,
-heading, etc) or parsing of an Amateur Radio callsign.
+heading, etc) or parsing of Amateur Radio callsigns. 
 
-Currently, PyHamtools contain the following modules and classes:
+Currently, PyHamtools contains the following modules and classes:
 
 Modules
 ^^^^^^^
