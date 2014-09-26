@@ -4,10 +4,33 @@ from pyhamtools.consts import LookupConventions as const
 def freq_to_band(freq):
     """converts a Frequency [kHz] into the band and mode according to the IARU bandplan
 
+        Args:
+            frequency (float): Frequency in kHz
+
+        Returns:
+            dict: Dictionary containing the band (int) and mode (str)
+
+        Raises:
+            KeyError: Wrong frequency or out of band
+
+        Example:
+           The following example converts the frequency *14005.3 kHz* into band and mode.
+
+           >>> from pyhamtools.utils import freq_to_band
+           >>> print freq_to_band(14005.3)
+           {
+                'band': 20,
+                'mode': CW
+           }
+
         Note:
-            **DEPRECATION NOTICE**
-            This function has been moved to pyhamtools.frequency with PyHamTools 0.4.1
-            Please don't use this module/function anymore. It will be removed soon.
+
+            Modes are:
+
+                - CW
+                - USB
+                - LSB
+                - DIGITAL
 
     """
 

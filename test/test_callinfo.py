@@ -138,7 +138,7 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_clublog
-        #    assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_Prefix_C6A
+            assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_prefix_C6A_clublog
 
         if fix_callinfo._lookuplib._lookuptype == "countryfile":
             assert fix_callinfo._dismantle_callsign("DH1TW/QRP") == response_prefix_DH_countryfile
@@ -153,8 +153,7 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_countryfile
-        #    assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_Prefix_C6A
-
+            assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_prefix_C6A_countryfile
 
     def test_lookup_callsign(selfself, fix_callinfo):
 

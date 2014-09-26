@@ -1,5 +1,5 @@
 import pytest
-from pyhamtools.utils import freq_to_band
+from pyhamtools.frequency import freq_to_band
 from pyhamtools.consts import LookupConventions as const
 
 class Test_utils_freq_to_band():

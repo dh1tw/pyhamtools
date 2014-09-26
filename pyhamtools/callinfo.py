@@ -135,7 +135,7 @@ class Callinfo(object):
                 callsign = re.sub('/[A-Z0-9]{1,4}$', '', callsign)  # cut off 2. appendix DH1TW/HC2/P -> DH1TW/HC2
 
             # multiple character appendix (callsign/xxx)
-            if re.search('/[A-Z0-9]{2,4}$', callsign):  # case call/xxx, but ignoring /p and /m or /5
+            if re.search('[A-Z0-9]{4,10}/[A-Z0-9]{2,4}$', callsign):  # case call/xxx, but ignoring /p and /m or /5
                 appendix = re.search('/[A-Z0-9]{2,4}$', callsign)
                 appendix = re.sub('/', '', appendix.group(0))
                 self._logger.debug("appendix: " + appendix)

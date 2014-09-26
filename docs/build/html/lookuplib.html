@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>LookupLib &mdash; pyhamtools 0.4.0 documentation</title>
+    <title>LookupLib &mdash; pyhamtools 0.4.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.4.0',
+        VERSION:     '0.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,8 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pyhamtools 0.4.0 documentation" href="index.html" />
-    <link rel="prev" title="Callinfo" href="Callinfo.html" /> 
+    <link rel="top" title="pyhamtools 0.4.1 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="Callinfo.html" title="Callinfo"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pyhamtools 0.4.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pyhamtools 0.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -72,7 +68,7 @@ The documentation of the various methods provide more detail.</p>
 lookup against the Clublog API.</p>
 <p>The entire lookup data can also be copied into Redis, which an extremely fast in-memory Key/Value store.
 A LookupLib object can be instanciated to perform then all lookups in Redis, instead processing and loading
-the data from Internet / File. This saves some time and allows several instances of <a class="reference internal" href="#pyhamtools.lookuplib.LookupLib" title="pyhamtools.lookuplib.LookupLib"><tt class="xref py py-class docutils literal"><span class="pre">LookupLib</span></tt></a>
+the data from Internet / File. This saves some time and allows several instances of <a class="reference internal" href="reference.html#pyhamtools.lookuplib.LookupLib" title="pyhamtools.lookuplib.LookupLib"><tt class="xref py py-class docutils literal"><span class="pre">LookupLib</span></tt></a>
 to query the same data concurrently.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -152,7 +148,7 @@ instance of Redis, as well the python Redis connector (pip install redis-py).</p
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.is_invalid_operation">
-<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>21</em>, <em>18</em>, <em>15</em>, <em>2</em>, <em>393560</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">is_invalid_operation</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>26</em>, <em>23</em>, <em>10</em>, <em>28</em>, <em>994044</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.is_invalid_operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if an operations is known as invalid</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -208,7 +204,7 @@ API Key for Clublog missing or incorrect</li>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_callsign">
-<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>21</em>, <em>18</em>, <em>15</em>, <em>2</em>, <em>393534</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_callsign</tt><big>(</big><em>callsign=None</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>26</em>, <em>23</em>, <em>10</em>, <em>28</em>, <em>994018</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_callsign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data if an exception exists for a callsign</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -314,7 +310,7 @@ the id 273.</p>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_prefix">
-<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>21</em>, <em>18</em>, <em>15</em>, <em>2</em>, <em>393534</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_prefix</tt><big>(</big><em>prefix</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>26</em>, <em>23</em>, <em>10</em>, <em>28</em>, <em>994018</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_prefix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns lookup data of a Prefix</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -372,7 +368,7 @@ database (default database).</p>
 
 <dl class="method">
 <dt id="pyhamtools.lookuplib.LookupLib.lookup_zone_exception">
-<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>21</em>, <em>18</em>, <em>15</em>, <em>2</em>, <em>393566</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lookup_zone_exception</tt><big>(</big><em>callsign</em>, <em>timestamp=datetime.datetime(2014</em>, <em>9</em>, <em>26</em>, <em>23</em>, <em>10</em>, <em>28</em>, <em>994050</em>, <em>tzinfo=&lt;UTC&gt;)</em><big>)</big><a class="headerlink" href="#pyhamtools.lookuplib.LookupLib.lookup_zone_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a CQ Zone if an exception exists for the given callsign</p>
 <p>Args:
 callsign (string): Amateur radio callsign
@@ -427,12 +423,9 @@ in CQ Zone 38</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="Callinfo.html"
-                        title="previous chapter">Callinfo</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/LookupLib.txt"
+    <li><a href="_sources/lookupLib.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -461,10 +454,7 @@ in CQ Zone 38</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="Callinfo.html" title="Callinfo"
-             >previous</a> |</li>
-        <li><a href="index.html">pyhamtools 0.4.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pyhamtools 0.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
