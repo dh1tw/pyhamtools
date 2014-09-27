@@ -287,7 +287,12 @@ def calculate_sunrise_sunset(locator, calc_date=datetime.utcnow()):
            >>> UTC = pytz.UTC
            >>> myDate = datetime(year=2014, month=1, day=1, tzinfo=UTC)
            >>> calculate_sunrise_sunset("JN48QM", myDate)
-           74.3136
+           {
+               'morning_dawn': datetime.datetime(2014, 1, 1, 6, 36, 51, 710524, tzinfo=<UTC>), 
+               'sunset': datetime.datetime(2014, 1, 1, 16, 15, 23, 31016, tzinfo=<UTC>), 
+               'evening_dawn': datetime.datetime(2014, 1, 1, 15, 38, 8, 355315, tzinfo=<UTC>), 
+               'sunrise': datetime.datetime(2014, 1, 1, 7, 14, 6, 162063, tzinfo=<UTC>)
+           }
                       
     """
     morning_dawn = None
@@ -349,6 +354,5 @@ def calculate_sunrise_sunset(locator, calc_date=datetime.utcnow()):
         result['evening_dawn'] = evening_dawn.replace(tzinfo=UTC)
     if sunset:
         result['sunset'] = sunset.replace(tzinfo=UTC)
-    print result
     return result
     

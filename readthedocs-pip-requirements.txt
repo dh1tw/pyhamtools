@@ -2,5 +2,6 @@ sphinxcontrib-napoleon>=0.2.7
 requests>=2.2.1
 pytz>=2014.2
 pyephem>=3.7.5.3
+redis>=2.10.2
 
 

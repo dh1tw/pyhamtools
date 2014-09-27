@@ -57,7 +57,7 @@ First we need to instanciate a LookupLib object for Country-files.com database. 
    >>> my_lookuplib = LookupLib(lookuptype="countryfile")
    
    
-Next, a Callinfo class needs to be instanciated. The lookuplib object will be injected on construction.
+Next, a Callinfo object needs to be instanciated. The lookuplib object will be injected on construction.
 
 .. code-block:: none
 
