@@ -6,7 +6,7 @@
 
 :Version:       |release|
 :Code:          https://github.com/dh1tw/pyhamtools
-:License:       MIT; see LICENSE file
+:License:       MIT; see :doc:`license` file
 :Issues:        https://github.com/dh1tw/pyhamtools/issues
 :Documentation: http://pyhamtools.readthedocs.org/
 :IRC:           #hamtests on webirc.deltaxray.org

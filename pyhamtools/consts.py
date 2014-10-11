@@ -21,9 +21,18 @@ class LookupConventions:
     DELETED = "deleted"
     MARITIME_MOBILE = "mm"
     AIRCRAFT_MOBILE = "am"
+    LOCATOR = "locator"
     BEACON = "beacon"
-    SKIMMER = "skimmer"
+    
+    #CQ / DIGITAL Skimmer specific
 
+    SKIMMER = "skimmer"
+    FS = "fs" #fieldstrength
+    WPM = "wpm" #words / bytes per second
+    CQ = "cq"
+    NCDXF = "ncdxf"
+    
+    
     # Modes
     CW = "CW"
     USB = "USB"

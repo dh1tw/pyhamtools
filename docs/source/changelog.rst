@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+PyHamTools 0.4.2
+================
+
+11. October 2014
+
+ * added pyhamtools.qsl (get EQSL.cc and LOTW user lists)
+ 
 PyHamTools 0.4.1
 ================
 

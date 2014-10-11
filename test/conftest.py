@@ -3,9 +3,10 @@ import tempfile
 import os
 
 
-from apikey import APIKEY
+from apikey import APIKEY, QRZ_USERNAME, QRZ_PWD
 from pyhamtools import LookupLib
 from pyhamtools import Callinfo
+
 
 @pytest.fixture(scope="session", params=["a", "", 12.5, -5, {"foo" : "bar"}, [5, "foo"]])
 def fixNonUnsignedInteger(request):
@@ -38,9 +39,6 @@ def fixLists(request):
 @pytest.fixture(scope="session", params=[None])
 def fixNone(request):
     return request.param
-
-
-
 
 @pytest.fixture(scope="session")
 def fixApiKey(request):
@@ -78,3 +76,7 @@ def fix_callinfo(request, fixApiKey):
 def fix_redis():
     import redis
     return LookupLib(lookuptype="redis", redis_instance=redis.Redis(), redis_prefix="clx")
+    
+@pytest.fixture(scope="module")
+def fix_qrz():
+    return LookupLib(lookuptype="qrz", username=QRZ_USERNAME, pwd=QRZ_PWD)
