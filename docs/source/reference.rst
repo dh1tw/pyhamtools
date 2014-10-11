@@ -9,6 +9,15 @@ pyhamtools.locator
 
 .. automodule:: pyhamtools.locator
     :members:
+    
+pyhamtools.qsl
+------------------
+
+.. module:: pyhamtools.qsl
+
+.. automodule:: pyhamtools.qsl
+    :members:
+    
 
 pyhamtools.frequency
 --------------------
