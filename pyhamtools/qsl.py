@@ -7,9 +7,7 @@ from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 
 def get_lotw_users(**kwargs):
-    """download the latest list of ARRL Logbook of the World (LOTW) inofficial user list
-       which is provided on a weekly basis by `HB9BZA`_. Dates of last activity on LOTW
-       is added by `WD5EAE`_.  
+    """Download the latest inoffical list of `ARRL Logbook of the World (LOTW)`__ users which is provided on a weekly basis by HB9BZA_. Dates of the users last upload is added by WD5EAE_.  
 
         Args:
             url (str, optional): Download URL
@@ -28,9 +26,10 @@ def get_lotw_users(**kwargs):
            >>> mydict['DH1TW']
            datetime.datetime(2014, 9, 7, 0, 0)
                 
-    .. HB9BZA: http://www.hb9bza.net/lotw-users-list
-    .. WD5EAE: http://www.wd5eae.org/HB9BZA_LoTWUsersList.html
-
+    .. _ARRL: http://www.arrl.org/logbook-of-the-world
+    .. _HB9BZA: http://www.hb9bza.net/lotw-users-list
+    .. _WD5EAE: http://www.wd5eae.org/HB9BZA_LoTWUsersList.html
+    __ ARRL_ 
     """    
     url = ""
     
@@ -58,7 +57,7 @@ def get_lotw_users(**kwargs):
     return lotw
 
 def get_eqsl_users(**kwargs):
-    """download the latest official list of EQSL.cc users. The list of users can be found `here`_.
+    """Download the latest official list of EQSL.cc users. The list of users can be found here_.
 
         Args:
             url (str, optional): Download URL
@@ -80,8 +79,7 @@ def get_eqsl_users(**kwargs):
            >>>    print e
            'DH1TW' is not in list
                 
-    .. here: http://www.eqsl.cc/QSLCard/DownloadedFiles/AGMemberlist.txt
-    .. WD5EAE: http://www.wd5eae.org/HB9BZA_LoTWUsersList.html
+    .. _here: http://www.eqsl.cc/QSLCard/DownloadedFiles/AGMemberlist.txt
 
     """    
     
