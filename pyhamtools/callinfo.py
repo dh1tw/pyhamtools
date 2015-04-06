@@ -371,7 +371,7 @@ class Callinfo(object):
         Note:
             Unfortunately, in most cases the returned Latitude and Longitude are not very precise.
             Clublog and Country-files.com use the country's capital coordinates in most cases, if no
-            dedicated entry in the database exists.
+            dedicated entry in the database exists. Best results will be retrieved with QRZ.com Lookup.
 
         """
         callsign_data = self.get_all(callsign, timestamp=timestamp)

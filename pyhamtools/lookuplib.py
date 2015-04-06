@@ -36,6 +36,7 @@ class LookupLib(object):
     1. Clublog.org (daily updated XML File)
     2. Clublog.org (HTTPS lookup)
     3. Country-files.com (infrequently updated PLIST File)
+    4. QRZ.com (HTTP / XML Lookup)
 
     It's aim is to provide a homogeneous interface to different databases.
 
@@ -46,15 +47,15 @@ class LookupLib(object):
     The documentation of the various methods provide more detail.
 
     By default, LookupLib requires an Internet connection to download the libraries or perform the
-    lookup against the Clublog API.
+    lookup against the Clublog API or QRZ.com.
 
-    The entire lookup data can also be copied into Redis, which an extremely fast in-memory Key/Value store.
-    A LookupLib object can be instanciated to perform then all lookups in Redis, instead processing and loading
-    the data from Internet / File. This saves some time and allows several instances of :py:class:`LookupLib`
-    to query the same data concurrently.
+    The entire lookup data (where database files are downloaded) can also be copied into Redis, which an extremely 
+    fast in-memory Key/Value store. A LookupLib object can be instanciated to perform then all lookups in Redis, 
+    instead processing and loading the data from Internet / File. This saves some time and allows several instances 
+    of :py:class:`LookupLib` to query the same data concurrently.
 
     Args:
-        lookuptype (str) : "clublogxml" or "clublogapi" or "countryfile" or "redis"
+        lookuptype (str) : "clublogxml" or "clublogapi" or "countryfile" or "redis" or "qrz"
         apikey (str): Clublog API Key
         username (str): QRZ.com username
         pwd (str): QRZ.com password
@@ -267,6 +268,7 @@ class LookupLib(object):
 
             - clublogxml
             - redis
+            - qrz.com
 
         """
         if self._lookuptype == "clublogxml":

@@ -15,11 +15,11 @@ PyHamTools 0.5.0
  * improved callsign decoding alogrithm [CallInfo]
  
  * added special case to decode location of VK9 callsigns [CallInfo]
+
+ * added handling of special callsigns which can't be decoded properly inside a separate callsign exception file (e.g. 7QAA) [CallInfo]
  
  * added ValueError when LOTW data from file contains too many errors [qsl]
  
- * added handling of special callsigns which can't be decoded properly inside a separate 
- callsign exception file (e.g. 7QAA)
 
 PyHamTools 0.4.2
 ================

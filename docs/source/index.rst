@@ -16,14 +16,20 @@ with some modules and classes which are frequently needed:
 
  - Locator based calculations (distance, heading, sunrise/sunset, Locator to Lat/Long conversion)
 
- - Checking frequencies against the IARU bandplan or 
+ - Checking frequencies against the IARU bandplan
 
- - Parsing Amateur Radio callsigns using Clublog.org_'s or AD1C's Country-Files.com_ database
+ - Parsing Amateur Radio callsigns using Clublog.org_'s, AD1C's Country-Files.com_ or QRZ.com_ database
+ 
+ - Download list of current eQSL_ or LOTW_ users
 
-PyHamTools is used in production at the DXHeat.com DXCluster_, performing several thousand lookups and calculations per day.
+PyHamTools is used in production at the DXHeat.com DXCluster_, performing several thousand lookups and 
+calculations per day.
 
 .. _Clublog.org: https://secure.clublog.org/
 .. _Country-Files.com: http://www.country-files.com/
+.. _QRZ.com: http://qrz.com
+.. _eQSL: http://eqsl.cc
+.. _LOTW: http://www.arrl.org/logbook-of-the-world
 
 .. _DXCluster: https://dxheat.com
 
