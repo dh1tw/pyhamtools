@@ -8,6 +8,7 @@ Currently,
 * [Country-Files.org](http://country-files.org)
 * [Clublog Prefixes & Exceptions XML File](https://clublog.freshdesk.com/support/articles/54902-downloading-the-prefixes-and-exceptions-as)
 * [Clublog DXCC Query API](http://clublog.freshdesk.com/support/articles/54904-how-to-query-club-log-for-dxcc)
+* [QRZ.com XML API](http://www.qrz.com/XML/current_spec.html)
 * [Redis.io](http://redis.io)
 
 are supported sources.
