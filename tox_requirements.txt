@@ -1,0 +1,5 @@
+pyephem (3.7.5.3)
+Pygments (1.6)
+pytz (2014.2)
+redis (2.10.3)
+requests (2.2.1)

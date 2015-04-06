@@ -7,7 +7,6 @@ from pyhamtools.qsl import get_eqsl_users
 
 class Test_eqsl_methods:
 
-
     def test_check_content_with_mocked_http_server(self, httpserver):
         httpserver.serve_content(open('./fixtures/eqsl_data.html').read(), headers={'content-type': 'text/plain; charset=ISO-8859-1'})
 

@@ -9,12 +9,14 @@ import urllib
 import json
 import copy
 import sys
+import unicodedata
 
 import requests
 from requests.exceptions import ConnectionError, HTTPError, Timeout
+from bs4 import BeautifulSoup
 import pytz
 
-
+import version
 from consts import LookupConventions as const
 from exceptions import APIKeyMissingError
 
@@ -54,6 +56,9 @@ class LookupLib(object):
     Args:
         lookuptype (str) : "clublogxml" or "clublogapi" or "countryfile" or "redis"
         apikey (str): Clublog API Key
+        username (str): QRZ.com username
+        pwd (str): QRZ.com password
+        apiv (str, optional): QRZ.com API Version 
         filename (str, optional): Filename for Clublog XML or Country-files.com cty.plist file. When a local file is
         used, no Internet connection not API Key is necessary.
         logger (logging.getLogger(__name__), optional): Python logger
@@ -62,7 +67,7 @@ class LookupLib(object):
 
 
     """
-    def __init__(self, lookuptype = "countryfile", apikey=None, filename=None, logger=None, redis_instance=None, redis_prefix=None):
+    def __init__(self, lookuptype = "countryfile", apikey=None, apiv="1.3.3", filename=None, logger=None, username=None, pwd=None, redis_instance=None, redis_prefix=None):
 
         self._logger = None
         if logger:
@@ -75,10 +80,13 @@ class LookupLib(object):
                 self._logger.addHandler(logging.NullHandler())
 
         self._apikey = apikey
+        self._apiv = apiv
         self._download = True
         self._lib_filename = filename
         self._redis = redis_instance
         self._redis_prefix = redis_prefix
+        self._username = username
+        self._pwd = pwd
 
         if self._lib_filename:
             self._download = False
@@ -101,8 +109,36 @@ class LookupLib(object):
             pass
         elif self._lookuptype == "redis":
             import redis
+        elif self._lookuptype == "qrz":
+            self._apikey = self._get_qrz_session_key(self._username, self._pwd)
         else:
             raise AttributeError("Lookup type missing")
+            
+    def _get_qrz_session_key(self, username, pwd):
+        
+        qrz_api_version = "1.3.3"
+        url = "https://xmldata.qrz.com/xml/" + qrz_api_version + "/"
+        agent = "PyHT"+version.__version__
+        
+        params = {"username" : username,
+            "password" : pwd, 
+            "agent" : agent
+        }
+
+        encodeurl = url + "?" + urllib.urlencode(params)
+        response = requests.get(encodeurl, timeout=5)
+        doc = BeautifulSoup(response.text)
+        session_key = None
+        if doc.session.key:
+            session_key = doc.session.key.text
+        else:
+            if doc.session.error:
+                raise ValueError(doc.session.error.text)
+            else:
+                raise ValueError("Could not retrieve Session Key from QRZ.com")
+
+        return session_key
+        
 
     def copy_data_in_redis(self, redis_prefix, redis_instance):
         """
@@ -135,8 +171,8 @@ class LookupLib(object):
            >>> my_lookuplib.lookup_callsign("3D2RI")
            {
              u'adif': 460,
-             u'continent': 'OC',
-             u'country': 'Rotuma Island',
+             u'continent': u'OC',
+             u'country': u'Rotuma Island',
              u'cqz': 32,
              u'ituz': 56,
              u'latitude': -12.48,
@@ -217,12 +253,12 @@ class LookupLib(object):
            >>> print my_lookuplib.lookup_entity(273)
            {
             'deleted': False,
-            'country': 'TURKMENISTAN',
+            'country': u'TURKMENISTAN',
             'longitude': -58.4,
             'cqz': 17,
-            'prefix': 'EZ',
+            'prefix': u'EZ',
             'latitude': 38.0,
-            'continent': 'AS'
+            'continent': u'AS'
            }
 
 
@@ -241,16 +277,18 @@ class LookupLib(object):
                 raise KeyError
 
         elif self._lookuptype == "redis":
-
             if self._redis_prefix is None:
                 raise KeyError ("redis_prefix is missing")
-
             #entity = str(entity)
             json_data = self._redis.get(self._redis_prefix + "_entity_" + str(entity))
             if json_data is not None:
                 my_dict = self._deserialize_data(json_data)
                 return self._strip_metadata(my_dict)
 
+        elif self._lookuptype == "qrz":
+            result = self._lookup_qrz_dxcc(entity, self._apikey)
+            return result
+            
         # no matching case
         raise KeyError
 
@@ -297,12 +335,12 @@ class LookupLib(object):
            >>> timestamp = datetime(year=1962, month=7, day=7, tzinfo=pytz.UTC)
            >>> print my_lookuplib.lookup_callsign("VK9XO", timestamp)
            {
-            'country': 'CHRISTMAS ISLAND',
+            'country': u'CHRISTMAS ISLAND',
             'longitude': -105.7,
             'cqz': 29,
             'adif': 35,
             'latitude': -10.5,
-            'continent': 'OC'
+            'continent': u'OC'
            }
 
         Note:
@@ -311,7 +349,9 @@ class LookupLib(object):
             - clublogxml
             - clublogapi
             - countryfile
+            - qrz.com
             - redis
+
 
         """
         callsign = callsign.strip().upper()
@@ -333,7 +373,10 @@ class LookupLib(object):
             return self._check_data_for_date(callsign, timestamp, data_dict, index)
 
         # no matching case
-        raise KeyError
+        elif self._lookuptype == "qrz":
+            return self._lookup_qrz_callsign(callsign, self._apikey, self._apiv)
+        
+        raise KeyError("unknown Callsign")
 
     def _get_dicts_from_redis(self, name, index_name, redis_prefix, item):
         """
@@ -454,12 +497,12 @@ class LookupLib(object):
            >>> print myLookupLib.lookup_prefix("DH")
            {
             'adif': 230,
-            'country': 'Fed. Rep. of Germany',
+            'country': u'Fed. Rep. of Germany',
             'longitude': -10.0,
             'cqz': 14,
             'ituz': 28,
             'latitude': 51.0,
-            'continent': 'EU'
+            'continent': u'EU'
            }
 
         Note:
@@ -644,17 +687,243 @@ class LookupLib(object):
         lookup = {}
 
         for item in jsonLookup:
-            if item == "Name": lookup[const.COUNTRY] = str(jsonLookup["Name"])
+            if item == "Name": lookup[const.COUNTRY] = jsonLookup["Name"]
             elif item == "DXCC": lookup[const.ADIF] = int(jsonLookup["DXCC"])
             elif item == "Lon": lookup[const.LONGITUDE] = float(jsonLookup["Lon"])
             elif item == "Lat": lookup[const.LATITUDE] = float(jsonLookup["Lat"])
             elif item == "CQZ": lookup[const.CQZ] = int(jsonLookup["CQZ"])
-            elif item == "Continent": lookup[const.CONTINENT] = str(jsonLookup["Continent"])
-
+            elif item == "Continent": lookup[const.CONTINENT] = jsonLookup["Continent"]
+            
         if lookup[const.ADIF] == 0:
             raise KeyError
         else:
             return lookup
+            
+    def _request_callsign_info_from_qrz(self, callsign, apikey, apiv="1.3.3"):
+        qrz_api_version = apiv
+        url = "https://xmldata.qrz.com/xml/" + qrz_api_version + "/"
+        
+        params = {
+            "s": apikey,
+            "callsign" : callsign, 
+        }
+        
+        encodeurl = url + "?" + urllib.urlencode(params)
+        response = requests.get(encodeurl, timeout=5)
+        return response
+        
+    def _request_dxcc_info_from_qrz(self, dxcc_or_callsign, apikey, apiv="1.3.3"):
+        qrz_api_version = apiv
+        url = "https://xmldata.qrz.com/xml/" + qrz_api_version + "/"
+        
+        params = {
+            "s": apikey,
+            "dxcc" : str(dxcc_or_callsign), 
+        }
+        
+        encodeurl = url + "?" + urllib.urlencode(params)
+        response = requests.get(encodeurl, timeout=5)
+        return response
+        
+    def _lookup_qrz_dxcc(self, dxcc_or_callsign, apikey, apiv="1.3.3"):
+        """ Performs the dxcc lookup against the QRZ.com XML API:
+        """
+        
+        response = self._request_dxcc_info_from_qrz(dxcc_or_callsign, apikey, apiv=apiv)
+        
+        root = BeautifulSoup(response.text)
+        lookup = {}
+
+        if root.error: #try to get a new session key and try to request again
+        
+            if re.search('No DXCC Information for', root.error.text, re.I):  #No data available for callsign
+                raise KeyError(root.error.text)
+            elif re.search('Session Timeout', root.error.text, re.I): # Get new session key
+                self._apikey = apikey = self._get_qrz_session_key(self._username, self._pwd)
+                response = self._request_dxcc_info_from_qrz(dxcc_or_callsign, apikey)
+                root = BeautifulSoup(response.text)
+            else:
+                raise AttributeError("Session Key Missing") #most likely session key missing or invalid
+        
+        if root.dxcc is None:
+            raise ValueError
+        
+        if root.dxcc.dxcc:
+            lookup[const.ADIF] = int(root.dxcc.dxcc.text)
+        if root.dxcc.cc:
+            lookup['cc'] = root.dxcc.cc.text
+        if root.dxcc.cc:
+            lookup['ccc'] = root.dxcc.ccc.text
+        if root.find('name'):
+            lookup[const.COUNTRY] = root.find('name').get_text()
+        if root.dxcc.continent:
+            lookup[const.CONTINENT] = root.dxcc.continent.text
+        if root.dxcc.ituzone:
+            lookup[const.ITUZ] = int(root.dxcc.ituzone.text)
+        if root.dxcc.cqzone:
+            lookup[const.CQZ] = int(root.dxcc.cqzone.text)
+        if root.dxcc.timezone:
+            lookup['timezone'] = float(root.dxcc.timezone.text)
+        if root.dxcc.lat:
+            lookup[const.LATITUDE] = float(root.dxcc.lat.text)
+        if root.dxcc.lon:
+            lookup[const.LONGITUDE] = float(root.dxcc.lon.text)
+        
+        return lookup
+        
+        
+    def _lookup_qrz_callsign(self, callsign=None, apikey=None, apiv="1.3.3"):
+        """ Performs the callsign lookup against the QRZ.com XML API:
+        """
+        
+        if apikey is None:
+            raise AttributeError("Session Key Missing")
+    
+        callsign = callsign.upper() 
+        
+        response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
+        
+        root = BeautifulSoup(response.text)
+        lookup = {}
+
+        if root.error: #try to get a new session key and try to request again
+        
+            if re.search('Not found', root.error.text, re.I):  #No data available for callsign
+                raise KeyError(root.error.text)
+            elif re.search('Session Timeout', root.error.text, re.I): # Get new session key
+                self._apikey = apikey = self._get_qrz_session_key(self._username, self._pwd)
+                response = self._request_callsign_info_from_qrz(callsign, apikey)
+                root = BeautifulSoup(response.text)
+            else:
+                raise AttributeError(root.error.text) #most likely session key missing or invalid
+
+        if root.callsign is None:
+            raise ValueError
+
+        if root.callsign.call:
+            lookup[const.CALLSIGN] = root.callsign.call.text
+        if root.callsign.xref:
+            lookup[const.XREF] = root.callsign.xref.text
+        if root.callsign.aliases:  
+            lookup[const.ALIASES] = root.callsign.aliases.text.split(',')
+        if root.callsign.dxcc:
+            lookup[const.ADIF] = int(root.callsign.dxcc.text)
+        if root.callsign.fname:
+            lookup[const.FNAME] = root.callsign.fname.text
+        if root.callsign.find("name"):
+            lookup[const.NAME] = root.callsign.find('name').get_text()
+        if root.callsign.addr1: 
+            lookup[const.ADDR1] = root.callsign.addr1.text
+        if root.callsign.addr2: 
+            lookup[const.ADDR2] = root.callsign.addr2.text
+        if root.callsign.state:
+            lookup[const.STATE] = root.callsign.state.text
+        if root.callsign.zip:
+            lookup[const.ZIPCODE] = root.callsign.zip.text
+        if root.callsign.country:
+            lookup[const.COUNTRY] = root.callsign.country.text
+        if root.callsign.ccode: 
+            lookup[const.CCODE] = int(root.callsign.ccode.text)
+        if root.callsign.lat: 
+            lookup[const.LATITUDE] = float(root.callsign.lat.text)
+        if root.callsign.lon: 
+            lookup[const.LONGITUDE] = float(root.callsign.lon.text)
+        if root.callsign.grid: 
+            lookup[const.LOCATOR] = root.callsign.grid.text
+        if root.callsign.county: 
+            lookup[const.COUNTY] = root.callsign.county.text
+        if root.callsign.fips: 
+            lookup[const.FIPS] = int(root.callsign.fips.text) # check type
+        if root.callsign.land: 
+            lookup[const.LAND] = root.callsign.land.text
+        if root.callsign.efdate:
+            try: 
+                lookup[const.EFDATE] = datetime.strptime(root.callsign.efdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
+            except ValueError:
+                self._logger.debug("[QRZ.com] efdate: Invalid DateTime; " + callsign + " " + root.callsign.efdate.text)
+        if root.callsign.expdate: 
+            try:
+                lookup[const.EXPDATE] = datetime.strptime(root.callsign.expdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
+            except ValueError:
+                self._logger.debug("[QRZ.com] expdate: Invalid DateTime; " + callsign + " " + root.callsign.expdate.text)
+        if root.callsign.p_call: 
+            lookup[const.P_CALL] = root.callsign.p_call.text
+        if root.callsign.find('class'):
+             lookup[const.LICENSE_CLASS] = root.callsign.find('class').get_text()
+        if root.callsign.codes: 
+            lookup[const.CODES] = root.callsign.codes.text
+        if root.callsign.qslmgr: 
+            lookup[const.QSLMGR] = root.callsign.qslmgr.text
+        if root.callsign.email: 
+            lookup[const.EMAIL] = root.callsign.email.text
+        if root.callsign.url: 
+            lookup[const.URL] = root.callsign.url.text
+        if root.callsign.u_views:
+            lookup[const.U_VIEWS] = int(root.callsign.u_views.text)
+        if root.callsign.bio: 
+            lookup[const.BIO] = root.callsign.bio.text
+        if root.callsign.biodate:
+            try:
+                lookup[const.BIODATE] = datetime.strptime(root.callsign.biodate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
+            except ValueError:
+                self._logger.warning("[QRZ.com] biodate: Invalid DateTime; " + callsign)
+        if root.callsign.image: 
+            lookup[const.IMAGE] = root.callsign.image.text
+        if root.callsign.imageinfo:
+            lookup[const.IMAGE_INFO] = root.callsign.imageinfo.text
+        if root.callsign.serial: 
+            lookup[const.SERIAL] = long(root.callsign.serial.text)
+        if root.callsign.moddate:
+            try: 
+                lookup[const.MODDATE] = datetime.strptime(root.callsign.moddate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
+            except ValueError:
+                self._logger.warning("[QRZ.com] moddate: Invalid DateTime; " + callsign)
+        if root.callsign.MSA: 
+            lookup[const.MSA] = int(root.callsign.MSA.text)
+        if root.callsign.AreaCode:
+            lookup[const.AREACODE] = int(root.callsign.AreaCode.text)
+        if root.callsign.TimeZone: 
+            lookup[const.TIMEZONE] = int(root.callsign.TimeZone.text)
+        if root.callsign.GMTOffset: 
+            lookup[const.GMTOFFSET] = float(root.callsign.GMTOffset.text)
+        if root.callsign.DST:
+            if root.callsign.DST.text == "Y":
+                lookup[const.DST] = True
+            else:
+                lookup[const.DST] = False
+        if root.callsign.eqsl: 
+            if root.callsign.eqsl.text == "1":
+                lookup[const.EQSL] = True
+            else:
+                lookup[const.EQSL] = False
+        if root.callsign.mqsl:
+            if root.callsign.mqsl.text == "1":
+                lookup[const.MQSL] = True
+            else:
+                lookup[const.MQSL] = False
+        if root.callsign.cqzone:
+            lookup[const.CQZ] = int(root.callsign.cqzone.text)
+        if root.callsign.ituzone:
+            lookup[const.ITUZ] = int(root.callsign.ituzone.text)
+        if root.callsign.born: 
+            lookup[const.BORN] = int(root.callsign.born.text)
+        if root.callsign.user: 
+            lookup[const.USER_MGR] = root.callsign.user.text
+        if root.callsign.lotw:
+            if root.callsign.lotw.text == "1":
+                lookup[const.LOTW] = True
+            else:
+                lookup[const.LOTW] = False
+        if root.callsign.iota:
+            lookup[const.IOTA] = root.callsign.iota.text
+        if root.callsign.geoloc: 
+            lookup[const.GEOLOC] = root.callsign.geoloc.text
+
+        # if sys.version_info >= (2,):
+        #     for item in lookup:
+        #         if isinstance(lookup[item], unicode):
+        #             print item, repr(lookup[item])
+        return lookup
 
     def _load_clublogXML(self,
                         url="https://secure.clublog.org/cty.php",
@@ -866,44 +1135,49 @@ class LookupLib(object):
 
         #retrieve ADIF Country Entities
         cty_entities = cty_tree.find("entities")
+        self._logger.debug("total entities: " + str(len(cty_entities)))
         if len(cty_entities) > 1:
             for cty_entity in cty_entities:
-                entity = {}
-                for item in cty_entity:
-                    if item.tag == "name":
-                        entity[const.COUNTRY] = str(item.text)
-                    elif item.tag == "prefix":
-                        entity[const.PREFIX] = str(item.text)
-                    elif item.tag == "deleted":
-                        if item.text == "TRUE":
-                            entity[const.DELETED] = True
-                        else:
-                            entity[const.DELETED] = False
-                    elif item.tag == "cqz":
-                        entity[const.CQZ] = int(item.text)
-                    elif item.tag == "cont":
-                        entity[const.CONTINENT] = str(item.text)
-                    elif item.tag == "long":
-                        entity[const.LONGITUDE] = float(item.text)*(-1)
-                    elif item.tag == "lat":
-                        entity[const.LATITUDE] = float(item.text)
-                    elif item.tag == "start":
-                        dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        entity[const.START] = dt.replace(tzinfo=UTC)
-                    elif item.tag == "end":
-                        dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        entity[const.END] = dt.replace(tzinfo=UTC)
-                    elif item.tag == "whitelist":
-                        if item.text == "TRUE":
-                            entity[const.WHITELIST] = True
-                        else:
-                            entity[const.WHITELIST] = False
-                    elif item.tag == "whitelist_start":
-                        dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        entity[const.WHITELIST_START] = dt.replace(tzinfo=UTC)
-                    elif item.tag == "whitelist_end":
-                        dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        entity[const.WHITELIST_END] = dt.replace(tzinfo=UTC)
+                try: 
+                    entity = {}
+                    for item in cty_entity:
+                        if item.tag == "name":
+                            entity[const.COUNTRY] = unicode(item.text)
+                            self._logger.debug(unicode(item.text))
+                        elif item.tag == "prefix":
+                            entity[const.PREFIX] = unicode(item.text)
+                        elif item.tag == "deleted":
+                            if item.text == "TRUE":
+                                entity[const.DELETED] = True
+                            else:
+                                entity[const.DELETED] = False
+                        elif item.tag == "cqz":
+                            entity[const.CQZ] = int(item.text)
+                        elif item.tag == "cont":
+                            entity[const.CONTINENT] = unicode(item.text)
+                        elif item.tag == "long":
+                            entity[const.LONGITUDE] = float(item.text)*(-1)
+                        elif item.tag == "lat":
+                            entity[const.LATITUDE] = float(item.text)
+                        elif item.tag == "start":
+                            dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
+                            entity[const.START] = dt.replace(tzinfo=UTC)
+                        elif item.tag == "end":
+                            dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
+                            entity[const.END] = dt.replace(tzinfo=UTC)
+                        elif item.tag == "whitelist":
+                            if item.text == "TRUE":
+                                entity[const.WHITELIST] = True
+                            else:
+                                entity[const.WHITELIST] = False
+                        elif item.tag == "whitelist_start":
+                            dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
+                            entity[const.WHITELIST_START] = dt.replace(tzinfo=UTC)
+                        elif item.tag == "whitelist_end":
+                            dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
+                            entity[const.WHITELIST_END] = dt.replace(tzinfo=UTC)
+                except AttributeError:
+                    self._logger.error("Error while processing: ")
                 entities[int(cty_entity[0].text)] = entity
             self._logger.debug(str(len(entities))+" Entities added")
         else:
@@ -922,13 +1196,13 @@ class LookupLib(object):
                         else:
                             call_exceptions_index[call] = [int(cty_exception.attrib["record"])]
                     elif item.tag == "entity":
-                        call_exception[const.COUNTRY] = str(item.text)
+                        call_exception[const.COUNTRY] = unicode(item.text)
                     elif item.tag == "adif":
                         call_exception[const.ADIF] = int(item.text)
                     elif item.tag == "cqz":
                         call_exception[const.CQZ] = int(item.text)
                     elif item.tag == "cont":
-                        call_exception[const.CONTINENT] = str(item.text)
+                        call_exception[const.CONTINENT] = unicode(item.text)
                     elif item.tag == "long":
                         call_exception[const.LONGITUDE] = float(item.text)*(-1)
                     elif item.tag == "lat":
@@ -963,13 +1237,13 @@ class LookupLib(object):
                         else:
                             prefixes_index[call] = [int(cty_prefix.attrib["record"])]
                     if item.tag == "entity":
-                        prefix[const.COUNTRY] = str(item.text)
+                        prefix[const.COUNTRY] = unicode(item.text)
                     elif item.tag == "adif":
                         prefix[const.ADIF] = int(item.text)
                     elif item.tag == "cqz":
                         prefix[const.CQZ] = int(item.text)
                     elif item.tag == "cont":
-                        prefix[const.CONTINENT] = str(item.text)
+                        prefix[const.CONTINENT] = unicode(item.text)
                     elif item.tag == "long":
                         prefix[const.LONGITUDE] = float(item.text)*(-1)
                     elif item.tag == "lat":
@@ -1086,12 +1360,12 @@ class LookupLib(object):
         for item in cty_list:
             entry = {}
             call = str(item)
-            entry[const.COUNTRY] = str(cty_list[item]["Country"])
+            entry[const.COUNTRY] = unicode(cty_list[item]["Country"])
             if mapping:
                  entry[const.ADIF] = int(mapping[cty_list[item]["Country"]])
             entry[const.CQZ] = int(cty_list[item]["CQZone"])
             entry[const.ITUZ] = int(cty_list[item]["ITUZone"])
-            entry[const.CONTINENT] = str(cty_list[item]["Continent"])
+            entry[const.CONTINENT] = unicode(cty_list[item]["Continent"])
             entry[const.LATITUDE] = float(cty_list[item]["Latitude"])
             entry[const.LONGITUDE] = float(cty_list[item]["Longitude"])
 
@@ -1193,7 +1467,7 @@ class LookupLib(object):
             elif item == const.WHITELIST:
                 my_dict[item] = self._str_to_bool(my_dict[item])
             else:
-                my_dict[item] = str(my_dict[item])
+                my_dict[item] = unicode(my_dict[item])
 
         return my_dict
 

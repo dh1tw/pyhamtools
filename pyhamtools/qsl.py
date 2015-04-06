@@ -5,7 +5,6 @@ import requests
 import redis
 from requests.exceptions import ConnectionError, HTTPError, Timeout
 
-
 def get_lotw_users(**kwargs):
     """Download the latest inoffical list of `ARRL Logbook of the World (LOTW)`__ users which is provided on a weekly basis by HB9BZA_. Dates of the users last upload is added by WD5EAE_.  
 
@@ -17,6 +16,7 @@ def get_lotw_users(**kwargs):
 
         Raises:
             IOError: When network is unavailable, file can't be downloaded or processed
+            ValueError: Raised when data from file can't be read
 
         Example:
            The following example downloads the LOTW user list and check when DH1TW has made his last LOTW upload:
@@ -30,7 +30,9 @@ def get_lotw_users(**kwargs):
     .. _HB9BZA: http://www.hb9bza.net/lotw-users-list
     .. _WD5EAE: http://www.wd5eae.org/HB9BZA_LoTWUsersList.html
     __ ARRL_ 
-    """    
+
+    """
+    
     url = ""
     
     lotw = {}
@@ -46,14 +48,21 @@ def get_lotw_users(**kwargs):
     except (ConnectionError, HTTPError, Timeout) as e:
         raise IOError(e)
 
+    error_count = 0
+    
     if result.status_code == requests.codes.ok:
         for el in result.text.split():
             data = el.split(",")
-            lotw[data[0]] = datetime.strptime(data[1], '%Y-%m-%d')
-        #     print call
+            try:
+                lotw[data[0]] = datetime.strptime(data[1], '%Y-%m-%d')
+            except ValueError as e:
+                error_count += 1
+                if error_count > 10:
+                    raise ValueError("more than 10 wrongly formatted datasets " + str(e))
+
     else: 
         raise IOError("HTTP Error: " + str(result.status_code))
-        
+
     return lotw
 
 def get_eqsl_users(**kwargs):

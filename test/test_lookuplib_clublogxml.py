@@ -15,19 +15,19 @@ UTC = pytz.UTC
 
 
 response_Entity_230 = {
-          'country': 'FEDERAL REPUBLIC OF GERMANY', 
-          'continent': 'EU', 
+          'country': u'FEDERAL REPUBLIC OF GERMANY', 
+          'continent': u'EU', 
           'latitude': 51.0, 
           'longitude': -10.0, 
           'cqz': 14,
-          'prefix' : 'DL',
+          'prefix' : u'DL',
           'deleted' : False,
 }
 
 response_Exception_KC6MM_1990 = { 
            'adif': 22, 
-           'country': 'PALAU',
-           'continent': 'OC', 
+           'country': u'PALAU',
+           'continent': u'OC', 
            'latitude': 9.50, 
            'longitude': -138.20, 
            'cqz': 27,
@@ -35,8 +35,8 @@ response_Exception_KC6MM_1990 = {
 
 response_Exception_KC6MM_1992 = { 
            'adif': 22, 
-           'country': 'PALAU', 
-           'continent': 'OC', 
+           'country': u'PALAU', 
+           'continent': u'OC', 
            'latitude': 9.50, 
            'longitude': -138.20, 
            'cqz': 27,
@@ -45,8 +45,8 @@ response_Exception_KC6MM_1992 = {
 
 response_Exception_VK9XX_with_end_date = { 
            'adif': 35, 
-           'country': 'CHRISTMAS ISLAND', 
-           'continent': 'OC', 
+           'country': u'CHRISTMAS ISLAND', 
+           'continent': u'OC', 
            'latitude': -10.50, 
            'longitude': -105.70, 
            'cqz': 29,
@@ -54,8 +54,8 @@ response_Exception_VK9XX_with_end_date = {
 
 response_Exception_VK9XO_with_start_date = { 
            'adif': 35, 
-           'country': 'CHRISTMAS ISLAND', 
-           'continent': 'OC', 
+           'country': u'CHRISTMAS ISLAND', 
+           'continent': u'OC', 
            'latitude': -10.50, 
            'longitude': -105.70, 
            'cqz': 29,
@@ -63,44 +63,44 @@ response_Exception_VK9XO_with_start_date = {
 
 response_Exception_AX9NYG = { 
            'adif': 38, 
-           'country': 'COCOS (KEELING) ISLAND', 
-           'continent': 'OC', 
+           'country': u'COCOS (KEELING) ISLAND', 
+           'continent': u'OC', 
            'latitude': -12.20, 
            'longitude': -96.80, 
            'cqz': 29,
         }
         
 response_Prefix_DH = {
-    'country': 'FEDERAL REPUBLIC OF GERMANY', 
+    'country': u'FEDERAL REPUBLIC OF GERMANY', 
     'adif' : 230,
-    'continent': 'EU', 
+    'continent': u'EU', 
     'latitude': 51.0, 
     'longitude': -10.0, 
     'cqz': 14,
 }
 
 response_Prefix_VK9_until_1975 = {
-    'country': 'PAPUA TERR', 
+    'country': u'PAPUA TERR', 
     'adif' : 198,
-    'continent': 'OC', 
+    'continent': u'OC', 
     'latitude': -9.40, 
     'longitude': -147.10, 
     'cqz': 28,
 }
 
 response_Prefix_VK9_starting_1976 = {
-    'country': 'NORFOLK ISLAND', 
+    'country': u'NORFOLK ISLAND', 
     'adif' : 189,
-    'continent': 'OC', 
+    'continent': u'OC', 
     'latitude': -29.00, 
     'longitude': -168.00, 
     'cqz': 32,
 }
 
 response_Prefix_ZD5_1964_to_1971 = {
-    'country': 'SWAZILAND', 
+    'country': u'SWAZILAND', 
     'adif' : 468,
-    'continent': 'AF', 
+    'continent': u'AF', 
     'latitude': -26.30, 
     'longitude': -31.10, 
     'cqz': 38,

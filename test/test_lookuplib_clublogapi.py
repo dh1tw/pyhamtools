@@ -10,8 +10,8 @@ from pyhamtools.exceptions import APIKeyMissingError
 
 response_Exception_DH1TW = { 
           'adif': 230, 
-          'country': 'FEDERAL REPUBLIC OF GERMANY', 
-          'continent': 'EU', 
+          'country': u'FEDERAL REPUBLIC OF GERMANY', 
+          'continent': u'EU', 
           'latitude': 51.0, 
           'longitude': -10.0, 
           'cqz': 14
@@ -19,8 +19,8 @@ response_Exception_DH1TW = {
         
 response_Exception_VU9KV = { 
           'adif': 324, 
-          'country': 'INDIA', 
-          'continent': 'AS', 
+          'country': u'INDIA', 
+          'continent': u'AS', 
           'latitude': 22.0, 
           'longitude': -80.0, 
           'cqz': 22
@@ -29,8 +29,8 @@ response_Exception_VU9KV = {
 
 response_Exception_VU9KV_with_Date = { 
           'adif': 11, 
-          'country': 'ANDAMAN & NICOBAR ISLANDS', 
-          'continent': 'AS', 
+          'country': u'ANDAMAN & NICOBAR ISLANDS', 
+          'continent': u'AS', 
           'latitude': 11.70, 
           'longitude': -92.80, 
           'cqz': 26
@@ -39,8 +39,8 @@ response_Exception_VU9KV_with_Date = {
 
 response_Exception_DH1TW_MM = { 
         'adif': 999, 
-        'country': 'MARITIME MOBILE', 
-        'continent': '', 
+        'country': u'MARITIME MOBILE', 
+        'continent': u'', 
         'latitude': 0.0, 
         'longitude': 0.0, 
         'cqz': 0
@@ -48,8 +48,8 @@ response_Exception_DH1TW_MM = {
     
 response_Exception_DH1TW_AM = { 
         'adif': 998, 
-        'country': 'AIRCRAFT MOBILE', 
-        'continent': '', 
+        'country': u'AIRCRAFT MOBILE', 
+        'continent': u'', 
         'longitude': 0.0, 
         'latitude': 0.0, 
         'cqz': 0

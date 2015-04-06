@@ -53,13 +53,13 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
                 count = 0
                 for attr in entity: 
                     if attr == "country": 
-                        assert type(entity[attr] is str)
+                        assert type(entity[attr] is unicode)
                         count +=1
                     if attr == "continent": 
-                        assert type(entity[attr] is str)
+                        assert type(entity[attr] is unicode)
                         count +=1
                     if attr == "prefix": 
-                        assert type(entity[attr] is str)
+                        assert type(entity[attr] is unicode)
                         count +=1                
                     if attr == "deleted": 
                         assert type(entity[attr] is bool)
@@ -109,10 +109,10 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
                         assert type(ex[attr]) is float
                         count +=1
                 elif attr == "country": 
-                        assert type(ex[attr]) is str
+                        assert type(ex[attr]) is unicode
                         count +=1
                 elif attr == "continent": 
-                        assert type(ex[attr]) is str
+                        assert type(ex[attr]) is unicode
                         count +=1
                 elif attr == "cqz": 
                         assert type(ex[attr]) is int
@@ -145,7 +145,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
             count = 0
             for attr in prefix: 
                 if attr == "country": 
-                        assert type(prefix[attr]) is str
+                        assert type(prefix[attr]) is unicode
                         count +=1
                 elif attr == "adif": 
                         assert type(prefix[attr]) is int
@@ -157,7 +157,7 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
                         assert type(prefix[attr]) is int
                         count +=1
                 elif attr == "continent": 
-                        assert type(prefix[attr]) is str
+                        assert type(prefix[attr]) is unicode
                         count +=1
                 elif attr == "latitude": 
                         assert type(prefix[attr]) is float

@@ -47,7 +47,65 @@ response_prefix_C6A_countryfile = {
     'ituz': 11
 }
 
+response_prefix_VK9NDX_countryfile = {
+    u'adif': 189,
+    u'continent': u'OC',
+    u'country': u'Norfolk Island',
+    u'cqz': 32,
+    u'ituz': 60,
+    u'latitude': -29.03,
+    u'longitude': -167.93
+}
 
+response_prefix_VK9DNX_clublog = {
+    u'adif': 189,
+    u'continent': u'OC',
+    u'country': u'NORFOLK ISLAND',
+    u'cqz': 32,
+    u'latitude': -29.0,
+    u'longitude': -168.0
+}
+
+response_prefix_VK9DWX_clublog = {
+    u'adif': 303,
+    u'continent': u'OC',
+    u'country': u'WILLIS ISLAND',
+    u'cqz': 30,
+    u'latitude': -16.2,
+    u'longitude': -150.0
+}
+
+response_prefix_VK9DLX_clublog = {
+    u'adif': 147,
+    u'continent': u'OC',
+    u'country': u'LORD HOWE ISLAND',
+    u'cqz': 30,
+    u'latitude': -31.6,
+    u'longitude': -159.1
+}
+
+response_prefix_VK9DLX_countryfile = {
+     u'adif': 147,
+     u'continent': u'OC',
+     u'country': u'Lord Howe Island',
+     u'cqz': 30,
+     u'ituz': 60,
+     u'latitude': -31.55,
+     u'longitude': -159.08
+}
+
+response_prefix_VK9GMW_clublog = {
+    u'adif': 171,
+    u'continent': u'OC',
+    u'country': u'MELLISH REEF',
+    u'cqz': 30,
+    u'latitude': -17.6,
+    u'longitude': -155.8
+}
+
+
+
+ 
 response_Exception_VK9XO_with_start_date = {
            'adif': 35,
            'country': 'CHRISTMAS ISLAND',
@@ -89,6 +147,18 @@ response_aircraft_mobile = {
     'longitude': 0.0
 }
 
+response_callsign_exceptions_7QAA_clublog = {
+    u'adif': 440,
+    u'continent': u'AF',
+    u'country': u'MALAWI',
+    u'cqz': 37,
+    u'latitude': -14.9,
+    u'longitude': -34.4
+}
+
+
+
+
 class Test_callinfo_methods:
 
     def test_callinfo_iterate_prefix(self, fix_callinfo):
@@ -126,7 +196,7 @@ class Test_callinfo_methods:
     def test_dismantle_callsign(self, fix_callinfo):
 
         if fix_callinfo._lookuplib._lookuptype == "clublogxml":
-            #assert fix_callinfo._dismantle_callsign("DH1TW/BCN")[const.BEACON]
+            assert fix_callinfo._dismantle_callsign("DH1TW/BCN")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW/QRP") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/QRPP") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/LH") == response_prefix_DH_clublog
@@ -134,28 +204,51 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DH1TW/P") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/5") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/M") == response_prefix_DH_clublog
-            #assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
+            assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_clublog
             assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_prefix_C6A_clublog
+            assert fix_callinfo._dismantle_callsign("DH1TW/UNI") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("DH1TW/BUX") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("DH1TW/NOT") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("VK9DLX/NOT") == response_prefix_VK9DLX_clublog
+            assert fix_callinfo._dismantle_callsign("7QAA") == response_callsign_exceptions_7QAA_clublog
+                        
+            with pytest.raises(KeyError):
+                fix_callinfo._dismantle_callsign("OZ/JO85")
 
         if fix_callinfo._lookuplib._lookuptype == "countryfile":
             assert fix_callinfo._dismantle_callsign("DH1TW/QRP") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/QRPP") == response_prefix_DH_countryfile
-            #assert fix_callinfo._dismantle_callsign("DH1TW/BCN")[const.BEACON]
+            assert fix_callinfo._dismantle_callsign("DH1TW/BCN")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW/LH") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("HC2AO/DL") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/P") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/5") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/M") == response_prefix_DH_countryfile
-            #assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
+            assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_countryfile
             assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_prefix_C6A_countryfile
+            assert fix_callinfo._dismantle_callsign("DH1TW/NOT") == response_prefix_DH_countryfile
+            assert fix_callinfo._dismantle_callsign("VK9DLX/NOT") == response_prefix_VK9DLX_countryfile
+            
+            with pytest.raises(KeyError):
+                fix_callinfo._dismantle_callsign("OZ/JO85")
+            
+            
+    def test_dismantle_callsign_with_VK9_special_suffixes(self, fix_callinfo):
+        
+        if fix_callinfo._lookuplib._lookuptype == "clublog":
+            assert fix_callinfo._dismantle_callsign("VK9DNX") == response_prefix_VK9DNX_clublog
+            assert fix_callinfo._dismantle_callsign("VK9DLX") == response_prefix_VK9DLX_clublog
+            assert fix_callinfo._dismantle_callsign("VK9GMX") == response_prefix_VK9GMW_clublog
+            assert fix_callinfo._dismantle_callsign("VK9DWX") == response_prefix_VK9DWX_clublog
+            
 
-    def test_lookup_callsign(selfself, fix_callinfo):
+    def test_lookup_callsign(self, fix_callinfo):
 
         assert fix_callinfo._lookup_callsign("DH1TW/MM") == response_maritime_mobile
         assert fix_callinfo._lookup_callsign("DH1TW/AM") == response_aircraft_mobile

@@ -7,6 +7,7 @@ import pytz
 
 from pyhamtools.consts import LookupConventions as const
 
+from pyhamtools.callsign_exceptions import callsign_exceptions
 
 UTC = pytz.UTC
 timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
@@ -80,6 +81,10 @@ class Callinfo(object):
     def _iterate_prefix(self, callsign, timestamp=timestamp_now):
         """truncate call until it corresponds to a Prefix in the database"""
         prefix = callsign
+        
+        if re.search('(VK|AX|VI)9[A-Z]{3}', callsign): #special rule for VK9 calls
+            if timestamp > datetime(2006,1,1, tzinfo=UTC):
+                prefix = callsign[0:3]+callsign[4:5]
 
         while len(prefix) > 0:
             try:
@@ -139,7 +144,7 @@ class Callinfo(object):
                 appendix = re.search('/[A-Z0-9]{2,4}$', callsign)
                 appendix = re.sub('/', '', appendix.group(0))
                 self._logger.debug("appendix: " + appendix)
-
+                
                 if appendix == 'MM':  # special case Martime Mobile
                     #self._mm = True
                     return {
@@ -173,6 +178,10 @@ class Callinfo(object):
                 elif appendix == "LH":  # Filter all Lighthouses
                     callsign = re.sub('/LH', '', callsign)
                     return self._iterate_prefix(callsign, timestamp)
+                elif re.search('[A-Z]{3}', appendix): #case of US county(?) contest N3HBX/UAL
+                    callsign = re.sub('/[A-Z]{3}$', '', callsign)
+                    return self._iterate_prefix(callsign, timestamp)                    
+                
                 else:
                     # check if the appendix is a valid country prefix
                     return self._iterate_prefix(re.sub('/', '', appendix), timestamp)
@@ -205,10 +214,17 @@ class Callinfo(object):
             elif re.search('^[A-Z0-9]{1,4}/', entire_callsign):
                 pfx = re.search('^[A-Z0-9]{1,4}/', entire_callsign)
                 pfx = re.sub('/', '', pfx.group(0))
-                return self._iterate_prefix(pfx)
+                #make sure that the remaining part is actually a callsign (avoid: OZ/JO81)
+                rest = re.search('/[A-Z0-9]+', entire_callsign)
+                rest = re.sub('/', '', rest.group(0))
+                if re.match('^[\d]{0,1}[A-Z]{1,2}\d([A-Z]{1,4}|\d{3,3}|\d{1,3}[A-Z])[A-Z]{0,5}$', rest):
+                    return self._iterate_prefix(pfx)
 
+        if entire_callsign in callsign_exceptions: 
+            return self._iterate_prefix(callsign_exceptions[entire_callsign])
+            
         self._logger.debug("Could not decode " + callsign)
-        raise KeyError
+        raise KeyError("Callsign could not be decoded")
 
     def _lookup_callsign(self, callsign, timestamp=timestamp_now):
 
@@ -241,7 +257,7 @@ class Callinfo(object):
                 'longitude': 0.0
             }
 
-        # Check if a dedicated entry exists for the callsign
+        # Check if a dedicated entry/exception exists for the callsign
         try:
             data = self._lookuplib.lookup_callsign(callsign, timestamp).copy()
             if self.check_if_beacon(callsign):

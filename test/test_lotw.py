@@ -26,4 +26,11 @@ class Test_lotw_methods:
         with pytest.raises(IOError):
             get_lotw_users(url="http://wd5eae.org/LoTW_Data_XXXXX.txt")
             
+    def test_with_more_than_10_invalid_dates(self, httpserver):
+        httpserver.serve_content(open('./fixtures/lotw_data_with_errors.html').read())
+
+        with pytest.raises(ValueError):
+            get_lotw_users(url=httpserver.url)
+
+            
             
