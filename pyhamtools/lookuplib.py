@@ -788,16 +788,23 @@ class LookupLib(object):
         root = BeautifulSoup(response.text)
         lookup = {}
 
-        if root.error: #try to get a new session key and try to request again
+        if root.error: 
         
             if re.search('Not found', root.error.text, re.I):  #No data available for callsign
                 raise KeyError(root.error.text)
-            elif re.search('Session Timeout', root.error.text, re.I): # Get new session key
+
+            #try to get a new session key and try to request again
+            elif re.search('Session Timeout', root.error.text, re.I) or re.search('Invalid session key', root.error.text, re.I):
                 self._apikey = apikey = self._get_qrz_session_key(self._username, self._pwd)
-                response = self._request_callsign_info_from_qrz(callsign, apikey)
+                response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
                 root = BeautifulSoup(response.text)
+                
+                #if this fails again, raise error
+                if root.error:
+                    raise AttributeError(root.error.text) #most likely session key invalid
+                
             else:
-                raise AttributeError(root.error.text) #most likely session key missing or invalid
+                raise AttributeError(root.error.text) #most likely session key missing
 
         if root.callsign is None:
             raise ValueError

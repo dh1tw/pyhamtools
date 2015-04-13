@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamTools 0.5.1
+================
+
+14. April 2015
+
+ * improved handling of expired QRZ.com sessions
+
+
 PyHamTools 0.5.0
 ================
 
