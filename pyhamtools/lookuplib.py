@@ -795,7 +795,7 @@ class LookupLib(object):
 
             #try to get a new session key and try to request again
             elif re.search('Session Timeout', root.error.text, re.I) or re.search('Invalid session key', root.error.text, re.I):
-                self._apikey = apikey = self._get_qrz_session_key(self._username, self._pwd)
+                apikey = self._get_qrz_session_key(self._username, self._pwd)
                 response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
                 root = BeautifulSoup(response.text)
                 
@@ -806,6 +806,9 @@ class LookupLib(object):
                         raise KeyError(root.error.text)
                     else:
                         raise AttributeError(root.error.text) #most likely session key invalid
+                else:
+                    #update API Key ob Lookup object
+                    self._apikey = apikey
                 
             else:
                 raise AttributeError(root.error.text) #most likely session key missing
