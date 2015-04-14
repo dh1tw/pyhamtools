@@ -801,7 +801,11 @@ class LookupLib(object):
                 
                 #if this fails again, raise error
                 if root.error:
-                    raise AttributeError(root.error.text) #most likely session key invalid
+                    
+                    if re.search('Not found', root.error.text, re.I):  #No data available for callsign
+                        raise KeyError(root.error.text)
+                    else:
+                        raise AttributeError(root.error.text) #most likely session key invalid
                 
             else:
                 raise AttributeError(root.error.text) #most likely session key missing
