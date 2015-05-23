@@ -1,5 +1,7 @@
 # pyhamtools
 
+[![Join the chat at https://gitter.im/dh1tw/pyhamtools](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dh1tw/pyhamtools?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Pyhamtools is a set of functions and classes for Amateur Radio purpose. Currently the core part is the Callsign
 Lookup which decodes any amateur radio callsign string and provides the corresponding information (Country, DXCC entity,
 CQ Zone...etc). This basic functionality is needed for Logbooks, DX-Clusters or Log Checking.
