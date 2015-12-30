@@ -1,10 +1,27 @@
 Changelog
 ---------
 
-PyHamTools 0.5.1
+PyHamTools 0.5.3
+================
+
+30. December 2015
+
+ * Updated DXCC entity name of ZL9 (arrl id 16) from Auckland & Campbell to "N.Z. Subantarctic Is." in countrymapping.json (tnx G0UKB)
+ * Deleted "Auckland" (016) from countrymapping.json
+ * corrected code example of latlong_to_locator() (tnx VE5ZX)
+
+PyHamTools 0.5.2
 ================
 
 14. April 2015
+
+ * catching another bug related to QRZ.com sessions
+
+
+PyHamTools 0.5.1
+================
+
+13. April 2015
 
  * improved handling of expired QRZ.com sessions
 
@@ -17,17 +34,17 @@ PyHamTools 0.5.0
  * implemented QRZ.com interface into LookupLib [LookupLib]
 
  * changed and unified all output to Unicode
- 
+
  * corrected Longitude to General Standard (-180...0° West, 0...180° East) [LookupLib]
- 
+
  * improved callsign decoding alogrithm [CallInfo]
- 
+
  * added special case to decode location of VK9 callsigns [CallInfo]
 
  * added handling of special callsigns which can't be decoded properly inside a separate callsign exception file (e.g. 7QAA) [CallInfo]
- 
+
  * added ValueError when LOTW data from file contains too many errors [qsl]
- 
+
 
 PyHamTools 0.4.2
 ================
@@ -35,7 +52,7 @@ PyHamTools 0.4.2
 11. October 2014
 
  * added pyhamtools.qsl (get EQSL.cc and LOTW user lists)
- 
+
 PyHamTools 0.4.1
 ================
 
