@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 import pytest
 import pytz
 
@@ -104,8 +103,16 @@ response_prefix_VK9GMW_clublog = {
 }
 
 
+response_Exception_VP8STI_with_start_and_stop_date = {
+           'adif': 240,
+           'country': u'SOUTH SANDWICH ISLANDS',
+           'continent': u'SA',
+           'latitude': -59.45,
+           'longitude': 27.4,
+           'cqz': 13,
+        }
 
- 
+
 response_Exception_VK9XO_with_start_date = {
            'adif': 35,
            'country': 'CHRISTMAS ISLAND',
@@ -214,7 +221,7 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DH1TW/NOT") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("VK9DLX/NOT") == response_prefix_VK9DLX_clublog
             assert fix_callinfo._dismantle_callsign("7QAA") == response_callsign_exceptions_7QAA_clublog
-                        
+
             with pytest.raises(KeyError):
                 fix_callinfo._dismantle_callsign("OZ/JO85")
 
@@ -234,19 +241,19 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_prefix_C6A_countryfile
             assert fix_callinfo._dismantle_callsign("DH1TW/NOT") == response_prefix_DH_countryfile
             assert fix_callinfo._dismantle_callsign("VK9DLX/NOT") == response_prefix_VK9DLX_countryfile
-            
+
             with pytest.raises(KeyError):
                 fix_callinfo._dismantle_callsign("OZ/JO85")
-            
-            
+
+
     def test_dismantle_callsign_with_VK9_special_suffixes(self, fix_callinfo):
-        
+
         if fix_callinfo._lookuplib._lookuptype == "clublog":
             assert fix_callinfo._dismantle_callsign("VK9DNX") == response_prefix_VK9DNX_clublog
             assert fix_callinfo._dismantle_callsign("VK9DLX") == response_prefix_VK9DLX_clublog
             assert fix_callinfo._dismantle_callsign("VK9GMX") == response_prefix_VK9GMW_clublog
             assert fix_callinfo._dismantle_callsign("VK9DWX") == response_prefix_VK9DWX_clublog
-            
+
 
     def test_lookup_callsign(self, fix_callinfo):
 
@@ -275,6 +282,8 @@ class Test_callinfo_methods:
         if fix_callinfo._lookuplib._lookuptype == "clublogxml" or fix_callinfo._lookuplib._lookuptype == "clublogapi":
             assert fix_callinfo.get_all("DH1TW") == response_prefix_DH_clublog
             assert fix_callinfo.get_all("dp0gvn") == response_zone_exception_dp0gvn
+            timestamp = datetime(year=2016, month=1, day=20, tzinfo=UTC)
+            assert fix_callinfo.get_all("VP8STI", timestamp) == response_Exception_VP8STI_with_start_and_stop_date
 
         elif fix_callinfo._lookuplib._lookuptype == "countryfile":
             assert fix_callinfo.get_all("DH1TW") == response_prefix_DH_countryfile

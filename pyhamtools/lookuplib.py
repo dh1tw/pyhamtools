@@ -49,9 +49,9 @@ class LookupLib(object):
     By default, LookupLib requires an Internet connection to download the libraries or perform the
     lookup against the Clublog API or QRZ.com.
 
-    The entire lookup data (where database files are downloaded) can also be copied into Redis, which an extremely 
-    fast in-memory Key/Value store. A LookupLib object can be instanciated to perform then all lookups in Redis, 
-    instead processing and loading the data from Internet / File. This saves some time and allows several instances 
+    The entire lookup data (where database files are downloaded) can also be copied into Redis, which an extremely
+    fast in-memory Key/Value store. A LookupLib object can be instanciated to perform then all lookups in Redis,
+    instead processing and loading the data from Internet / File. This saves some time and allows several instances
     of :py:class:`LookupLib` to query the same data concurrently.
 
     Args:
@@ -59,7 +59,7 @@ class LookupLib(object):
         apikey (str): Clublog API Key
         username (str): QRZ.com username
         pwd (str): QRZ.com password
-        apiv (str, optional): QRZ.com API Version 
+        apiv (str, optional): QRZ.com API Version
         filename (str, optional): Filename for Clublog XML or Country-files.com cty.plist file. When a local file is
         used, no Internet connection not API Key is necessary.
         logger (logging.getLogger(__name__), optional): Python logger
@@ -114,20 +114,20 @@ class LookupLib(object):
             self._apikey = self._get_qrz_session_key(self._username, self._pwd)
         else:
             raise AttributeError("Lookup type missing")
-            
+
     def _get_qrz_session_key(self, username, pwd):
-        
+
         qrz_api_version = "1.3.3"
         url = "https://xmldata.qrz.com/xml/" + qrz_api_version + "/"
-        agent = "PyHT"+version.__version__
-        
+        agent = "PyHamTools"+version.__version__
+
         params = {"username" : username,
-            "password" : pwd, 
+            "password" : pwd,
             "agent" : agent
         }
 
         encodeurl = url + "?" + urllib.urlencode(params)
-        response = requests.get(encodeurl, timeout=5)
+        response = requests.get(encodeurl, timeout=10)
         doc = BeautifulSoup(response.text)
         session_key = None
         if doc.session.key:
@@ -139,7 +139,7 @@ class LookupLib(object):
                 raise ValueError("Could not retrieve Session Key from QRZ.com")
 
         return session_key
-        
+
 
     def copy_data_in_redis(self, redis_prefix, redis_instance):
         """
@@ -164,7 +164,7 @@ class LookupLib(object):
            True
 
            Now let's create an instance of LookupLib, using Redis to query the data
-           
+
            >>> from pyhamtools import LookupLib
            >>> import redis
            >>> r = redis.Redis()
@@ -290,7 +290,7 @@ class LookupLib(object):
         elif self._lookuptype == "qrz":
             result = self._lookup_qrz_dxcc(entity, self._apikey)
             return result
-            
+
         # no matching case
         raise KeyError
 
@@ -377,7 +377,7 @@ class LookupLib(object):
         # no matching case
         elif self._lookuptype == "qrz":
             return self._lookup_qrz_callsign(callsign, self._apikey, self._apiv)
-        
+
         raise KeyError("unknown Callsign")
 
     def _get_dicts_from_redis(self, name, index_name, redis_prefix, item):
@@ -695,49 +695,49 @@ class LookupLib(object):
             elif item == "Lat": lookup[const.LATITUDE] = float(jsonLookup["Lat"])
             elif item == "CQZ": lookup[const.CQZ] = int(jsonLookup["CQZ"])
             elif item == "Continent": lookup[const.CONTINENT] = jsonLookup["Continent"]
-            
+
         if lookup[const.ADIF] == 0:
             raise KeyError
         else:
             return lookup
-            
+
     def _request_callsign_info_from_qrz(self, callsign, apikey, apiv="1.3.3"):
         qrz_api_version = apiv
         url = "https://xmldata.qrz.com/xml/" + qrz_api_version + "/"
-        
+
         params = {
             "s": apikey,
-            "callsign" : callsign, 
+            "callsign" : callsign,
         }
-        
+
         encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
         return response
-        
+
     def _request_dxcc_info_from_qrz(self, dxcc_or_callsign, apikey, apiv="1.3.3"):
         qrz_api_version = apiv
         url = "https://xmldata.qrz.com/xml/" + qrz_api_version + "/"
-        
+
         params = {
             "s": apikey,
-            "dxcc" : str(dxcc_or_callsign), 
+            "dxcc" : str(dxcc_or_callsign),
         }
-        
+
         encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
         return response
-        
+
     def _lookup_qrz_dxcc(self, dxcc_or_callsign, apikey, apiv="1.3.3"):
         """ Performs the dxcc lookup against the QRZ.com XML API:
         """
-        
+
         response = self._request_dxcc_info_from_qrz(dxcc_or_callsign, apikey, apiv=apiv)
-        
+
         root = BeautifulSoup(response.text)
         lookup = {}
 
         if root.error: #try to get a new session key and try to request again
-        
+
             if re.search('No DXCC Information for', root.error.text, re.I):  #No data available for callsign
                 raise KeyError(root.error.text)
             elif re.search('Session Timeout', root.error.text, re.I): # Get new session key
@@ -746,10 +746,10 @@ class LookupLib(object):
                 root = BeautifulSoup(response.text)
             else:
                 raise AttributeError("Session Key Missing") #most likely session key missing or invalid
-        
+
         if root.dxcc is None:
             raise ValueError
-        
+
         if root.dxcc.dxcc:
             lookup[const.ADIF] = int(root.dxcc.dxcc.text)
         if root.dxcc.cc:
@@ -770,26 +770,26 @@ class LookupLib(object):
             lookup[const.LATITUDE] = float(root.dxcc.lat.text)
         if root.dxcc.lon:
             lookup[const.LONGITUDE] = float(root.dxcc.lon.text)
-        
+
         return lookup
-        
-        
+
+
     def _lookup_qrz_callsign(self, callsign=None, apikey=None, apiv="1.3.3"):
         """ Performs the callsign lookup against the QRZ.com XML API:
         """
-        
+
         if apikey is None:
             raise AttributeError("Session Key Missing")
-    
-        callsign = callsign.upper() 
-        
+
+        callsign = callsign.upper()
+
         response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
-        
+
         root = BeautifulSoup(response.text)
         lookup = {}
 
-        if root.error: 
-        
+        if root.error:
+
             if re.search('Not found', root.error.text, re.I):  #No data available for callsign
                 raise KeyError(root.error.text)
 
@@ -798,10 +798,10 @@ class LookupLib(object):
                 apikey = self._get_qrz_session_key(self._username, self._pwd)
                 response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
                 root = BeautifulSoup(response.text)
-                
+
                 #if this fails again, raise error
                 if root.error:
-                    
+
                     if re.search('Not found', root.error.text, re.I):  #No data available for callsign
                         raise KeyError(root.error.text)
                     else:
@@ -809,7 +809,7 @@ class LookupLib(object):
                 else:
                     #update API Key ob Lookup object
                     self._apikey = apikey
-                
+
             else:
                 raise AttributeError(root.error.text) #most likely session key missing
 
@@ -820,7 +820,7 @@ class LookupLib(object):
             lookup[const.CALLSIGN] = root.callsign.call.text
         if root.callsign.xref:
             lookup[const.XREF] = root.callsign.xref.text
-        if root.callsign.aliases:  
+        if root.callsign.aliases:
             lookup[const.ALIASES] = root.callsign.aliases.text.split(',')
         if root.callsign.dxcc:
             lookup[const.ADIF] = int(root.callsign.dxcc.text)
@@ -828,9 +828,9 @@ class LookupLib(object):
             lookup[const.FNAME] = root.callsign.fname.text
         if root.callsign.find("name"):
             lookup[const.NAME] = root.callsign.find('name').get_text()
-        if root.callsign.addr1: 
+        if root.callsign.addr1:
             lookup[const.ADDR1] = root.callsign.addr1.text
-        if root.callsign.addr2: 
+        if root.callsign.addr2:
             lookup[const.ADDR2] = root.callsign.addr2.text
         if root.callsign.state:
             lookup[const.STATE] = root.callsign.state.text
@@ -838,76 +838,76 @@ class LookupLib(object):
             lookup[const.ZIPCODE] = root.callsign.zip.text
         if root.callsign.country:
             lookup[const.COUNTRY] = root.callsign.country.text
-        if root.callsign.ccode: 
+        if root.callsign.ccode:
             lookup[const.CCODE] = int(root.callsign.ccode.text)
-        if root.callsign.lat: 
+        if root.callsign.lat:
             lookup[const.LATITUDE] = float(root.callsign.lat.text)
-        if root.callsign.lon: 
+        if root.callsign.lon:
             lookup[const.LONGITUDE] = float(root.callsign.lon.text)
-        if root.callsign.grid: 
+        if root.callsign.grid:
             lookup[const.LOCATOR] = root.callsign.grid.text
-        if root.callsign.county: 
+        if root.callsign.county:
             lookup[const.COUNTY] = root.callsign.county.text
-        if root.callsign.fips: 
+        if root.callsign.fips:
             lookup[const.FIPS] = int(root.callsign.fips.text) # check type
-        if root.callsign.land: 
+        if root.callsign.land:
             lookup[const.LAND] = root.callsign.land.text
         if root.callsign.efdate:
-            try: 
+            try:
                 lookup[const.EFDATE] = datetime.strptime(root.callsign.efdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
             except ValueError:
                 self._logger.debug("[QRZ.com] efdate: Invalid DateTime; " + callsign + " " + root.callsign.efdate.text)
-        if root.callsign.expdate: 
+        if root.callsign.expdate:
             try:
                 lookup[const.EXPDATE] = datetime.strptime(root.callsign.expdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
             except ValueError:
                 self._logger.debug("[QRZ.com] expdate: Invalid DateTime; " + callsign + " " + root.callsign.expdate.text)
-        if root.callsign.p_call: 
+        if root.callsign.p_call:
             lookup[const.P_CALL] = root.callsign.p_call.text
         if root.callsign.find('class'):
              lookup[const.LICENSE_CLASS] = root.callsign.find('class').get_text()
-        if root.callsign.codes: 
+        if root.callsign.codes:
             lookup[const.CODES] = root.callsign.codes.text
-        if root.callsign.qslmgr: 
+        if root.callsign.qslmgr:
             lookup[const.QSLMGR] = root.callsign.qslmgr.text
-        if root.callsign.email: 
+        if root.callsign.email:
             lookup[const.EMAIL] = root.callsign.email.text
-        if root.callsign.url: 
+        if root.callsign.url:
             lookup[const.URL] = root.callsign.url.text
         if root.callsign.u_views:
             lookup[const.U_VIEWS] = int(root.callsign.u_views.text)
-        if root.callsign.bio: 
+        if root.callsign.bio:
             lookup[const.BIO] = root.callsign.bio.text
         if root.callsign.biodate:
             try:
                 lookup[const.BIODATE] = datetime.strptime(root.callsign.biodate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
             except ValueError:
                 self._logger.warning("[QRZ.com] biodate: Invalid DateTime; " + callsign)
-        if root.callsign.image: 
+        if root.callsign.image:
             lookup[const.IMAGE] = root.callsign.image.text
         if root.callsign.imageinfo:
             lookup[const.IMAGE_INFO] = root.callsign.imageinfo.text
-        if root.callsign.serial: 
+        if root.callsign.serial:
             lookup[const.SERIAL] = long(root.callsign.serial.text)
         if root.callsign.moddate:
-            try: 
+            try:
                 lookup[const.MODDATE] = datetime.strptime(root.callsign.moddate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
             except ValueError:
                 self._logger.warning("[QRZ.com] moddate: Invalid DateTime; " + callsign)
-        if root.callsign.MSA: 
+        if root.callsign.MSA:
             lookup[const.MSA] = int(root.callsign.MSA.text)
         if root.callsign.AreaCode:
             lookup[const.AREACODE] = int(root.callsign.AreaCode.text)
-        if root.callsign.TimeZone: 
+        if root.callsign.TimeZone:
             lookup[const.TIMEZONE] = int(root.callsign.TimeZone.text)
-        if root.callsign.GMTOffset: 
+        if root.callsign.GMTOffset:
             lookup[const.GMTOFFSET] = float(root.callsign.GMTOffset.text)
         if root.callsign.DST:
             if root.callsign.DST.text == "Y":
                 lookup[const.DST] = True
             else:
                 lookup[const.DST] = False
-        if root.callsign.eqsl: 
+        if root.callsign.eqsl:
             if root.callsign.eqsl.text == "1":
                 lookup[const.EQSL] = True
             else:
@@ -921,9 +921,9 @@ class LookupLib(object):
             lookup[const.CQZ] = int(root.callsign.cqzone.text)
         if root.callsign.ituzone:
             lookup[const.ITUZ] = int(root.callsign.ituzone.text)
-        if root.callsign.born: 
+        if root.callsign.born:
             lookup[const.BORN] = int(root.callsign.born.text)
-        if root.callsign.user: 
+        if root.callsign.user:
             lookup[const.USER_MGR] = root.callsign.user.text
         if root.callsign.lotw:
             if root.callsign.lotw.text == "1":
@@ -932,7 +932,7 @@ class LookupLib(object):
                 lookup[const.LOTW] = False
         if root.callsign.iota:
             lookup[const.IOTA] = root.callsign.iota.text
-        if root.callsign.geoloc: 
+        if root.callsign.geoloc:
             lookup[const.GEOLOC] = root.callsign.geoloc.text
 
         # if sys.version_info >= (2,):
@@ -973,8 +973,8 @@ class LookupLib(object):
         return True
 
     def _load_countryfile(self,
-                         url="http://www.country-files.com/cty/cty.plist", 
-                         country_mapping_filename="countryfilemapping.json", 
+                         url="http://www.country-files.com/cty/cty.plist",
+                         country_mapping_filename="countryfilemapping.json",
                          cty_file=None):
         """ Load and process the ClublogXML file either as a download or from file
         """
@@ -1062,7 +1062,7 @@ class LookupLib(object):
             cty_file_path = download_file_path
 
         return cty_file_path
-    
+
     def _extract_clublog_header(self, cty_xml_filename):
         """
         Extract the header of the Clublog XML File
@@ -1070,22 +1070,22 @@ class LookupLib(object):
 
         cty_header = {}
 
-        try: 
+        try:
             with open(cty_xml_filename, "r") as cty:
                 raw_header = cty.readline()
 
             cty_date = re.search("date='.+'", raw_header)
-            if cty_date: 
+            if cty_date:
                 cty_date = cty_date.group(0).replace("date=", "").replace("'", "")
                 cty_date = datetime.strptime(cty_date[:19], '%Y-%m-%dT%H:%M:%S')
                 cty_date.replace(tzinfo=UTC)
                 cty_header["Date"] = cty_date
-            
+
             cty_ns = re.search("xmlns='.+[']", raw_header)
-            if cty_ns: 
+            if cty_ns:
                 cty_ns = cty_ns.group(0).replace("xmlns=", "").replace("'", "")
                 cty_header['NameSpace'] = cty_ns
-        
+
             if len(cty_header) == 2:
                 self._logger.debug("Header successfully retrieved from CTY File")
             elif len(cty_header) < 2:
@@ -1094,24 +1094,24 @@ class LookupLib(object):
                 for key in cty_header:
                     self._logger.warning(str(key)+": "+str(cty_header[key]))
             return cty_header
-        
-        except Exception as e: 
+
+        except Exception as e:
             self._logger.error("Clublog CTY File could not be opened / modified")
             self._logger.error("Error Message: " + str(e))
             return
 
 
     def _remove_clublog_xml_header(self, cty_xml_filename):
-        """ 
+        """
             remove the header of the Clublog XML File to make it
             properly parseable for the python ElementTree XML parser
-        """        
+        """
         import tempfile
 
         try:
             with open(cty_xml_filename, "r") as f:
                 content = f.readlines()
-            
+
             cty_dir = tempfile.gettempdir()
             cty_name = os.path.split(cty_xml_filename)[1]
             cty_xml_filename_no_header = os.path.join(cty_dir, "NoHeader_"+cty_name)
@@ -1154,7 +1154,7 @@ class LookupLib(object):
         self._logger.debug("total entities: " + str(len(cty_entities)))
         if len(cty_entities) > 1:
             for cty_entity in cty_entities:
-                try: 
+                try:
                     entity = {}
                     for item in cty_entity:
                         if item.tag == "name":
@@ -1354,7 +1354,7 @@ class LookupLib(object):
         """
 
         import plistlib
-        
+
         cty_list = None
         entities = {}
         exceptions = {}
@@ -1494,4 +1494,3 @@ class LookupLib(object):
             return False
         else:
             raise KeyError
-

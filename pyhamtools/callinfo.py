@@ -81,7 +81,7 @@ class Callinfo(object):
     def _iterate_prefix(self, callsign, timestamp=timestamp_now):
         """truncate call until it corresponds to a Prefix in the database"""
         prefix = callsign
-        
+
         if re.search('(VK|AX|VI)9[A-Z]{3}', callsign): #special rule for VK9 calls
             if timestamp > datetime(2006,1,1, tzinfo=UTC):
                 prefix = callsign[0:3]+callsign[4:5]
@@ -144,7 +144,7 @@ class Callinfo(object):
                 appendix = re.search('/[A-Z0-9]{2,4}$', callsign)
                 appendix = re.sub('/', '', appendix.group(0))
                 self._logger.debug("appendix: " + appendix)
-                
+
                 if appendix == 'MM':  # special case Martime Mobile
                     #self._mm = True
                     return {
@@ -180,8 +180,8 @@ class Callinfo(object):
                     return self._iterate_prefix(callsign, timestamp)
                 elif re.search('[A-Z]{3}', appendix): #case of US county(?) contest N3HBX/UAL
                     callsign = re.sub('/[A-Z]{3}$', '', callsign)
-                    return self._iterate_prefix(callsign, timestamp)                    
-                
+                    return self._iterate_prefix(callsign, timestamp)
+
                 else:
                     # check if the appendix is a valid country prefix
                     return self._iterate_prefix(re.sub('/', '', appendix), timestamp)
@@ -220,9 +220,9 @@ class Callinfo(object):
                 if re.match('^[\d]{0,1}[A-Z]{1,2}\d([A-Z]{1,4}|\d{3,3}|\d{1,3}[A-Z])[A-Z]{0,5}$', rest):
                     return self._iterate_prefix(pfx)
 
-        if entire_callsign in callsign_exceptions: 
+        if entire_callsign in callsign_exceptions:
             return self._iterate_prefix(callsign_exceptions[entire_callsign])
-            
+
         self._logger.debug("Could not decode " + callsign)
         raise KeyError("Callsign could not be decoded")
 
@@ -307,7 +307,7 @@ class Callinfo(object):
             would be missing with Clublog (API or XML) :py:class:`LookupLib`.
 
         """
-        callsign_data = self._lookup_callsign(callsign, timestamp_now)
+        callsign_data = self._lookup_callsign(callsign, timestamp)
 
         try:
             cqz = self._lookuplib.lookup_zone_exception(callsign, timestamp)

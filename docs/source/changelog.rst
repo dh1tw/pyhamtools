@@ -1,6 +1,17 @@
 Changelog
 ---------
 
+PyHamTools 0.5.4
+================
+
+11. January 2016
+
+ * Bugfix: Callinfo.get_all(callsign, timestamp) did ignore timestamp
+ * added unit test for the bug above
+ * extended timeout for QRZ.com request to 10 seconds (sometimes a bit slow)
+ * updated QRZ.com unit tests for fixture callsigns (XX1XX and XX2XX)
+
+
 PyHamTools 0.5.3
 ================
 
