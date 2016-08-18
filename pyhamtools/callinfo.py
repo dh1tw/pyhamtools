@@ -136,7 +136,7 @@ class Callinfo(object):
             if re.search('\-\d{1,3}$', entire_callsign):  # cut off any -10 / -02 appendixes
                 callsign = re.sub('\-\d{1,3}$', '', entire_callsign)
 
-            if re.search('/[A-Z0-9]{2,4}/[A-Z0-9]{1,4}$', callsign):
+            if re.search('/[A-Z0-9]{1,4}/[A-Z0-9]{1,4}$', callsign):
                 callsign = re.sub('/[A-Z0-9]{1,4}$', '', callsign)  # cut off 2. appendix DH1TW/HC2/P -> DH1TW/HC2
 
             # multiple character appendix (callsign/xxx)
@@ -199,8 +199,11 @@ class Callinfo(object):
 
                 elif re.search('\d$', appendix):
                     area_nr = re.search('\d$', appendix).group(0)
-                    callsign = re.sub('/\d$', '', callsign)
-                    callsign = re.sub('[\d]+', area_nr, callsign)
+                    callsign = re.sub('/\d$', '', callsign) #remove /number
+                    if len(re.findall(r'\d+', callsign)) == 1: #call has just on digit e.g. DH1TW
+                        callsign = re.sub('[\d]+', area_nr, callsign)
+                    else: # call has several digits e.g. 7N4AAL
+                        pass # no (two) digit prefix contries known where appendix would change entitiy
                     return self._iterate_prefix(callsign, timestamp)
 
                 else:
@@ -231,8 +234,8 @@ class Callinfo(object):
         # Check if operation is invalid
         invalid = False
         try:
-            if self._lookuplib.is_invalid_operation(callsign, timestamp):
-                invalid = True
+            invalid = self._lookuplib.is_invalid_operation(callsign, timestamp)
+            if invalid:
                 raise KeyError
         except KeyError:
             if invalid:

@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamTools 0.5.5
+================
+
+18. August 2016
+
+ * Refined callsign detection rule for two digit prefix with appendix (e.g. 7N0ERX/1)
+ * Refined callsign detection rule for callsigns with two appendixes (e.g. SV8GXQ/P/QRP)
+
+
 PyHamTools 0.5.4
 ================
 

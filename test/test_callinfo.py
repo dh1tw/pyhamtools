@@ -102,6 +102,23 @@ response_prefix_VK9GMW_clublog = {
     u'longitude': -155.8
 }
 
+response_callsign_exceptions_7N1PRD_0_clublog = {
+    u'adif': 339,
+    u'continent': u'AS',
+    u'country': u'JAPAN',
+    u'cqz': 25,
+    u'latitude': 35.7,
+    u'longitude': -139.8
+}
+
+response_callsign_exceptions_SV8GXQ_P_QRP_clublog = {
+    u'adif': 236,
+    u'continent': u'EU',
+    u'country': u'GREECE',
+    u'cqz': 20,
+    u'latitude': 38.0,
+    u'longitude': -23.7
+}
 
 response_Exception_VP8STI_with_start_and_stop_date = {
            'adif': 240,
@@ -221,6 +238,8 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DH1TW/NOT") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("VK9DLX/NOT") == response_prefix_VK9DLX_clublog
             assert fix_callinfo._dismantle_callsign("7QAA") == response_callsign_exceptions_7QAA_clublog
+            assert fix_callinfo._dismantle_callsign("7N1PRD/0") == response_callsign_exceptions_7N1PRD_0_clublog
+            assert fix_callinfo._dismantle_callsign("SV8GXQ/P/QRP") == response_callsign_exceptions_SV8GXQ_P_QRP_clublog
 
             with pytest.raises(KeyError):
                 fix_callinfo._dismantle_callsign("OZ/JO85")

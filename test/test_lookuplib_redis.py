@@ -5,12 +5,22 @@ from datetime import datetime
 import pytz
 import redis
 
-from pyhamtools import LookupLib
+from pyhamtools import LookupLib, Callinfo
 
 
 UTC = pytz.UTC
 
 r = redis.Redis()
+
+
+response_Exception_VP8STI_with_start_and_stop_date = {
+           'adif': 240,
+           'country': u'SOUTH SANDWICH ISLANDS',
+           'continent': u'SA',
+           'latitude': -59.45,
+           'longitude': 27.4,
+           'cqz': 13,
+        }
 
 
 class TestStoreDataInRedis:
@@ -40,3 +50,8 @@ class TestStoreDataInRedis:
         fixCountryFile.copy_data_in_redis("CF", r)
         assert lib.lookup_callsign("3D2RI") == fixCountryFile.lookup_callsign("3D2RI")
         assert lib.lookup_prefix("DH") == fixCountryFile.lookup_prefix("DH")
+
+    def test_redis_lookup(self, fixClublogXML, fix_redis):
+        timestamp = datetime(year=2016, month=1, day=20, tzinfo=UTC)
+        ci = Callinfo(fix_redis)
+        assert ci.get_all("VP8STI", timestamp) == response_Exception_VP8STI_with_start_and_stop_date
