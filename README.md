@@ -30,8 +30,6 @@ Check out the full documentation at:
 ## License
 PyHamTools are published under the permissive [MIT License](http://choosealicense.com/licenses/mit/). You can find a good comparison of Open Source Software licenses, including the MIT license at [choosealicense.com](http://choosealicense.com/licenses/)
 
-[PyHamTools.readthedocs.org](http://pyhamtools.readthedocs.org/en/latest/index.html)
-
 ## Installation
 
 Easiest way to install pyhamtools is through the packet manager PIP:
