@@ -16,7 +16,7 @@ Currently,
 are supported sources.
 All these lookup services can be accessed through a unified interface.
 
-Other modules include location based calculations (e.g. distance, heading between Maidenhead locators) or 
+Other modules include location based calculations (e.g. distance, heading between Maidenhead locators) or
 frequency based calculations (e.g. frequency to band).
 
 ## References
@@ -25,6 +25,11 @@ lookups and calculations per day.
 
 ## Documentation
 Check out the full documentation at:
+[PyHamTools.readthedocs.org](http://pyhamtools.readthedocs.org/en/latest/index.html)
+
+## License
+PyHamTools are published under the permissive [MIT License](http://choosealicense.com/licenses/mit/). You can find a good comparison of Open Source Software licenses, including the MIT license at [choosealicense.com](http://choosealicense.com/licenses/)
+
 [PyHamTools.readthedocs.org](http://pyhamtools.readthedocs.org/en/latest/index.html)
 
 ## Installation
