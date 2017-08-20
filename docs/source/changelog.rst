@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamTools 0.5.6
+================
+
+20. August 2017
+
+ * LOTW User list is now downloaded directly from ARRL
+
+
+
 PyHamTools 0.5.5
 ================
 

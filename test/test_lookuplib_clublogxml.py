@@ -301,7 +301,6 @@ class TestclublogXML_Getters:
             fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp_after)
 
         #zone exception with start date
-        assert fixClublogXML.lookup_zone_exception("dh1hb/p") == 38
         timestamp_before = datetime(year=2013, month=12, day=26).replace(tzinfo=UTC)
         with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dh1hb/p", timestamp_before)

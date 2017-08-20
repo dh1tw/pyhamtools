@@ -6,13 +6,13 @@ import redis
 from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 def get_lotw_users(**kwargs):
-    """Download the latest inoffical list of `ARRL Logbook of the World (LOTW)`__ users which is provided on a weekly basis by HB9BZA_. Dates of the users last upload is added by WD5EAE_.  
+    """Download the latest offical list of `ARRL Logbook of the World (LOTW)`__ users.
 
         Args:
             url (str, optional): Download URL
 
         Returns:
-            dict: Dictionary containing the callsign (unicode) date of estimated last LOTW upload (datetime)
+            dict: Dictionary containing the callsign (unicode) date of the last LOTW upload (datetime)
 
         Raises:
             IOError: When network is unavailable, file can't be downloaded or processed
@@ -27,8 +27,6 @@ def get_lotw_users(**kwargs):
            datetime.datetime(2014, 9, 7, 0, 0)
                 
     .. _ARRL: http://www.arrl.org/logbook-of-the-world
-    .. _HB9BZA: http://www.hb9bza.net/lotw-users-list
-    .. _WD5EAE: http://www.wd5eae.org/HB9BZA_LoTWUsersList.html
     __ ARRL_ 
 
     """
@@ -40,8 +38,8 @@ def get_lotw_users(**kwargs):
     try: 
         url = kwargs['url']
     except KeyError:
-        # url = "http://wd5eae.org/LoTW1.txt"
-        url = "http://wd5eae.org/LoTW_Data.txt"
+        # url = "http://wd5eae.org/LoTW_Data.txt"
+        url = "https://lotw.arrl.org/lotw-user-activity.csv"
     
     try: 
         result = requests.get(url)
