@@ -695,7 +695,7 @@ class LookupLib(object):
         if not self._check_html_response(response):
             raise LookupError
 
-        jsonLookup = json.loads(response.text)
+        jsonLookup = json.loads(response.text, encoding='UTF-8')
         lookup = {}
 
         for item in jsonLookup:
@@ -989,7 +989,7 @@ class LookupLib(object):
         return True
 
     def _load_countryfile(self,
-                         url="http://www.country-files.com/cty/cty.plist",
+                         url="https://www.country-files.com/cty/cty.plist",
                          country_mapping_filename="countryfilemapping.json",
                          cty_file=None):
         """ Load and process the ClublogXML file either as a download or from file
@@ -1385,7 +1385,7 @@ class LookupLib(object):
         mapping = None
 
         with open(country_mapping_filename, "r") as f:
-            mapping = json.loads(f.read())
+            mapping = json.loads(f.read(), encoding='UTF-8')
 
         cty_list = plistlib.readPlist(cty_file)
 
@@ -1473,7 +1473,7 @@ class LookupLib(object):
         Deserialize a JSON into a dictionary
         """
 
-        my_dict = json.loads(json_data)
+        my_dict = json.loads(json_data, encoding='UTF-8')
 
         for item in my_dict:
             if item == const.ADIF:

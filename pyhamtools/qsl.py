@@ -121,7 +121,7 @@ def get_clublog_users(**kwargs):
     files = zip_file.namelist()
     cl_json_unzipped = zip_file.read(files[0])
 
-    cl_data = json.loads(cl_json_unzipped)
+    cl_data = json.loads(cl_json_unzipped, encoding='UTF-8')
 
     error_count = 0
 
