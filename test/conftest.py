@@ -1,12 +1,22 @@
 import pytest
 import tempfile
 import os
+import logging
 
-
-from .apikey import APIKEY, QRZ_USERNAME, QRZ_PWD
 from pyhamtools import LookupLib
 from pyhamtools import Callinfo
 
+APIKEY = ""
+QRZ_USERNAME = ""
+QRZ_PWD = ""
+
+try:
+    APIKEY = str(os.environ['CLUBLOG_APIKEY'])
+    QRZ_USERNAME = str(os.environ['QRZ_USERNAME'])
+    QRZ_PWD = str(os.environ['QRZ_PWD'])
+
+except Exception as ex:
+    print("WARNING: Environment variables with API keys not set; some tests will be skipped")
 
 @pytest.fixture(scope="session", params=["a", "", 12.5, -5, {"foo" : "bar"}, [5, "foo"]])
 def fixNonUnsignedInteger(request):

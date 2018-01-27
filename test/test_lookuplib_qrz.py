@@ -1,8 +1,8 @@
+import os
+
 import pytest
 from datetime import datetime
 
-
-from .apikey import QRZ_USERNAME, QRZ_PWD
 from pyhamtools.lookuplib import LookupLib
 from pyhamtools.exceptions import APIKeyMissingError
 from pyhamtools.consts import LookupConventions as const
@@ -10,10 +10,15 @@ from pyhamtools.consts import LookupConventions as const
 import pytz
 UTC = pytz.UTC
 
+
+try:
+    QRZ_USERNAME = str(os.environ['QRZ_USERNAME'])
+    QRZ_PWD = str(os.environ['QRZ_PWD'])
+except Exception:
+    pytestmark = pytest.mark.skip("Environment variables with QRZ.com credentials not set")
+
 #Fixtures
 #===========================================================
-
-
 response_XX1XX = {
      u'addr2': u'Not QSL',
      u'adif': 0,
