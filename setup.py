@@ -21,6 +21,7 @@ setup(name='pyhamtools',
           "pyephem>=3.7.6.0",
           "beautifulsoup4>=4.6.0",
           "future>=0.16.0",
+          "redis>=2.10.6",
       ],
       **kw
      )
