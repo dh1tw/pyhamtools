@@ -1,10 +1,14 @@
 # pyhamtools
 
-[![Join the chat at https://gitter.im/dh1tw/pyhamtools](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dh1tw/pyhamtools?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Linux & MacOS [![Build Status](https://travis-ci.org/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.org/dh1tw/pyhamtools)
+Windows [![Build status](https://ci.appveyor.com/api/projects/status/it6077sklplhgkyf?svg=true)](https://ci.appveyor.com/project/dh1tw/pyhamtools)
 
-Pyhamtools is a set of functions and classes for Amateur Radio purpose. Currently the core part is the Callsign
-Lookup which decodes any amateur radio callsign string and provides the corresponding information (Country, DXCC entity,
-CQ Zone...etc). This basic functionality is needed for Logbooks, DX-Clusters or Log Checking.
+
+Pyhamtools is a set of functions and classes for Amateur Radio purpose.
+Currently the core part is the Callsign Lookup which decodes any amateur radio
+callsign string and provides the corresponding information (Country, DXCC
+entity, CQ Zone...etc). This basic functionality is needed for Logbooks,
+DX-Clusters or Log Checking.
 
 Currently,
 * [Country-Files.org](http://country-files.org)
@@ -14,21 +18,39 @@ Currently,
 * [Redis.io](http://redis.io)
 
 are supported sources.
-All these lookup services can be accessed through a unified interface.
+All these lookup services can be accessed through a unified interface. However
+for the best results, we strongly recommend the data provided by Clublog.
 
-Other modules include location based calculations (e.g. distance, heading between Maidenhead locators) or
-frequency based calculations (e.g. frequency to band).
+Other modules include location based calculations (e.g. distance,
+heading between Maidenhead locators) or frequency based calculations
+(e.g. frequency to band).
 
 ## References
-This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat.com), performing several thousand
-lookups and calculations per day.
+
+This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat.com), performing several thousand lookups and calculations per day.
+
+## Compatibility
+
+pyhamtools is since version 0.6.0 compatible with > Python 2.7 and > python 3.3.
+We check compatibility on OSX, Windows and Linux with the following Python
+versions:
+* 2.7
+* 3.3
+* 3.4
+* 3.5
+* 3.6
+* pypy (Python 2)
+* pypy3 (Python 3)
 
 ## Documentation
+
 Check out the full documentation at:
 [PyHamTools.readthedocs.org](http://pyhamtools.readthedocs.org/en/latest/index.html)
 
 ## License
-PyHamTools are published under the permissive [MIT License](http://choosealicense.com/licenses/mit/). You can find a good comparison of Open Source Software licenses, including the MIT license at [choosealicense.com](http://choosealicense.com/licenses/)
+
+PyHamTools are published under the permissive [MIT License](http://choosealicense.com/licenses/mit/). You can find a good comparison of
+Open Source Software licenses, including the MIT license at [choosealicense.com](http://choosealicense.com/licenses/)
 
 ## Installation
 
@@ -38,7 +60,7 @@ Easiest way to install pyhamtools is through the packet manager PIP:
 
 ## Example: How to use pyhamtools
 
-```
+``` python
 
 >>> from pyhamtools.locator import calculate_heading
 >>> calculate_heading("JN48QM", "QF67bf")
@@ -62,4 +84,47 @@ Easiest way to install pyhamtools is through the packet manager PIP:
 ```
 
 ## Testing
+
 An extensive set of unit tests has been created for all Classes & Methods.
+In order to be able to perform all tests you need a QRZ.com account and a
+[Clublog API key](http://clublog.freshdesk.com/support/solutions/articles/54910-api-keys).
+
+pyhamtools rely on the [pytest](https://docs.pytest.org/en/latest/) testing
+framework. In order to install it with all the needed dependencies run:
+
+```bash
+
+$ pip install -r requirements-pytest.txt
+
+```
+
+The QRZ.com credentials and the Clublog API key have to be set in environment
+variables:
+
+```bash
+
+$ export CLUBLOG_APIKEY="<your API key>"
+$ export QRZ_USERNAME="<your qrz.com username>"
+$ export QRZ_PWD="<your qrz.com password>"
+
+```
+
+To run the tests, simply execute:
+
+```bash
+
+$ pytest
+
+```
+
+## Generate the documentation
+
+You can generate the documentation of pyhamtools with the following commands:
+
+```bash
+
+$ pip install -r requirements-docs.txt
+$ cd docs
+$ make html
+
+```
