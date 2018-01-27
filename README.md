@@ -31,7 +31,7 @@ This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat
 
 ## Compatibility
 
-pyhamtools is since version 0.6.0 compatible with > Python 2.7 and > python 3.3.
+Pyhamtools is since version 0.6.0 compatible with > Python 2.7 and > python 3.3.
 We check compatibility on OSX, Windows and Linux with the following Python
 versions:
 
@@ -81,7 +81,7 @@ $ pip install pyhamtools
         'adif': 230,
         'continent': 'EU',
         'latitude': 51.0,
-        'longitude': -10.0,
+        'longitude': 10.0,
         'cqz': 14,
         'ituz': 28
     }
