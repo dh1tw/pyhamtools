@@ -8,18 +8,18 @@ Pyhamtools is a set of functions and classes for Amateur Radio purpose.
 Currently the core part is the Callsign Lookup which decodes any amateur radio
 callsign string and provides the corresponding information (Country, DXCC
 entity, CQ Zone...etc). This basic functionality is needed for Logbooks,
-DX-Clusters or Log Checking.
+DX-Clusters or Log Checking. This and additional convenience features are
+provided for the following sources:
 
 Currently,
-* [Country-Files.org](http://country-files.org)
+* [AD1C's Country-Files.org](http://country-files.org)
 * [Clublog Prefixes & Exceptions XML File](https://clublog.freshdesk.com/support/articles/54902-downloading-the-prefixes-and-exceptions-as)
 * [Clublog DXCC Query API](http://clublog.freshdesk.com/support/articles/54904-how-to-query-club-log-for-dxcc)
 * [QRZ.com XML API](http://www.qrz.com/XML/current_spec.html)
 * [Redis.io](http://redis.io)
-
-are supported sources.
-All these lookup services can be accessed through a unified interface. However
-for the best results, we strongly recommend the data provided by Clublog.
+* [ARRL Logbook of the World (LOTW)](http://https://lotw.arrl.org)
+* [eQSL.cc user list](https://www.eqsl.cc)
+* [Clublog & OQRS user list](http://clublog.freshdesk.com/support/solutions/articles/3000064883-list-of-club-log-and-lotw-users)
 
 Other modules include location based calculations (e.g. distance,
 heading between Maidenhead locators) or frequency based calculations
@@ -34,29 +34,34 @@ This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat
 pyhamtools is since version 0.6.0 compatible with > Python 2.7 and > python 3.3.
 We check compatibility on OSX, Windows and Linux with the following Python
 versions:
-* 2.7
-* 3.3
-* 3.4
-* 3.5
-* 3.6
-* pypy (Python 2)
-* pypy3 (Python 3)
+
+* Python 2.7
+* Python 3.3
+* Python 3.4
+* Python 3.5
+* Python 3.6
+* [pypy](https://pypy.org/)
+* [pypy3](https://pypy.org/)
 
 ## Documentation
 
-Check out the full documentation at:
-[PyHamTools.readthedocs.org](http://pyhamtools.readthedocs.org/en/latest/index.html)
+Check out the full documentation including the changelog at:
+[pyhamtools.readthedocs.org](http://pyhamtools.readthedocs.org/en/latest/index.html)
 
 ## License
 
-PyHamTools are published under the permissive [MIT License](http://choosealicense.com/licenses/mit/). You can find a good comparison of
+Pyhamtools is published under the permissive [MIT License](http://choosealicense.com/licenses/mit/). You can find a good comparison of
 Open Source Software licenses, including the MIT license at [choosealicense.com](http://choosealicense.com/licenses/)
 
 ## Installation
 
-Easiest way to install pyhamtools is through the packet manager PIP:
+Easiest way to install pyhamtools is through the packet manager `pip`:
 
-`pip install pyhamtools`
+```bash
+
+$ pip install pyhamtools
+
+```
 
 ## Example: How to use pyhamtools
 
