@@ -66,11 +66,17 @@ def fixCountryFile(request):
     Lib = LookupLib("countryfile")
     return(Lib)
 
-@pytest.fixture(scope="module", params=["clublogapi", "clublogxml", "countryfile"])
+@pytest.fixture(scope="module", params=["clublogxml", "countryfile"])
 def fix_callinfo(request, fixApiKey):
     lib = LookupLib(request.param, fixApiKey)
     callinfo = Callinfo(lib)
     return(callinfo)
+
+# @pytest.fixture(scope="module", params=["clublogapi", "clublogxml", "countryfile"])
+# def fix_callinfo(request, fixApiKey):
+#     lib = LookupLib(request.param, fixApiKey)
+#     callinfo = Callinfo(lib)
+#     return(callinfo)
 
 @pytest.fixture(scope="module")
 def fix_redis():

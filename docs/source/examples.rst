@@ -74,7 +74,7 @@ Now we can query the information conveniently through our Callinfo object:
        'adif': 230,
        'continent': 'EU',
        'latitude': 51.0,
-       'longitude': -10.0,
+       'longitude': 10.0,
        'cqz': 14,
        'ituz': 28
    }

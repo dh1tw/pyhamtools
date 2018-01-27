@@ -177,7 +177,7 @@ class LookupLib(object):
              u'cqz': 32,
              u'ituz': 56,
              u'latitude': -12.48,
-             u'longitude': -177.08
+             u'longitude': 177.08
            }
 
 
@@ -255,7 +255,7 @@ class LookupLib(object):
            {
             'deleted': False,
             'country': u'TURKMENISTAN',
-            'longitude': -58.4,
+            'longitude': 58.4,
             'cqz': 17,
             'prefix': u'EZ',
             'latitude': 38.0,
@@ -338,7 +338,7 @@ class LookupLib(object):
            >>> print my_lookuplib.lookup_callsign("VK9XO", timestamp)
            {
             'country': u'CHRISTMAS ISLAND',
-            'longitude': -105.7,
+            'longitude': 105.7,
             'cqz': 29,
             'adif': 35,
             'latitude': -10.5,
@@ -500,7 +500,7 @@ class LookupLib(object):
            {
             'adif': 230,
             'country': u'Fed. Rep. of Germany',
-            'longitude': -10.0,
+            'longitude': 10.0,
             'cqz': 14,
             'ituz': 28,
             'latitude': 51.0,
@@ -691,7 +691,7 @@ class LookupLib(object):
         for item in jsonLookup:
             if item == "Name": lookup[const.COUNTRY] = jsonLookup["Name"]
             elif item == "DXCC": lookup[const.ADIF] = int(jsonLookup["DXCC"])
-            elif item == "Lon": lookup[const.LONGITUDE] = float(jsonLookup["Lon"])
+            elif item == "Lon": lookup[const.LONGITUDE] = float(jsonLookup["Lon"])*(-1)
             elif item == "Lat": lookup[const.LATITUDE] = float(jsonLookup["Lat"])
             elif item == "CQZ": lookup[const.CQZ] = int(jsonLookup["CQZ"])
             elif item == "Continent": lookup[const.CONTINENT] = jsonLookup["Continent"]
@@ -1172,7 +1172,7 @@ class LookupLib(object):
                         elif item.tag == "cont":
                             entity[const.CONTINENT] = unicode(item.text)
                         elif item.tag == "long":
-                            entity[const.LONGITUDE] = float(item.text)*(-1)
+                            entity[const.LONGITUDE] = float(item.text)
                         elif item.tag == "lat":
                             entity[const.LATITUDE] = float(item.text)
                         elif item.tag == "start":
@@ -1220,7 +1220,7 @@ class LookupLib(object):
                     elif item.tag == "cont":
                         call_exception[const.CONTINENT] = unicode(item.text)
                     elif item.tag == "long":
-                        call_exception[const.LONGITUDE] = float(item.text)*(-1)
+                        call_exception[const.LONGITUDE] = float(item.text)
                     elif item.tag == "lat":
                         call_exception[const.LATITUDE] = float(item.text)
                     elif item.tag == "start":
@@ -1261,7 +1261,7 @@ class LookupLib(object):
                     elif item.tag == "cont":
                         prefix[const.CONTINENT] = unicode(item.text)
                     elif item.tag == "long":
-                        prefix[const.LONGITUDE] = float(item.text)*(-1)
+                        prefix[const.LONGITUDE] = float(item.text)
                     elif item.tag == "lat":
                         prefix[const.LATITUDE] = float(item.text)
                     elif item.tag == "start":
@@ -1383,7 +1383,7 @@ class LookupLib(object):
             entry[const.ITUZ] = int(cty_list[item]["ITUZone"])
             entry[const.CONTINENT] = unicode(cty_list[item]["Continent"])
             entry[const.LATITUDE] = float(cty_list[item]["Latitude"])
-            entry[const.LONGITUDE] = float(cty_list[item]["Longitude"])
+            entry[const.LONGITUDE] = float(cty_list[item]["Longitude"])*(-1)
 
             if cty_list[item]["ExactCallsign"]:
                 if call in exceptions_index.keys():
@@ -1433,7 +1433,7 @@ class LookupLib(object):
         else:
             err_str = "HTTP Status Code: " + str(response.status_code) + " HTTP Response: " + str(response.text)
             self._logger.error(err_str)
-            if response.text.strip() == error1 or response.text.strip() == error2:
+            if error1 in response.text.strip() or error2 in response.text.strip():
                 raise APIKeyMissingError
             else:
                 raise LookupError(err_str)

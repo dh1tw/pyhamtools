@@ -1,6 +1,19 @@
 Changelog
 ---------
 
+PyHamTools 0.6.0
+================
+
+23. January 2018
+
+ * BREAKING CHANGE: Longitude is now provided with the correct sign for all
+   lookup libraries. The AD1C cty format used by Countryfile and ClublogAPI
+   provide the longitude with the wrong sign. This is now covered and internally
+   corrected. East = positive longitude, West = negative longitude.
+ * Added a function to download the Clublog user list and the associated activity dates 
+ * updated requirements for libraries used by pyhamtools
+
+
 PyHamTools 0.5.6
 ================
 
@@ -46,6 +59,7 @@ PyHamTools 0.5.2
 14. April 2015
 
  * catching another bug related to QRZ.com sessions
+ 
 
 
 PyHamTools 0.5.1

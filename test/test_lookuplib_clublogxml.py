@@ -18,7 +18,7 @@ response_Entity_230 = {
           'country': u'FEDERAL REPUBLIC OF GERMANY',
           'continent': u'EU',
           'latitude': 51.0,
-          'longitude': -10.0,
+          'longitude': 10.0,
           'cqz': 14,
           'prefix' : u'DL',
           'deleted' : False,
@@ -29,7 +29,7 @@ response_Exception_KC6MM_1990 = {
            'country': u'PALAU',
            'continent': u'OC',
            'latitude': 9.50,
-           'longitude': -138.20,
+           'longitude': 138.20,
            'cqz': 27,
         }
 
@@ -38,7 +38,7 @@ response_Exception_KC6MM_1992 = {
            'country': u'PALAU',
            'continent': u'OC',
            'latitude': 9.50,
-           'longitude': -138.20,
+           'longitude': 138.20,
            'cqz': 27,
         }
 
@@ -47,7 +47,7 @@ response_Exception_VK9XX_with_end_date = {
            'country': u'CHRISTMAS ISLAND',
            'continent': u'OC',
            'latitude': -10.50,
-           'longitude': -105.70,
+           'longitude': 105.70,
            'cqz': 29,
         }
 
@@ -56,7 +56,7 @@ response_Exception_VK9XO_with_start_date = {
            'country': u'CHRISTMAS ISLAND',
            'continent': u'OC',
            'latitude': -10.50,
-           'longitude': -105.70,
+           'longitude': 105.70,
            'cqz': 29,
         }
 
@@ -65,7 +65,7 @@ response_Exception_AX9NYG = {
            'country': u'COCOS (KEELING) ISLAND',
            'continent': u'OC',
            'latitude': -12.20,
-           'longitude': -96.80,
+           'longitude': 96.80,
            'cqz': 29,
         }
 
@@ -74,7 +74,7 @@ response_Prefix_DH = {
     'adif' : 230,
     'continent': u'EU',
     'latitude': 51.0,
-    'longitude': -10.0,
+    'longitude': 10.0,
     'cqz': 14,
 }
 
@@ -83,7 +83,7 @@ response_Prefix_VK9_until_1975 = {
     'adif' : 198,
     'continent': u'OC',
     'latitude': -9.40,
-    'longitude': -147.10,
+    'longitude': 147.10,
     'cqz': 28,
 }
 
@@ -92,7 +92,7 @@ response_Prefix_VK9_starting_1976 = {
     'adif' : 189,
     'continent': u'OC',
     'latitude': -29.00,
-    'longitude': -168.00,
+    'longitude': 168.00,
     'cqz': 32,
 }
 
@@ -101,7 +101,7 @@ response_Prefix_ZD5_1964_to_1971 = {
     'adif' : 468,
     'continent': u'AF',
     'latitude': -26.30,
-    'longitude': -31.10,
+    'longitude': 31.10,
     'cqz': 38,
 }
 

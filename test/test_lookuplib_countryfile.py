@@ -13,7 +13,7 @@ response_Prefix_DH = {
           'country': 'Fed. Rep. of Germany', 
           'continent': 'EU', 
           'latitude': 51.0, 
-          'longitude': -10.0, 
+          'longitude': 10.0, 
           'cqz': 14,
           'ituz' : 28
         }
@@ -24,7 +24,7 @@ response_Exception_3D2RI = {
           'country': 'Rotuma Island', 
           'continent': 'OC', 
           'latitude': -12.48, 
-          'longitude': -177.08, 
+          'longitude': 177.08, 
           'cqz': 32,
           'ituz' : 56
         }

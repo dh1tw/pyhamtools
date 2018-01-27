@@ -13,7 +13,7 @@ response_prefix_DH_clublog = {
     'adif': 230,
     'continent': 'EU',
     'latitude': 51.0,
-    'longitude': -10.0,
+    'longitude': 10.0,
     'cqz': 14,
 }
 
@@ -22,14 +22,14 @@ response_prefix_DH_countryfile = {
     'adif': 230,
     'continent': 'EU',
     'latitude': 51.0,
-    'longitude': -10.0,
+    'longitude': 10.0,
     'cqz': 14,
     'ituz': 28
 }
 
 response_prefix_C6A_clublog = {
     'country': 'BAHAMAS',
-    'longitude': 76.0,
+    'longitude': -76.0,
     'cqz': 8,
     'adif': 60,
     'latitude': 24.25,
@@ -38,7 +38,7 @@ response_prefix_C6A_clublog = {
 
 response_prefix_C6A_countryfile = {
     'country': 'Bahamas',
-    'longitude': 76.0,
+    'longitude': -76.0,
     'cqz': 8,
     'adif': 60,
     'latitude': 24.25,
@@ -53,7 +53,7 @@ response_prefix_VK9NDX_countryfile = {
     u'cqz': 32,
     u'ituz': 60,
     u'latitude': -29.03,
-    u'longitude': -167.93
+    u'longitude': 167.93
 }
 
 response_prefix_VK9DNX_clublog = {
@@ -62,7 +62,7 @@ response_prefix_VK9DNX_clublog = {
     u'country': u'NORFOLK ISLAND',
     u'cqz': 32,
     u'latitude': -29.0,
-    u'longitude': -168.0
+    u'longitude': 168.0
 }
 
 response_prefix_VK9DWX_clublog = {
@@ -71,7 +71,7 @@ response_prefix_VK9DWX_clublog = {
     u'country': u'WILLIS ISLAND',
     u'cqz': 30,
     u'latitude': -16.2,
-    u'longitude': -150.0
+    u'longitude': 150.0
 }
 
 response_prefix_VK9DLX_clublog = {
@@ -80,7 +80,7 @@ response_prefix_VK9DLX_clublog = {
     u'country': u'LORD HOWE ISLAND',
     u'cqz': 30,
     u'latitude': -31.6,
-    u'longitude': -159.1
+    u'longitude': 159.1
 }
 
 response_prefix_VK9DLX_countryfile = {
@@ -90,7 +90,7 @@ response_prefix_VK9DLX_countryfile = {
      u'cqz': 30,
      u'ituz': 60,
      u'latitude': -31.55,
-     u'longitude': -159.08
+     u'longitude': 159.08
 }
 
 response_prefix_VK9GMW_clublog = {
@@ -99,7 +99,7 @@ response_prefix_VK9GMW_clublog = {
     u'country': u'MELLISH REEF',
     u'cqz': 30,
     u'latitude': -17.6,
-    u'longitude': -155.8
+    u'longitude': 155.8
 }
 
 response_callsign_exceptions_7N1PRD_0_clublog = {
@@ -108,7 +108,7 @@ response_callsign_exceptions_7N1PRD_0_clublog = {
     u'country': u'JAPAN',
     u'cqz': 25,
     u'latitude': 35.7,
-    u'longitude': -139.8
+    u'longitude': 139.8
 }
 
 response_callsign_exceptions_SV8GXQ_P_QRP_clublog = {
@@ -117,7 +117,7 @@ response_callsign_exceptions_SV8GXQ_P_QRP_clublog = {
     u'country': u'GREECE',
     u'cqz': 20,
     u'latitude': 38.0,
-    u'longitude': -23.7
+    u'longitude': 23.7
 }
 
 response_Exception_VP8STI_with_start_and_stop_date = {
@@ -125,7 +125,7 @@ response_Exception_VP8STI_with_start_and_stop_date = {
            'country': u'SOUTH SANDWICH ISLANDS',
            'continent': u'SA',
            'latitude': -59.45,
-           'longitude': 27.4,
+           'longitude': -27.4,
            'cqz': 13,
         }
 
@@ -135,7 +135,7 @@ response_Exception_VK9XO_with_start_date = {
            'country': 'CHRISTMAS ISLAND',
            'continent': 'OC',
            'latitude': -10.50,
-           'longitude': -105.70,
+           'longitude': 105.70,
            'cqz': 29
         }
 
@@ -144,13 +144,13 @@ response_zone_exception_dp0gvn = {
     'adif': 13,
     'cqz': 38,
     'latitude': -65.0,
-    'longitude': 64.0,
+    'longitude': -64.0,
     'continent': 'AN'
 }
 
 response_lat_long_dh1tw = {
     const.LATITUDE: 51.0,
-    const.LONGITUDE: -10.0
+    const.LONGITUDE: 10.0
 }
 
 response_maritime_mobile = {
@@ -177,7 +177,7 @@ response_callsign_exceptions_7QAA_clublog = {
     u'country': u'MALAWI',
     u'cqz': 37,
     u'latitude': -14.9,
-    u'longitude': -34.4
+    u'longitude': 34.4
 }
 
 
