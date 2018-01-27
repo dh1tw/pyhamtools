@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os
 import logging
 import logging.config
@@ -16,9 +17,9 @@ from requests.exceptions import ConnectionError, HTTPError, Timeout
 from bs4 import BeautifulSoup
 import pytz
 
-import version
-from consts import LookupConventions as const
-from exceptions import APIKeyMissingError
+from . import version
+from .consts import LookupConventions as const
+from .exceptions import APIKeyMissingError
 
 UTC = pytz.UTC
 timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
@@ -27,6 +28,9 @@ if sys.version_info < (2, 7,):
     class NullHandler(logging.Handler):
         def emit(self, record):
             pass
+
+if sys.version_info.major == 3:
+    unicode = str
 
 class LookupLib(object):
     """
@@ -126,9 +130,12 @@ class LookupLib(object):
             "agent" : agent
         }
 
-        encodeurl = url + "?" + urllib.urlencode(params)
+        if sys.version_info.major == 3:
+            encodeurl = url + "?" + urllib.parse.urlencode(params)
+        else:
+            encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=10)
-        doc = BeautifulSoup(response.text)
+        doc = BeautifulSoup(response.text, "html.parser")
         session_key = None
         if doc.session.key:
             session_key = doc.session.key.text
@@ -393,10 +400,10 @@ class LookupLib(object):
             raise KeyError ("redis_prefix is missing")
 
         if r.scard(redis_prefix + index_name + str(item)) > 0:
-            data_index_dict[item] = r.smembers(redis_prefix + index_name + str(item))
+            data_index_dict[str(item)] = r.smembers(redis_prefix + index_name + str(item))
 
             for i in data_index_dict[item]:
-                json_data = r.get(redis_prefix + name + i)
+                json_data = r.get(redis_prefix + name + str(int(i)))
                 data_dict[i] = self._deserialize_data(json_data)
 
             return (data_dict, data_index_dict)
@@ -679,7 +686,10 @@ class LookupLib(object):
             "call" : callsign
         }
 
-        encodeurl = url + "?" + urllib.urlencode(params)
+        if sys.version_info.major == 3:
+            encodeurl = url + "?" + urllib.parse.urlencode(params)
+        else:
+            encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
 
         if not self._check_html_response(response):
@@ -710,7 +720,10 @@ class LookupLib(object):
             "callsign" : callsign,
         }
 
-        encodeurl = url + "?" + urllib.urlencode(params)
+        if sys.version_info.major == 3:
+            encodeurl = url + "?" + urllib.parse.urlencode(params)
+        else:
+            encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
         return response
 
@@ -723,7 +736,10 @@ class LookupLib(object):
             "dxcc" : str(dxcc_or_callsign),
         }
 
-        encodeurl = url + "?" + urllib.urlencode(params)
+        if sys.version_info.major == 3:
+            encodeurl = url + "?" + urllib.parse.urlencode(params)
+        else:
+            encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
         return response
 
@@ -733,7 +749,7 @@ class LookupLib(object):
 
         response = self._request_dxcc_info_from_qrz(dxcc_or_callsign, apikey, apiv=apiv)
 
-        root = BeautifulSoup(response.text)
+        root = BeautifulSoup(response.text, "html.parser")
         lookup = {}
 
         if root.error: #try to get a new session key and try to request again
@@ -743,7 +759,7 @@ class LookupLib(object):
             elif re.search('Session Timeout', root.error.text, re.I): # Get new session key
                 self._apikey = apikey = self._get_qrz_session_key(self._username, self._pwd)
                 response = self._request_dxcc_info_from_qrz(dxcc_or_callsign, apikey)
-                root = BeautifulSoup(response.text)
+                root = BeautifulSoup(response.text, "html.parser")
             else:
                 raise AttributeError("Session Key Missing") #most likely session key missing or invalid
 
@@ -785,7 +801,7 @@ class LookupLib(object):
 
         response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
 
-        root = BeautifulSoup(response.text)
+        root = BeautifulSoup(response.text, "html.parser")
         lookup = {}
 
         if root.error:
@@ -797,7 +813,7 @@ class LookupLib(object):
             elif re.search('Session Timeout', root.error.text, re.I) or re.search('Invalid session key', root.error.text, re.I):
                 apikey = self._get_qrz_session_key(self._username, self._pwd)
                 response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
-                root = BeautifulSoup(response.text)
+                root = BeautifulSoup(response.text, "html.parser")
 
                 #if this fails again, raise error
                 if root.error:
@@ -1043,7 +1059,7 @@ class LookupLib(object):
             filename = "cty_" + self._generate_random_word(5)
 
         download_file_path = os.path.join(tempfile.gettempdir(), filename)
-        with open(download_file_path, "w") as download_file:
+        with open(download_file_path, "wb") as download_file:
             download_file.write(response.content)
         self._logger.debug(str(download_file_path) + " successfully downloaded")
 
@@ -1053,7 +1069,7 @@ class LookupLib(object):
             download_file = gzip.open(download_file_path, "r")
             try:
                 cty_file_path = os.path.join(os.path.splitext(download_file_path)[0])
-                with open(cty_file_path, "w") as cty_file:
+                with open(cty_file_path, "wb") as cty_file:
                     cty_file.write(download_file.read())
                 self._logger.debug(str(cty_file_path) + " successfully extracted")
             finally:
@@ -1418,7 +1434,7 @@ class LookupLib(object):
         """
             Generates a random word
         """
-        return ''.join(random.choice(string.lowercase) for i in xrange(length))
+        return ''.join(random.choice(string.ascii_lowercase) for _ in range(length))
 
     def _check_html_response(self, response):
         """

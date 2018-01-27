@@ -2,16 +2,10 @@
 import sys
 import os
 from distutils.core import setup
-# from pyhamtools import __version__, __release__
 
 kw = {}
 
-if sys.version_info >= (3,):
-    kw['use_2to3'] = True
-
 exec(open(os.path.join("pyhamtools","version.py")).read())
-
-# from pyhamtools import __version__, __release__
 
 setup(name='pyhamtools',
       version=__release__,
@@ -22,10 +16,11 @@ setup(name='pyhamtools',
       package_data={'': ['countryfilemapping.json']},
       packages=['pyhamtools'],
       install_requires=[
-          "pytz", 
-          "requests",
-          "pyephem",
-          "beautifulsoup4",
+          "pytz>=2017.3",
+          "requests>=2.18.4",
+          "pyephem>=3.7.6.0",
+          "beautifulsoup4>=4.6.0",
+          "future>=0.16.0",
       ],
       **kw
      )

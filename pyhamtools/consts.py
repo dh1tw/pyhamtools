@@ -23,7 +23,7 @@ class LookupConventions:
     AIRCRAFT_MOBILE = u"am"
     LOCATOR = u"locator"
     BEACON = u"beacon"
-    
+
     #CQ / DIGITAL Skimmer specific
 
     SKIMMER = u"skimmer"
@@ -31,8 +31,8 @@ class LookupConventions:
     WPM = u"wpm" #words / bytes per second
     CQ = u"cq"
     NCDXF = u"ncdxf"
-    
-    
+
+
     # Modes
     CW = u"CW"
     USB = u"USB"

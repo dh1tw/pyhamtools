@@ -15,10 +15,12 @@ class Test_latlong_to_locator():
 
     def test_latlong_to_locator_invalid_characters(self):
 
-        with pytest.raises(ValueError):
+        # throws ValueError in Python2 and TypeError in Python3
+        with pytest.raises(Exception):
             latlong_to_locator("JN48QM", "test")
 
-        with pytest.raises(ValueError):
+        # throws ValueError in Python2 and TypeError in Python3
+        with pytest.raises(Exception):
             latlong_to_locator("", "")
 
     def test_latlong_to_locator_out_of_boundry(self):

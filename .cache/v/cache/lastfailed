@@ -1,0 +1,9 @@
+{
+  "test/test_callinfo.py::Test_callinfo_methods::()::test_get_all[clublogapi]": true,
+  "test/test_callinfo.py::Test_callinfo_methods::()::test_get_lat_long[clublogapi]": true,
+  "test/test_callinfo.py::Test_callinfo_methods::()::test_lookup_callsign[clublogapi]": true,
+  "test/test_clublog.py::Test_clublog_methods": true,
+  "test/test_eqsl.py::Test_eqsl_methods": true,
+  "test/test_lookuplib_redis.py::TestStoreDataInRedis": true,
+  "test/test_lotw.py::Test_lotw_methods": true
+}

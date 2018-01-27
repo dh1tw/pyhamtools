@@ -1,7 +1,0 @@
-sphinxcontrib-napoleon>=0.6.1
-requests>=2.18.4
-pytz>=2017.3
-pyephem>=3.7.6.0
-redis>=2.10.6
-beautifulsoup4>=4.6.0
-

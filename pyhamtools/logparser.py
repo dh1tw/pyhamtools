@@ -10,7 +10,7 @@ def import_cabrillo(filename):
     log = []
     log_import = log_import.split("\r\n")
 
-    for qso in log_import: 
+    for qso in log_import:
 
         if re.match("^QSO", qso):
             freq = int(qso[4:11])
@@ -24,15 +24,15 @@ def import_cabrillo(filename):
             rcvd_exchange = qso[73:79].strip()
             station = int(qso[80])
             log.append({
-                "freq": freq, 
-                "mode":mode, 
-                "time":time, 
-                "from": frm, 
+                "freq": freq,
+                "mode":mode,
+                "time":time,
+                "from": frm,
                 "sent_rst":sent_rst,
-                "sent_exchange": sent_exchange, 
-                "qso_partner": qso_partner, 
-                "rcvd_rst": rcvd_rst, 
-                "rcvd_exchange": rcvd_exchange, 
+                "sent_exchange": sent_exchange,
+                "qso_partner": qso_partner,
+                "rcvd_rst": rcvd_rst,
+                "rcvd_exchange": rcvd_exchange,
                 "station": station
              })
     return log

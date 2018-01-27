@@ -268,7 +268,7 @@ class TestclublogXML_Getters:
             fixClublogXML.is_invalid_operation("5W1CFN", timestamp_before)
 
         #Invalid Operation with end date
-        timestamp_before = datetime(year=2004, month=04, day=02).replace(tzinfo=UTC)
+        timestamp_before = datetime(year=2004, month=4, day=2).replace(tzinfo=UTC)
         with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("T33C")
 
@@ -291,7 +291,7 @@ class TestclublogXML_Getters:
         #zone exception with start and end date
         timestamp = datetime(year=1992, month=10, day=2).replace(tzinfo=UTC)
         timestamp_before = datetime(year=1992, month=9, day=30).replace(tzinfo=UTC)
-        timestamp_after = datetime(year=1993, month=03, day=1).replace(tzinfo=UTC)
+        timestamp_after = datetime(year=1993, month=3, day=1).replace(tzinfo=UTC)
         assert fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp) == 38
 
         with pytest.raises(KeyError):

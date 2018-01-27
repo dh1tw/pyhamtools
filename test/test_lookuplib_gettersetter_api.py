@@ -1,6 +1,11 @@
+from __future__ import unicode_literals
 import pytest
 import tempfile
 import os
+import sys
+
+if sys.version_info.major == 3:
+    unicode = str
 
 from datetime import datetime
 
@@ -19,7 +24,7 @@ def fixExceptions(request):
 @pytest.fixture(scope="function", params=["DH", "DH1TW", "", 5, 12.5, -9999, {}, []])
 def fixPrefixes(request):
     return request.param
-    
+
 @pytest.fixture(scope="function", params=["DH1TW", "JA3UB/GAZA", "", 5, 12.5, -9999, {}, []])
 def fixInvalidOperations(request):
     return request.param
@@ -28,7 +33,7 @@ def fixInvalidOperations(request):
 def fixZoneExceptions(request):
     return request.param
 
-@pytest.fixture(scope="function", params=[{"DH1TW": {'latitude': 51.0, 'country': 'FEDERAL REPUBLIC OF GERMANY', 
+@pytest.fixture(scope="function", params=[{"DH1TW": {'latitude': 51.0, 'country': 'FEDERAL REPUBLIC OF GERMANY',
                                 'continent': 'EU', 'longitude': -10.0, 'cqz': 14}}, {}, "ve8ev", "", 5, 12.5, -9999])
 def fixSetExceptions(request):
     return request.param
@@ -39,11 +44,11 @@ def fixSetExceptions(request):
 #===========================================================
 
 class Test_Getter_Setter_Api_Types_for_all_sources:
-    
+
     def test_lookup_entity_without_entity_nr(self, fixGeneralApi):
         with pytest.raises(Exception):
             fixGeneralApi.lookup_entity()
-        
+
     def test_lookup_entity(self, fixGeneralApi, fixEntities):
         try:
             entity = fixGeneralApi.lookup_entity(fixEntities)
@@ -51,43 +56,43 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
             assert type(entity) is dict
             if len(entity) > 0:
                 count = 0
-                for attr in entity: 
-                    if attr == "country": 
+                for attr in entity:
+                    if attr == "country":
                         assert type(entity[attr] is unicode)
                         count +=1
-                    if attr == "continent": 
+                    if attr == "continent":
                         assert type(entity[attr] is unicode)
                         count +=1
-                    if attr == "prefix": 
+                    if attr == "prefix":
                         assert type(entity[attr] is unicode)
-                        count +=1                
-                    if attr == "deleted": 
+                        count +=1
+                    if attr == "deleted":
                         assert type(entity[attr] is bool)
-                        count +=1                    
-                    if attr == "cqz": 
+                        count +=1
+                    if attr == "cqz":
                         assert type(entity[attr] is int)
-                        count +=1                    
-                    if attr == "longitude": 
+                        count +=1
+                    if attr == "longitude":
                         assert type(entity[attr] is float)
-                        count +=1                    
-                    if attr == "latitude": 
+                        count +=1
+                    if attr == "latitude":
                         assert type(entity[attr] is float)
-                        count +=1                    
-                    if attr == "start": 
+                        count +=1
+                    if attr == "start":
                         assert type(entity[attr] is datetime)
-                        count +=1                    
-                    if attr == "end": 
+                        count +=1
+                    if attr == "end":
                         assert type(entity[attr] is datetime)
-                        count +=1                    
-                    if attr == "whitelist": 
+                        count +=1
+                    if attr == "whitelist":
                         assert type(entity[attr] is bool)
-                        count +=1                    
-                    if attr == "whitelist_start": 
+                        count +=1
+                    if attr == "whitelist_start":
                         assert type(entity[attr] is datetime)
-                        count +=1                    
-                    if attr == "whitelist_end": 
+                        count +=1
+                    if attr == "whitelist_end":
                         assert type(entity[attr] is datetime)
-                        count +=1                    
+                        count +=1
                 assert len(entity) == count
         except KeyError:
             pass
@@ -95,91 +100,91 @@ class Test_Getter_Setter_Api_Types_for_all_sources:
             pass
         except ValueError:
             pass
-            
+
     def test_lookup_callsign(self, fixGeneralApi, fixExceptions):
         try:
             ex = fixGeneralApi.lookup_callsign(fixExceptions)
             assert type(ex) is dict
             count = 0
-            for attr in ex: 
-                if attr == "latitude": 
+            for attr in ex:
+                if attr == "latitude":
                         assert type(ex[attr]) is float
                         count +=1
-                elif attr == "longitude": 
+                elif attr == "longitude":
                         assert type(ex[attr]) is float
                         count +=1
-                elif attr == "country": 
+                elif attr == "country":
                         assert type(ex[attr]) is unicode
                         count +=1
-                elif attr == "continent": 
+                elif attr == "continent":
                         assert type(ex[attr]) is unicode
                         count +=1
-                elif attr == "cqz": 
+                elif attr == "cqz":
                         assert type(ex[attr]) is int
                         count +=1
-                elif attr == "ituz": 
+                elif attr == "ituz":
                         assert type(ex[attr]) is int
                         count +=1
-                elif attr == "start": 
+                elif attr == "start":
                         assert type(ex[attr]) is datetime
                         count +=1
-                elif attr == "end": 
+                elif attr == "end":
                         assert type(ex[attr]) is datetime
                         count +=1
-                elif attr == "adif": 
+                elif attr == "adif":
                         assert type(ex[attr]) is int
                         count +=1
-                    
-            #all attributes checked? 
+
+            #all attributes checked?
             assert len(ex) == count
         except KeyError:
             pass
         except AttributeError:
             pass
-    
+
     def test_lookup_prefix(self, fixGeneralApi, fixPrefixes):
 
         try:
             prefix = fixGeneralApi.lookup_prefix(fixPrefixes)
             assert type(prefix) is dict
             count = 0
-            for attr in prefix: 
-                if attr == "country": 
+            for attr in prefix:
+                if attr == "country":
                         assert type(prefix[attr]) is unicode
                         count +=1
-                elif attr == "adif": 
+                elif attr == "adif":
                         assert type(prefix[attr]) is int
                         count +=1
-                elif attr == "cqz": 
+                elif attr == "cqz":
                         assert type(prefix[attr]) is int
                         count +=1
-                elif attr == "ituz": 
+                elif attr == "ituz":
                         assert type(prefix[attr]) is int
                         count +=1
-                elif attr == "continent": 
+                elif attr == "continent":
                         assert type(prefix[attr]) is unicode
                         count +=1
-                elif attr == "latitude": 
+                elif attr == "latitude":
                         assert type(prefix[attr]) is float
                         count +=1
-                elif attr == "longitude": 
+                elif attr == "longitude":
                         assert type(prefix[attr]) is float
                         count +=1
-                elif attr == "start": 
+                elif attr == "start":
                         assert type(prefix[attr]) is datetime
                         count +=1
-                elif attr == "end": 
+                elif attr == "end":
                         assert type(prefix[attr]) is datetime
                         count +=1
-                    
-            #all attributes checked? 
+
+            #all attributes checked?
             assert len(prefix) == count
         except KeyError:
             pass
         except AttributeError:
             pass
-    
-        
+
+
     def test_get_InvalidOperation(self, fixGeneralApi, fixInvalidOperations):
         try:
             invOp = fixGeneralApi.is_invalid_operation(fixInvalidOperations)

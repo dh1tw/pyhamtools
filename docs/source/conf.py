@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyhamtools'
-copyright = u'2016, Tobias Wellnitz, DH1TW'
+copyright = u'2018, Tobias Wellnitz, DH1TW'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

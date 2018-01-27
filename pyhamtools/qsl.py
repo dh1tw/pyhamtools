@@ -1,3 +1,4 @@
+from future.utils import iteritems
 from datetime import datetime
 import re
 
@@ -19,7 +20,7 @@ def get_lotw_users(**kwargs):
 
         Raises:
             IOError: When network is unavailable, file can't be downloaded or processed
-            
+
             ValueError: Raised when data from file can't be read
 
         Example:
@@ -29,29 +30,29 @@ def get_lotw_users(**kwargs):
            >>> mydict = get_lotw_users()
            >>> mydict['DH1TW']
            datetime.datetime(2014, 9, 7, 0, 0)
-                
+
     .. _ARRL: http://www.arrl.org/logbook-of-the-world
-    __ ARRL_ 
+    __ ARRL_
 
     """
-    
+
     url = ""
-    
+
     lotw = {}
-    
-    try: 
+
+    try:
         url = kwargs['url']
     except KeyError:
         # url = "http://wd5eae.org/LoTW_Data.txt"
         url = "https://lotw.arrl.org/lotw-user-activity.csv"
-    
-    try: 
+
+    try:
         result = requests.get(url)
     except (ConnectionError, HTTPError, Timeout) as e:
         raise IOError(e)
 
     error_count = 0
-    
+
     if result.status_code == requests.codes.ok:
         for el in result.text.split():
             data = el.split(",")
@@ -62,7 +63,7 @@ def get_lotw_users(**kwargs):
                 if error_count > 10:
                     raise ValueError("more than 10 wrongly formatted datasets " + str(e))
 
-    else: 
+    else:
         raise IOError("HTTP Error: " + str(result.status_code))
 
     return lotw
@@ -75,7 +76,7 @@ def get_clublog_users(**kwargs):
 
         Returns:
             dict: Dictionary containing (if data available) the fields:
-                firstqso, lastqso, last-lotw, lastupload (datetime), 
+                firstqso, lastqso, last-lotw, lastupload (datetime),
                 locator (string) and oqrs (boolean)
 
         Raises:
@@ -94,25 +95,25 @@ def get_clublog_users(**kwargs):
             'oqrs': True}
 
     .. _CLUBLOG: https://secure.clublog.org
-    __ CLUBLOG_ 
+    __ CLUBLOG_
 
     """
-    
+
     url = ""
-    
+
     clublog = {}
-    
-    try: 
+
+    try:
         url = kwargs['url']
     except KeyError:
         url = "https://secure.clublog.org/clublog-users.json.zip"
-    
-    try: 
+
+    try:
         result = requests.get(url)
     except (ConnectionError, HTTPError, Timeout) as e:
         raise IOError(e)
 
-    
+
     if result.status_code != requests.codes.ok:
         raise IOError("HTTP Error: " + str(result.status_code))
 
@@ -124,12 +125,12 @@ def get_clublog_users(**kwargs):
 
     error_count = 0
 
-    for call, call_data in cl_data.iteritems():
+    for call, call_data in iteritems(cl_data):
         try:
             data = {}
             if "firstqso" in call_data:
                 if call_data["firstqso"] != None:
-                    data["firstqso"] = datetime.strptime(call_data["firstqso"], '%Y-%m-%d %H:%M:%S') 
+                    data["firstqso"] = datetime.strptime(call_data["firstqso"], '%Y-%m-%d %H:%M:%S')
             if "lastqso" in call_data:
                 if call_data["lastqso"] != None:
                     data["lastqso"] = datetime.strptime(call_data["lastqso"], '%Y-%m-%d %H:%M:%S')
@@ -172,26 +173,26 @@ def get_eqsl_users(**kwargs):
 
            >>> from pyhamtools.qsl import get_eqsl_users
            >>> mylist = get_eqsl_users()
-           >>> try: 
+           >>> try:
            >>>    mylist.index('DH1TW')
            >>> except ValueError as e:
            >>>    print e
            'DH1TW' is not in list
-    
+
     .. _here: http://www.eqsl.cc/QSLCard/DownloadedFiles/AGMemberlist.txt
 
-    """    
-    
+    """
+
     url = ""
-    
+
     eqsl = []
-    
-    try: 
+
+    try:
         url = kwargs['url']
     except KeyError:
         url = "http://www.eqsl.cc/QSLCard/DownloadedFiles/AGMemberlist.txt"
-    
-    try: 
+
+    try:
         result = requests.get(url)
     except (ConnectionError, HTTPError, Timeout) as e:
         raise IOError(e)
@@ -199,7 +200,7 @@ def get_eqsl_users(**kwargs):
     if result.status_code == requests.codes.ok:
         eqsl = re.sub("^List.+UTC", "", result.text)
         eqsl = eqsl.upper().split()
-    else: 
+    else:
         raise IOError("HTTP Error: " + str(result.status_code))
 
     return eqsl

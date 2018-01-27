@@ -3,7 +3,7 @@ import tempfile
 import os
 
 
-from apikey import APIKEY, QRZ_USERNAME, QRZ_PWD
+from .apikey import APIKEY, QRZ_USERNAME, QRZ_PWD
 from pyhamtools import LookupLib
 from pyhamtools import Callinfo
 
@@ -82,7 +82,7 @@ def fix_callinfo(request, fixApiKey):
 def fix_redis():
     import redis
     return LookupLib(lookuptype="redis", redis_instance=redis.Redis(), redis_prefix="clx")
-    
+
 @pytest.fixture(scope="module")
 def fix_qrz():
     return LookupLib(lookuptype="qrz", username=QRZ_USERNAME, pwd=QRZ_PWD)

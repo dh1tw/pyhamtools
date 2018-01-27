@@ -8,27 +8,27 @@ from pyhamtools.exceptions import APIKeyMissingError
 #Fixtures
 #===========================================================
 
-response_Prefix_DH = { 
-          'adif': 230, 
-          'country': 'Fed. Rep. of Germany', 
-          'continent': 'EU', 
-          'latitude': 51.0, 
-          'longitude': 10.0, 
+response_Prefix_DH = {
+          'adif': 230,
+          'country': 'Fed. Rep. of Germany',
+          'continent': 'EU',
+          'latitude': 51.0,
+          'longitude': 10.0,
           'cqz': 14,
           'ituz' : 28
         }
 
 
-response_Exception_3D2RI = { 
-          'adif': 460, 
-          'country': 'Rotuma Island', 
-          'continent': 'OC', 
-          'latitude': -12.48, 
-          'longitude': 177.08, 
+response_Exception_3D2RI = {
+          'adif': 460,
+          'country': 'Rotuma Island',
+          'continent': 'OC',
+          'latitude': -12.48,
+          'longitude': 177.08,
           'cqz': 32,
           'ituz' : 56
         }
-        
+
 @pytest.fixture(scope="function")
 def fix_plist_file(request):
     dir = os.path.dirname(__file__)
@@ -54,14 +54,14 @@ class Test_Countryfile_Constructor:
             lib.lookup_callsign("GB0BVL")
 
 class Test_countryfile_Getter_Setter:
-    
+
     #lookup_entity(adif)
     #===============================
     def test_getException(self, fixCountryFile):
         with pytest.raises(KeyError):
             fixCountryFile.lookup_entity(230)
-    
-    
+
+
     #lookup_callsign(callsign, [date])
     #===============================
     def test_getException(self, fixCountryFile):
@@ -72,8 +72,8 @@ class Test_countryfile_Getter_Setter:
 
         with pytest.raises(KeyError):
             fixCountryFile.lookup_callsign("")
-              
-    
+
+
     #lookup_prefix(prefix, [date])
     #=========================
     def test_lookup_prefix(self, fixCountryFile):
@@ -92,7 +92,7 @@ class Test_countryfile_Getter_Setter:
             fixCountryFile.is_invalid_operation("5W1CFN")
 
     #lookup_zone_exception(callsign, [date])
-    #====================================    
+    #====================================
     def test_lookup_zone_exception(self, fixCountryFile):
         with pytest.raises(KeyError):
             fixCountryFile.lookup_zone_exception("dp0gvn")

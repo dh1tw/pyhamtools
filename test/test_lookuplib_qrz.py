@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 
 
-from apikey import QRZ_USERNAME, QRZ_PWD
+from .apikey import QRZ_USERNAME, QRZ_PWD
 from pyhamtools.lookuplib import LookupLib
 from pyhamtools.exceptions import APIKeyMissingError
 from pyhamtools.consts import LookupConventions as const
