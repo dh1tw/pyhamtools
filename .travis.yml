@@ -22,4 +22,4 @@ install:
 script:
   - pytest
   - cd docs
-  - make docs
+  - make html
