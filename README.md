@@ -1,7 +1,7 @@
 # pyhamtools
 
-[![Build Status](https://travis-ci.org/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.org/dh1tw/pyhamtools)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/dh1tw/pyhamtools/branch/master?svg=true)]
+[![Linux & macOS Build Status](https://travis-ci.org/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.org/dh1tw/pyhamtools)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/dh1tw/pyhamtools/branch/master?svg=true)](https://ci.appveyor.com/api/projects/status/github/dh1tw/pyhamtools)
 [![codecov](https://codecov.io/gh/dh1tw/pyhamtools/branch/master/graph/badge.svg)](https://codecov.io/gh/dh1tw/pyhamtools)
 [![PyPI version](https://badge.fury.io/py/pyhamtools.svg)](https://badge.fury.io/py/pyhamtools)
 
@@ -37,7 +37,6 @@ We check compatibility on OSX, Windows and Linux with the following Python
 versions:
 
 * Python 2.7
-* Python 3.3
 * Python 3.4
 * Python 3.5
 * Python 3.6
