@@ -6,12 +6,16 @@ PyHamTools 0.6.0
 
 23. January 2018
 
+ * Support for Python3 has been added
+ * CI pipeline setup. Compatibility of Pyhamtools is now checked on Windows and
+   Linux for Python 2.7, 3.4, 3.5, 3.6 and pypy
  * BREAKING CHANGE: Longitude is now provided with the correct sign for all
    lookup libraries. The AD1C cty format used by Countryfile and ClublogAPI
    provide the longitude with the wrong sign. This is now covered and internally
    corrected. East = positive longitude, West = negative longitude.
- * Added a function to download the Clublog user list and the associated activity dates 
+ * Added a function to download the Clublog user list and the associated activity dates
  * updated requirements for libraries used by pyhamtools
+ * some slow regex were replaced by faster string based lookups
 
 
 PyHamTools 0.5.6
@@ -30,7 +34,7 @@ PyHamTools 0.5.5
 
  * Refined callsign detection rule for two digit prefix with appendix (e.g. 7N0ERX/1)
  * Refined callsign detection rule for callsigns with two appendixes (e.g. SV8GXQ/P/QRP)
- 
+
 
 
 PyHamTools 0.5.4
@@ -59,7 +63,7 @@ PyHamTools 0.5.2
 14. April 2015
 
  * catching another bug related to QRZ.com sessions
- 
+
 
 
 PyHamTools 0.5.1
