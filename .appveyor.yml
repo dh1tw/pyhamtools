@@ -26,6 +26,9 @@ init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 
 install:
+  - nuget install redis-64 -excludeversion
+  - redis-64\tools\redis-server.exe --service-install
+  - redis-64\tools\redis-server.exe --service-start
   - "%PYTHON%/Scripts/pip.exe install -e ."
   - "%PYTHON%/Scripts/pip.exe install -r requirements-docs.txt"
   - "%PYTHON%/Scripts/pip.exe install -r requirements-pytest.txt"
