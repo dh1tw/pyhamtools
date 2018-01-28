@@ -40,8 +40,7 @@ versions:
 * Python 3.4
 * Python 3.5
 * Python 3.6
-* [pypy](https://pypy.org/)
-* [pypy3](https://pypy.org/)
+* [pypy](https://pypy.org/) (Python 2)
 
 ## Documentation
 
