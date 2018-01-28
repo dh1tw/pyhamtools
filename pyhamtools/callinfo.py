@@ -96,26 +96,18 @@ class Callinfo(object):
 
     @staticmethod
     def check_if_mm(callsign):
-        if re.search("/MM$", callsign.upper()):
-            return True
-        else:
-            return False
+        check = callsign[-3:].upper()
+        return "/MM" in check
 
     @staticmethod
     def check_if_am(callsign):
-        if re.search("/AM$", callsign.upper()):
-            return True
-        else:
-            return False
+        check = callsign[-3:].upper()
+        return "/AM" in check
 
     @staticmethod
     def check_if_beacon(callsign):
-        if re.search("/B$", callsign.upper()):
-            return True
-        elif re.search("/BCN$", callsign.upper()):
-            return True
-        else:
-            return False
+        check = callsign[-4:].upper()
+        return "/B" in check or "/BCN" in check
 
     def _dismantle_callsign(self, callsign, timestamp=timestamp_now):
         """ try to identify the callsign's identity by analyzing it in the following order:
