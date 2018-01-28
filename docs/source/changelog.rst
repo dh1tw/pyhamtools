@@ -4,6 +4,13 @@ Changelog
 PyHamTools 0.6.0
 ================
 
+28. January 2018
+ * Minor bugfix for lookuplib which used with country-files.com
+
+
+PyHamTools 0.6.0
+================
+
 23. January 2018
 
  * Support for Python3 has been added

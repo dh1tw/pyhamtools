@@ -1000,6 +1000,8 @@ class LookupLib(object):
 
         # from cwd
         if os.path.exists(cwdFile):
+            # country mapping files contains the ADIF identifiers of a particular
+            # country since the country-files do not provide this information (only DXCC id)
             country_mapping_filename = cwdFile
         # from package
         elif os.path.exists(pkgFile):
