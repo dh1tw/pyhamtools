@@ -695,7 +695,7 @@ class LookupLib(object):
         if not self._check_html_response(response):
             raise LookupError
 
-        jsonLookup = json.loads(response.text, encoding='UTF-8')
+        jsonLookup = response.json()
         lookup = {}
 
         for item in jsonLookup:
@@ -1385,7 +1385,7 @@ class LookupLib(object):
         mapping = None
 
         with open(country_mapping_filename, "r") as f:
-            mapping = json.loads(f.read(), encoding='UTF-8')
+            mapping = json.loads(f.read(),encoding='UTF-8')
 
         cty_list = plistlib.readPlist(cty_file)
 
@@ -1473,7 +1473,8 @@ class LookupLib(object):
         Deserialize a JSON into a dictionary
         """
 
-        my_dict = json.loads(json_data, encoding='UTF-8')
+        my_dict = json.loads(json_data.decode('utf8').replace("'", '"'),
+            encoding='UTF-8')
 
         for item in my_dict:
             if item == const.ADIF:

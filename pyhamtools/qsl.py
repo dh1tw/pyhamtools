@@ -119,7 +119,7 @@ def get_clublog_users(**kwargs):
 
     zip_file = zipfile.ZipFile(BytesIO(result.content))
     files = zip_file.namelist()
-    cl_json_unzipped = zip_file.read(files[0])
+    cl_json_unzipped = zip_file.read(files[0]).decode('utf8').replace("'", '"')
 
     cl_data = json.loads(cl_json_unzipped, encoding='UTF-8')
 
