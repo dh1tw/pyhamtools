@@ -1,8 +1,9 @@
 # pyhamtools
 
-Linux & MacOS [![Build Status](https://travis-ci.org/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.org/dh1tw/pyhamtools)
-Windows [![Build status](https://ci.appveyor.com/api/projects/status/it6077sklplhgkyf?svg=true)](https://ci.appveyor.com/project/dh1tw/pyhamtools)
-
+[![Build Status](https://travis-ci.org/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.org/dh1tw/pyhamtools)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/dh1tw/pyhamtools/branch/master?svg=true)]
+[![codecov](https://codecov.io/gh/dh1tw/pyhamtools/branch/master/graph/badge.svg)](https://codecov.io/gh/dh1tw/pyhamtools)
+[![PyPI version](https://badge.fury.io/py/pyhamtools.svg)](https://badge.fury.io/py/pyhamtools)
 
 Pyhamtools is a set of functions and classes for Amateur Radio purpose.
 Currently the core part is the Callsign Lookup which decodes any amateur radio
