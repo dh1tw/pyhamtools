@@ -21,8 +21,8 @@ install:
 # run tests
 script:
   - pytest --cov=./
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then codecov; fi
   - cd docs
   # build the docs on 2.7 and 3.6 (sphinx requires 2.7 or >=3.4)
   - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then make html; fi
   - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then make html; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then codecov; fi
