@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-PyHamTools 0.6.0
+PyHamTools 0.6.1
 ================
 
 28. January 2018
