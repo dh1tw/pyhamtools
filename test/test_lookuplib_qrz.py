@@ -20,7 +20,7 @@ except Exception:
 #Fixtures
 #===========================================================
 response_XX1XX = {
-     u'addr2': u'Not QSL',
+    #  u'addr2': u'Not QSL',
      u'adif': 0,
      u'bio': u'0',
      u'biodate': datetime(2017, 7, 21, 0, 47, 25, tzinfo=UTC),
@@ -28,8 +28,8 @@ response_XX1XX = {
      u'ccode': 10,
      u'country': u'Antarctica',
 #     u'eqsl': True,
-     u'fname': u'Test page',
-     u'geoloc': u'dxcc',
+    #  u'fname': u'Test page',
+    #  u'geoloc': u'dxcc',
      u'land': u'NON-DXCC',
 #     u'latitude': 23.644524,
 #     u'locator': u'LL73ep',
@@ -37,7 +37,7 @@ response_XX1XX = {
 #     u'lotw': True,
      u'moddate': datetime(2017, 7, 21, 0, 56, 15, tzinfo=UTC),
 #     u'mqsl': True,
-     u'name': u'~',
+    #  u'name': u'~',
 #     u'user': u'XX1XX',
      u'license_class': u'1',
  }
@@ -71,7 +71,7 @@ response_XX2XX = {
     u'name': u'Blufferd',
     u'qslmgr': u'nobody here.   gone fishing, permanently',
     u'state': u'mt',
-    u'user': u'XX2XX',
+    # u'user': u'XX2XX',
     u'zipcode': u'112233'
 }
 
