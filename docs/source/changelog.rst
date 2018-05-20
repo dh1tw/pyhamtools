@@ -1,11 +1,19 @@
 Changelog
 ---------
 
+PyHamTools 0.7.1
+================
+
+21. May 2018
+
+ * Refined FT8 frequencies
+
+
 PyHamTools 0.7.0
 ================
 
 20. May 2018
- * Added FT8 to modes
+ * Added FT8 frequencies as DIGITAL
  * Updated test fixtures
  * Minor fixes wrt Kosovo & AD1C Countryfiles
 

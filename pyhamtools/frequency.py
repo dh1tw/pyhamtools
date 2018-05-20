@@ -31,7 +31,6 @@ def freq_to_band(freq):
                 - USB
                 - LSB
                 - DIGITAL
-                - FT8
 
     """
 
@@ -47,7 +46,7 @@ def freq_to_band(freq):
         elif ((freq >= 1838) and (freq < 1840)):
             mode = const.DIGITAL
         elif (freq == 1840):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 1840) and (freq < 2000)):
             mode = const.LSB
     elif ((freq >= 3500) and (freq <= 4000)):
@@ -55,7 +54,7 @@ def freq_to_band(freq):
         if ((freq >= 3500) and (freq < 3573)):
             mode = const.CW
         elif (freq == 3573):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 3573) and (freq < 3580)):
             mode = const.CW
         elif ((freq >= 3580) and (freq < 3600)):
@@ -73,7 +72,7 @@ def freq_to_band(freq):
         elif ((freq >= 7050) and (freq < 7074)):
             mode = const.LSB
         elif (freq == 7074):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 7074) and (freq < 7300)):
             mode = const.LSB
     elif ((freq >= 10100) and (freq <= 10150)):
@@ -81,7 +80,7 @@ def freq_to_band(freq):
         if ((freq >= 10100) and (freq < 10136)):
             mode = const.CW
         elif (freq == 10136):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 10136) and (freq < 10140)):
             mode = const.CW
         elif ((freq >= 10140) and (freq < 10150)):
@@ -93,7 +92,7 @@ def freq_to_band(freq):
         elif ((freq >= 14070) and (freq < 14074)):
             mode = const.DIGITAL
         elif (freq == 14074):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 14074) and (freq < 14099)):
             mode = const.DIGITAL
         elif ((freq >= 14100) and (freq < 14350)):
@@ -105,7 +104,7 @@ def freq_to_band(freq):
         elif ((freq >= 18095) and (freq < 18100)):
             mode = const.DIGITAL
         elif (freq == 18100):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 18100) and (freq < 18110)):
             mode = const.DIGITAL
         elif ((freq >= 18110) and (freq < 18268)):
@@ -117,7 +116,7 @@ def freq_to_band(freq):
         elif ((freq >= 21070) and (freq < 21074)):
             mode = const.DIGITAL
         elif (freq == 21074):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 21074) and (freq < 21150)):
             mode = const.DIGITAL
         elif ((freq >= 21150) and (freq < 21450)):
@@ -127,7 +126,7 @@ def freq_to_band(freq):
         if ((freq >= 24890) and (freq < 24915)):
             mode = const.CW
         elif (freq == 24915):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 24915) and (freq < 24930)):
             mode = const.DIGITAL
         elif ((freq >= 24930) and (freq < 24990)):
@@ -139,7 +138,7 @@ def freq_to_band(freq):
         elif ((freq >= 28070) and (freq < 28074)):
             mode = const.DIGITAL
         elif (freq == 28074):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 28074) and (freq < 28190)):
             mode = const.DIGITAL
         elif ((freq >= 28300) and (freq < 29700)):
@@ -151,7 +150,7 @@ def freq_to_band(freq):
         elif ((freq >= 50100) and (freq < 50313)):
             mode = const.USB
         elif (freq == 50313):
-            mode = const.FT8
+            mode = const.DIGITAL #FT8
         elif ((freq > 50313) and (freq < 50500)):
             mode = const.USB
         elif ((freq >= 50500) and (freq < 51000)):
@@ -163,7 +162,11 @@ def freq_to_band(freq):
         band = 2
         if ((freq >= 144000) and (freq < 144150)):
             mode = const.CW
-        elif ((freq >= 144150) and (freq < 144400)):
+        elif ((freq >= 144150) and (freq < 144174)):
+            mode = const.USB
+        elif (freq >= 144174) and (freq < 144175):
+            mode = const.DIGITAL #FT8
+        elif ((freq > 144175) and (freq < 144400)):
             mode = const.USB
         elif ((freq >= 144400) and (freq < 148000)):
             mode = None
