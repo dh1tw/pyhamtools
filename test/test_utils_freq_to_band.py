@@ -79,3 +79,15 @@ class Test_utils_freq_to_band():
 
         with pytest.raises(KeyError):
             freq_to_band(16304)
+
+    def test_ft_frequencies(self):
+        assert freq_to_band(1840) == {"band": 160, "mode": const.FT8}
+        assert freq_to_band(3573) == {"band": 80, "mode": const.FT8}
+        assert freq_to_band(7074) == {"band": 40, "mode": const.FT8}
+        assert freq_to_band(10136) == {"band": 30, "mode": const.FT8}
+        assert freq_to_band(14074) == {"band": 20, "mode": const.FT8}
+        assert freq_to_band(18100) == {"band": 17, "mode": const.FT8}
+        assert freq_to_band(21074) == {"band": 15, "mode": const.FT8}
+        assert freq_to_band(24915) == {"band": 12, "mode": const.FT8}
+        assert freq_to_band(28074) == {"band": 10, "mode": const.FT8}
+        assert freq_to_band(50313) == {"band": 6, "mode": const.FT8}

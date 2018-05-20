@@ -39,6 +39,7 @@ class LookupConventions:
     LSB = u"LSB"
     DIGITAL = u"DIGITAL"
     FM = u"FM"
+    FT8 = u'FT8'
 
     #DX Spot
     SPOTTER = u"spotter"
