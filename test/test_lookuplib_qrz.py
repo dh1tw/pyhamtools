@@ -19,28 +19,6 @@ except Exception:
 
 #Fixtures
 #===========================================================
-response_XX1XX = {
-    #  u'addr2': u'Not QSL',
-     u'adif': 0,
-     u'bio': u'0',
-     u'biodate': datetime(2017, 7, 21, 0, 47, 25, tzinfo=UTC),
-     u'callsign': u'XX1XX',
-     u'ccode': 10,
-     u'country': u'Antarctica',
-#     u'eqsl': True,
-    #  u'fname': u'Test page',
-    #  u'geoloc': u'dxcc',
-     u'land': u'NON-DXCC',
-#     u'latitude': 23.644524,
-#     u'locator': u'LL73ep',
-#     u'longitude': 54.382324,
-#     u'lotw': True,
-     u'moddate': datetime(2017, 7, 21, 0, 56, 15, tzinfo=UTC),
-#     u'mqsl': True,
-    #  u'name': u'~',
-#     u'user': u'XX1XX',
-     u'license_class': u'1',
- }
 
 response_XX2XX = {
     u'adif': 446,
@@ -71,7 +49,7 @@ response_XX2XX = {
     u'name': u'Blufferd',
     u'qslmgr': u'nobody here.   gone fishing, permanently',
     u'state': u'mt',
-    # u'user': u'XX2XX',
+    u'user': u'XX1XX',
     u'zipcode': u'112233'
 }
 
@@ -147,14 +125,6 @@ class TestQrzConstructur:
 class TestQrz_Callsign_Lookup:
 
     def test_lookup_callsign(self, fix_qrz):
-        data = fix_qrz._lookup_qrz_callsign("xx1xx", fix_qrz._apikey)
-        data.pop('u_views', None)
-        assert data == response_XX1XX #check content
-        assert len(data) == len(response_XX1XX) #ensure all fields are included
-
-        data = fix_qrz._lookup_qrz_callsign("XX1XX", fix_qrz._apikey)
-        data.pop('u_views', None)
-        assert data == response_XX1XX
 
         data = fix_qrz._lookup_qrz_callsign("XX2XX", fix_qrz._apikey)
         data.pop('u_views', None)
