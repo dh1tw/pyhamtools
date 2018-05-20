@@ -1451,7 +1451,7 @@ class LookupLib(object):
         else:
             err_str = "HTTP Status Code: " + str(response.status_code) + " HTTP Response: " + str(response.text)
             self._logger.error(err_str)
-            if error1 in response.text.strip() or error2 in response.text.strip():
+            if response.status_code == 403:
                 raise APIKeyMissingError
             else:
                 raise LookupError(err_str)
