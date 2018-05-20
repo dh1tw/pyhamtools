@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamTools 0.7.0
+================
+
+20. May 2018
+ * Added FT8 to modes
+ * Updated test fixtures
+ * Minor fixes wrt Kosovo & AD1C Countryfiles
+
+
 PyHamTools 0.6.1
 ================
 
