@@ -20,71 +20,30 @@ except Exception:
 #Fixtures
 #===========================================================
 
-response_XX2XX = {
-    u'adif': 446,
-    u'bio': u'349',
-    u'biodate': datetime(2017, 9, 5, 22, 28, 42, tzinfo=UTC),
-    u'born': 1932,
-    u'callsign': u'XX2XX',
-    u'ccode': 1230,
-    u'codes': u'ZZ',
-    u'country': u'Temotu',
-    u'cqz': 4,
-    u'email': 'dummy2@qrz.com',
-    u'eqsl': False,
-    u'fname': u'Gooberd',
-    u'geoloc': u'grid',
-    u'image': u'https://s3.amazonaws.com/files.qrz.com/x/xx2xx/oval_bumper_sticker4.png',
-    u'imageinfo': u'285:500:44218',
-    u'iota': u'NA-022',
-    u'ituz': 5,
-    u'land': u'Morocco',
-    u'latitude': 52.1875,
-    u'license_class': u'A',
-    u'locator': u'JO02be',
-    u'longitude': 0.125,
-    u'lotw': False,
-    u'moddate': datetime(2017, 6, 16, 19, 22, 21, tzinfo=UTC),
-    u'mqsl': False,
-    u'name': u'Blufferd',
-    u'qslmgr': u'nobody here.   gone fishing, permanently',
-    u'state': u'mt',
-    u'user': u'XX1XX',
-    u'zipcode': u'112233'
-}
-
-response_XX3XX = {
-     u'addr1': u'1234 Main St.3',
-     u'addr2': u'Shady Circle Roads',
-     u'adif': 79,
-     u'aliases': [u'XX3XX/W7'],
-     u'bio': u'16',
-     u'biodate': datetime(2018, 1, 24, 20, 55, 27, tzinfo=UTC),
-     u'born': 2010,
-     u'callsign': u'XX3XX',
-     u'ccode': 130,
-     u'country': u'Jamaica',
-     u'email': u'fred@qrz.com',
-     u'eqsl': False,
-     u'fname': u'TEST CALLSIGN',
-     u'geoloc': u'user',
-     u'image': u'https://s3.amazonaws.com/files.qrz.com/x/xx3xx/oval_bumper_sticker_600.png',
-     u'imageinfo': u'600:600:87971',
-     u'land': u'Guadeloupe',
-     u'latitude': 51.396953,
-     u'license_class': u'3',
-     u'locator': u'FO51sj',
-     u'longitude': -68.41959,
-     u'lotw': False,
-     u'moddate': datetime(2016, 4, 21, 19, 19, 6, tzinfo=UTC),
-     u'mqsl': False,
-     u'name': u'DO NOT QSL',
-     u'qslmgr': u'Via BURO or AA7BQ',
-     u'state': u'JJ',
-    #  u'user': u'KF7WIS',
-     u'zipcode': u'00033'
-}
-
+response_1A1AB = {
+    u'biodate': datetime(2018, 9, 7, 21, 17, 7, tzinfo=UTC),
+    u'bio': u'0',
+    u'license_class': u'C',
+    u'moddate': datetime(2008, 11, 2, 15, 0, 38, tzinfo=UTC),
+    u'locator': u'JN61fw',
+    u'callsign': u'1A1AB',
+    u'addr2': u'00187  Rome',
+    u'user': u'1A1AB',
+    u'adif': 246,
+    u'addr1': u'Via Condotti, 68',
+    u'mqsl': True,
+    u'ccode': 128,
+    u'land': u'SMO Malta',
+    u'codes': u'HVB',
+    u'name': u'Morgan',
+    u'geoloc': u'user',
+    u'country': u'Italy',
+    u'lotw': True,
+    u'longitude': 12.456779,
+    u'eqsl': True,
+    u'fname': u'Jonas',
+    u'latitude': 41.94417
+    }
 
 response_333 = {
     const.COUNTRY: u'Iraq',
@@ -126,20 +85,15 @@ class TestQrz_Callsign_Lookup:
 
     def test_lookup_callsign(self, fix_qrz):
 
-        data = fix_qrz._lookup_qrz_callsign("XX2XX", fix_qrz._apikey)
+        data = fix_qrz._lookup_qrz_callsign("1A1AB", fix_qrz._apikey)
         data.pop('u_views', None)
-        assert data == response_XX2XX
-        assert len(data) == len(response_XX2XX)
-
-        data = fix_qrz._lookup_qrz_callsign("XX3XX", fix_qrz._apikey)
-        data.pop('u_views', None)
-        assert data == response_XX3XX
-        assert len(data) == len(response_XX3XX)
+        assert data == response_1A1AB
+        assert len(data) == len(response_1A1AB)
 
     def test_lookup_callsign_with_unicode_escaping(self, fix_qrz):
-        data = fix_qrz._lookup_qrz_callsign("XX2XX", fix_qrz._apikey)
+        data = fix_qrz._lookup_qrz_callsign("1A1AB", fix_qrz._apikey)
         data.pop('u_views', None)
-        assert data == response_XX2XX
+        assert data == response_1A1AB
 
     def test_lookup_callsign_does_not_exist(self, fix_qrz):
         with pytest.raises(KeyError):

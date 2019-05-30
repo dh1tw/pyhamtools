@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamTools 0.7.2
+================
+
+01. June 2019
+
+ * Changed Macedonia to North Macedonia
+ * Updated test fixtures
+ * bumped dependencies to current versions
+
 PyHamTools 0.7.1
 ================
 

@@ -124,8 +124,8 @@ response_Exception_VP8STI_with_start_and_stop_date = {
            'adif': 240,
            'country': u'SOUTH SANDWICH ISLANDS',
            'continent': u'SA',
-           'latitude': -59.45,
-           'longitude': -27.4,
+           'latitude': -59.48,
+           'longitude': -27.29,
            'cqz': 13,
         }
 

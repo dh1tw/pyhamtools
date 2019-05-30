@@ -16,12 +16,12 @@ setup(name='pyhamtools',
       package_data={'': ['countryfilemapping.json']},
       packages=['pyhamtools'],
       install_requires=[
-          "pytz>=2017.3",
-          "requests>=2.18.4",
+          "pytz>=2019.1",
+          "requests>=2.22.0",
           "pyephem>=3.7.6.0",
-          "beautifulsoup4>=4.6.0",
-          "future>=0.16.0",
-          "redis>=2.10.6",
+          "beautifulsoup4>=4.7.1",
+          "future>=0.17.1",
+          "redis>=2.22.0",
       ],
       **kw
      )
