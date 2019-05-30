@@ -1,10 +1,18 @@
 Changelog
 ---------
 
+PyHamTools 0.7.3
+================
+
+30. May 2019
+
+ * fixed dependency redis dependency to use at least a version compatible with python 2.7.
+
+
 PyHamTools 0.7.2
 ================
 
-01. June 2019
+29. May 2019
 
  * Changed Macedonia to North Macedonia
  * Updated test fixtures
