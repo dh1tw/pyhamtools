@@ -1,6 +1,6 @@
 # pyhamtools
 
-[![Build Status](https://travis-ci.org/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.org/dh1tw/pyhamtools)
+[![Build Status](https://travis-ci.com/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.com/dh1tw/pyhamtools)
 [![Build status](https://ci.appveyor.com/api/projects/status/8rfgr7x6w1arixrh?svg=true)](https://ci.appveyor.com/project/dh1tw/pyhamtools)
 [![codecov](https://codecov.io/gh/dh1tw/pyhamtools/branch/master/graph/badge.svg)](https://codecov.io/gh/dh1tw/pyhamtools)
 [![PyPI version](https://badge.fury.io/py/pyhamtools.svg)](https://badge.fury.io/py/pyhamtools)
