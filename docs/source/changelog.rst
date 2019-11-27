@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamTools 0.7.4
+================
+
+27. November 2019
+
+ * Renamed "Swaziland" into "Kingdom of eSwatini"
+
+
 PyHamTools 0.7.3
 ================
 

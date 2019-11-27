@@ -97,7 +97,7 @@ response_Prefix_VK9_starting_1976 = {
 }
 
 response_Prefix_ZD5_1964_to_1971 = {
-    'country': u'SWAZILAND',
+    'country': u'KINGDOM OF ESWATINI',
     'adif' : 468,
     'continent': u'AF',
     'latitude': -26.30,
