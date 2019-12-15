@@ -265,7 +265,7 @@ def calculate_heading_longpath(locator1, locator2):
 
     return lp
 
-def calculate_sunrise_sunset(locator, calc_date=datetime.utcnow()):
+def calculate_sunrise_sunset(locator, calc_date=None):
     """calculates the next sunset and sunrise for a Maidenhead locator at a give date & time
 
         Args:
@@ -303,6 +303,8 @@ def calculate_sunrise_sunset(locator, calc_date=datetime.utcnow()):
 
     latitude, longitude = locator_to_latlong(locator)
 
+    if calc_date is None:
+        calc_date = datetime.utcnow()
     if type(calc_date) != datetime:
         raise ValueError
 

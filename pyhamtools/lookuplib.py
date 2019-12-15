@@ -22,7 +22,6 @@ from .consts import LookupConventions as const
 from .exceptions import APIKeyMissingError
 
 UTC = pytz.UTC
-timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
 
 if sys.version_info < (2, 7,):
     class NullHandler(logging.Handler):
@@ -319,7 +318,7 @@ class LookupLib(object):
         return new_dict
 
 
-    def lookup_callsign(self, callsign=None, timestamp=timestamp_now):
+    def lookup_callsign(self, callsign=None, timestamp=None):
         """
         Returns lookup data if an exception exists for a callsign
 
@@ -364,6 +363,8 @@ class LookupLib(object):
 
         """
         callsign = callsign.strip().upper()
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         if self._lookuptype == "clublogapi":
             callsign_data =  self._lookup_clublogAPI(callsign=callsign, timestamp=timestamp, apikey=self._apikey)
@@ -482,7 +483,7 @@ class LookupLib(object):
         raise KeyError
 
 
-    def lookup_prefix(self, prefix, timestamp=timestamp_now):
+    def lookup_prefix(self, prefix, timestamp=None):
         """
         Returns lookup data of a Prefix
 
@@ -524,6 +525,8 @@ class LookupLib(object):
         """
 
         prefix = prefix.strip().upper()
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         if self._lookuptype == "clublogxml" or self._lookuptype == "countryfile":
 
@@ -537,7 +540,7 @@ class LookupLib(object):
         # no matching case
         raise KeyError
 
-    def is_invalid_operation(self, callsign, timestamp=datetime.utcnow().replace(tzinfo=UTC)):
+    def is_invalid_operation(self, callsign, timestamp=None):
         """
         Returns True if an operations is known as invalid
 
@@ -577,6 +580,8 @@ class LookupLib(object):
         """
 
         callsign = callsign.strip().upper()
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         if self._lookuptype == "clublogxml":
 
@@ -624,7 +629,7 @@ class LookupLib(object):
         raise KeyError
 
 
-    def lookup_zone_exception(self, callsign, timestamp=datetime.utcnow().replace(tzinfo=UTC)):
+    def lookup_zone_exception(self, callsign, timestamp=None):
         """
         Returns a CQ Zone if an exception exists for the given callsign
 
@@ -659,6 +664,8 @@ class LookupLib(object):
         """
 
         callsign = callsign.strip().upper()
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         if self._lookuptype == "clublogxml":
 
@@ -672,7 +679,7 @@ class LookupLib(object):
         #no matching case
         raise KeyError
 
-    def _lookup_clublogAPI(self, callsign=None, timestamp=timestamp_now, url="https://secure.clublog.org/dxcc", apikey=None):
+    def _lookup_clublogAPI(self, callsign=None, timestamp=None, url="https://secure.clublog.org/dxcc", apikey=None):
         """ Set up the Lookup object for Clublog Online API
         """
 
@@ -685,6 +692,9 @@ class LookupLib(object):
             "full" : "1",
             "call" : callsign
         }
+
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         if sys.version_info.major == 3:
             encodeurl = url + "?" + urllib.parse.urlencode(params)
