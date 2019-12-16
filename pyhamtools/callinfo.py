@@ -10,7 +10,6 @@ from pyhamtools.consts import LookupConventions as const
 from pyhamtools.callsign_exceptions import callsign_exceptions
 
 UTC = pytz.UTC
-timestamp_now = datetime.utcnow().replace(tzinfo=UTC)
 
 if sys.version_info < (2, 7, ):
     class NullHandler(logging.Handler):
@@ -78,9 +77,11 @@ class Callinfo(object):
         else:
             raise ValueError
 
-    def _iterate_prefix(self, callsign, timestamp=timestamp_now):
+    def _iterate_prefix(self, callsign, timestamp=None):
         """truncate call until it corresponds to a Prefix in the database"""
         prefix = callsign
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         if re.search('(VK|AX|VI)9[A-Z]{3}', callsign): #special rule for VK9 calls
             if timestamp > datetime(2006,1,1, tzinfo=UTC):
@@ -109,7 +110,7 @@ class Callinfo(object):
         check = callsign[-4:].upper()
         return "/B" in check or "/BCN" in check
 
-    def _dismantle_callsign(self, callsign, timestamp=timestamp_now):
+    def _dismantle_callsign(self, callsign, timestamp=None):
         """ try to identify the callsign's identity by analyzing it in the following order:
 
         Args:
@@ -122,6 +123,8 @@ class Callinfo(object):
 
         """
         entire_callsign = callsign.upper()
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         if re.search('[/A-Z0-9\-]{3,15}', entire_callsign):  # make sure the call has at least 3 characters
 
@@ -221,7 +224,9 @@ class Callinfo(object):
         self._logger.debug("Could not decode " + callsign)
         raise KeyError("Callsign could not be decoded")
 
-    def _lookup_callsign(self, callsign, timestamp=timestamp_now):
+    def _lookup_callsign(self, callsign, timestamp=None):
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
         # Check if operation is invalid
         invalid = False
@@ -264,7 +269,7 @@ class Callinfo(object):
         # Dismantel the callsign and check if the prefix is known
         return self._dismantle_callsign(callsign, timestamp)
 
-    def get_all(self, callsign, timestamp=timestamp_now):
+    def get_all(self, callsign, timestamp=None):
         """ Lookup a callsign and return all data available from the underlying database
 
         Args:
@@ -302,6 +307,9 @@ class Callinfo(object):
             would be missing with Clublog (API or XML) :py:class:`LookupLib`.
 
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         callsign_data = self._lookup_callsign(callsign, timestamp)
 
         try:
@@ -312,7 +320,7 @@ class Callinfo(object):
 
         return callsign_data
 
-    def is_valid_callsign(self, callsign, timestamp=timestamp_now):
+    def is_valid_callsign(self, callsign, timestamp=None):
         """ Checks if a callsign is valid
 
         Args:
@@ -332,13 +340,16 @@ class Callinfo(object):
             True
 
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         try:
             if self.get_all(callsign, timestamp):
                 return True
         except KeyError:
             return False
 
-    def get_lat_long(self, callsign, timestamp=timestamp_now):
+    def get_lat_long(self, callsign, timestamp=None):
         """ Returns Latitude and Longitude for a callsign
 
         Args:
@@ -369,13 +380,16 @@ class Callinfo(object):
             dedicated entry in the database exists. Best results will be retrieved with QRZ.com Lookup.
 
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         callsign_data = self.get_all(callsign, timestamp=timestamp)
         return {
             const.LATITUDE: callsign_data[const.LATITUDE],
             const.LONGITUDE: callsign_data[const.LONGITUDE]
         }
 
-    def get_cqz(self, callsign, timestamp=timestamp_now):
+    def get_cqz(self, callsign, timestamp=None):
         """ Returns CQ Zone of a callsign
 
         Args:
@@ -389,9 +403,12 @@ class Callinfo(object):
             KeyError: no CQ Zone found for callsign
 
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         return self.get_all(callsign, timestamp)[const.CQZ]
 
-    def get_ituz(self, callsign, timestamp=timestamp_now):
+    def get_ituz(self, callsign, timestamp=None):
         """ Returns ITU Zone of a callsign
 
         Args:
@@ -408,9 +425,12 @@ class Callinfo(object):
             Currently, only Country-files.com lookup database contains ITU Zones
 
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         return self.get_all(callsign, timestamp)[const.ITUZ]
 
-    def get_country_name(self, callsign, timestamp=timestamp_now):
+    def get_country_name(self, callsign, timestamp=None):
         """ Returns the country name where the callsign is located
 
         Args:
@@ -432,9 +452,12 @@ class Callinfo(object):
             - Clublog: "FEDERAL REPUBLIC OF GERMANY"
 
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         return self.get_all(callsign, timestamp)[const.COUNTRY]
 
-    def get_adif_id(self, callsign, timestamp=timestamp_now):
+    def get_adif_id(self, callsign, timestamp=None):
         """ Returns ADIF id of a callsign's country
 
         Args:
@@ -448,9 +471,12 @@ class Callinfo(object):
             KeyError: No Country found for callsign
 
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         return self.get_all(callsign, timestamp)[const.ADIF]
 
-    def get_continent(self, callsign, timestamp=timestamp_now):
+    def get_continent(self, callsign, timestamp=None):
         """ Returns the continent Identifier of a callsign
 
         Args:
@@ -474,4 +500,7 @@ class Callinfo(object):
             - OC: Oceania
             - AN: Antarctica
         """
+        if timestamp is None:
+            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+
         return self.get_all(callsign, timestamp)[const.CONTINENT]
