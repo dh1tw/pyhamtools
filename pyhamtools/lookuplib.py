@@ -23,6 +23,8 @@ from .exceptions import APIKeyMissingError
 
 UTC = pytz.UTC
 
+REDIS_LUA_DEL_SCRIPT = "local keys = redis.call('keys', ARGV[1]) \n for i=1,#keys,20000 do \n redis.call('del', unpack(keys, i, math.min(i+19999, #keys))) \n end \n return keys"
+
 if sys.version_info < (2, 7,):
     class NullHandler(logging.Handler):
         def emit(self, record):
@@ -223,18 +225,26 @@ class LookupLib(object):
 
     def _push_dict_to_redis(self, push_dict, redis_prefix, name):
         r = self._redis
+        pipe = r.pipeline()
+        pipe.eval(REDIS_LUA_DEL_SCRIPT, 0, redis_prefix + name)
+
         for i in push_dict:
             json_data = self._serialize_data(push_dict[i])
-            r.delete(redis_prefix + name + str(i))
-            r.set(redis_prefix + name + str(i), json_data)
+            pipe.set(redis_prefix + name + str(i), json_data)
+
+        pipe.execute()
         return True
 
     def _push_dict_index_to_redis(self, index_dict, redis_prefix, name):
         r = self._redis
+        pipe = r.pipeline()
+        pipe.eval(REDIS_LUA_DEL_SCRIPT, 0, redis_prefix + name)
+
         for i in index_dict:
-            r.delete(redis_prefix + name + str(i))
             for el in index_dict[i]:
-                r.sadd(redis_prefix + name + str(i), el)
+                pipe.sadd(redis_prefix + name + str(i), el)
+
+        pipe.execute()
         return True
 
 
