@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamTools 0.7.5
+================
+
+3. March 2020
+
+ * fixed a bug related to badly escaped JSON data when using redis
+ * lookup data is now copied approx. 5x faster into redis
+ * download artifacts are now cleaned up from the temporary download directory
+
 PyHamTools 0.7.4
 ================
 
