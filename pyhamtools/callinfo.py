@@ -307,6 +307,9 @@ class Callinfo(object):
             would be missing with Clublog (API or XML) :py:class:`LookupLib`.
 
         """
+
+        callsign = callsign.upper()
+
         if timestamp is None:
             timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
