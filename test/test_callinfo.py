@@ -139,13 +139,13 @@ response_Exception_VK9XO_with_start_date = {
            'cqz': 29
         }
 
-response_zone_exception_dp0gvn = {
-    'country': 'ANTARCTICA',
-    'adif': 13,
-    'cqz': 38,
-    'latitude': -65.0,
-    'longitude': -64.0,
-    'continent': 'AN'
+response_zone_exception_ci8aw = {
+    'country': 'CANADA',
+    'adif': 1,
+    'cqz': 1,
+    'latitude': 45.0,
+    'longitude': -80.0,
+    'continent': 'NA'
 }
 
 response_lat_long_dh1tw = {
@@ -300,7 +300,7 @@ class Test_callinfo_methods:
 
         if fix_callinfo._lookuplib._lookuptype == "clublogxml" or fix_callinfo._lookuplib._lookuptype == "clublogapi":
             assert fix_callinfo.get_all("DH1TW") == response_prefix_DH_clublog
-            assert fix_callinfo.get_all("dp0gvn") == response_zone_exception_dp0gvn
+            assert fix_callinfo.get_all("ci8aw") == response_zone_exception_ci8aw
             timestamp = datetime(year=2016, month=1, day=20, tzinfo=UTC)
             assert fix_callinfo.get_all("VP8STI", timestamp) == response_Exception_VP8STI_with_start_and_stop_date
 
