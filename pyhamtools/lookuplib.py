@@ -1485,8 +1485,7 @@ class LookupLib(object):
         Deserialize a JSON into a dictionary
         """
 
-        my_dict = json.loads(json_data.decode('utf8').replace("'", '"'),
-            encoding='UTF-8')
+        my_dict = json.loads(json_data.decode('utf8'), encoding='UTF-8')
 
         for item in my_dict:
             if item == const.ADIF:

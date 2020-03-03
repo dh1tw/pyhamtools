@@ -22,6 +22,14 @@ response_Exception_VP8STI_with_start_and_stop_date = {
            'cqz': 13,
         }
 
+response_TU5PCT = {
+           'adif': 428,
+           'country': u"COTE D'IVOIRE",
+           'continent': u'AF',
+           'latitude': 5.3,
+           'longitude': -4.0,
+           'cqz': 35,
+        }
 
 class TestStoreDataInRedis:
 
@@ -31,6 +39,7 @@ class TestStoreDataInRedis:
         assert fix_redis.lookup_entity(280) == fixClublogXML.lookup_entity(280)
         assert fix_redis.lookup_callsign("VK9XO") == fixClublogXML.lookup_callsign("VK9XO")
         assert fix_redis.lookup_prefix("DH") == fixClublogXML.lookup_prefix("DH")
+
 
         with pytest.raises(KeyError):
             fix_redis.is_invalid_operation("VK0MC")
@@ -55,3 +64,4 @@ class TestStoreDataInRedis:
         timestamp = datetime(year=2016, month=1, day=20, tzinfo=UTC)
         ci = Callinfo(fix_redis)
         assert ci.get_all("VP8STI", timestamp) == response_Exception_VP8STI_with_start_and_stop_date
+        assert ci.get_all("tu5pct") == response_TU5PCT
