@@ -996,6 +996,9 @@ class LookupLib(object):
         self._invalid_operations_index = cty_dict["invalid_operations_index"]
         self._zone_exceptions_index = cty_dict["zone_exceptions_index"]
 
+        if self._download:
+            self._cleanup_download_artifact(cty_file)
+
         return True
 
     def _load_countryfile(self,
@@ -1029,6 +1032,9 @@ class LookupLib(object):
         self._prefixes = cty_dict["prefixes"]
         self._callsign_exceptions_index = cty_dict["exceptions_index"]
         self._prefixes_index = cty_dict["prefixes_index"]
+
+        if self._download:
+            self._cleanup_download_artifact(cty_file)
 
         return True
 
@@ -1090,6 +1096,19 @@ class LookupLib(object):
             cty_file_path = download_file_path
 
         return cty_file_path
+
+    def _cleanup_download_artifact(self, filename):
+        """
+        Delete the downloaded files which are not necessary anymore
+
+        Args:
+            filename (string): absolute path to the download artifact
+        """
+
+        try:
+            os.remove(filename)
+        except:
+            self._logger.warning("unable delete the download artifact: %s", _download_file)
 
     def _extract_clublog_header(self, cty_xml_filename):
         """
