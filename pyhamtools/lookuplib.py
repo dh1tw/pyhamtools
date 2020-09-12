@@ -176,7 +176,7 @@ class LookupLib(object):
            >>> from pyhamtools import LookupLib
            >>> import redis
            >>> r = redis.Redis()
-           >>> my_lookuplib = LookupLib(lookuptype="countryfile", redis_instance=r, redis_prefix="CF")
+           >>> my_lookuplib = LookupLib(lookuptype="redis", redis_instance=r, redis_prefix="CF")
            >>> my_lookuplib.lookup_callsign("3D2RI")
            {
              u'adif': 460,
