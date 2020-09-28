@@ -25,7 +25,7 @@ Calculate Distance between two WGS84 Coordinates
    >>> from pyhamtools.locator import calculate_distance, latlong_to_locator
    >>> locator1 = latlong_to_locator(48.52, 9.375)
    >>> locator2 = latlong_to_locator(-32.77, 152.125)
-   >>> distance = calculate_heading(locator1, locator2)
+   >>> distance = calculate_distance(locator1, locator2)
    >>> print("%.1fkm" % distance)
    16466.4km
    
