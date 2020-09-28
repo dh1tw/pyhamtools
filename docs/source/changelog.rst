@@ -1,6 +1,17 @@
 Changelog
 ---------
 
+PyHamTools 0.7.6
+================
+
+29. September 2020
+
+ * Renamed "Kingdom of eSwatini" into "Kingdom of Eswatini" (#19 tnx @therrio)
+ * fixed the latitude in the VK9XX unit test fixture
+ * fixed docs - redis related example in docstring (#20 tnx @kholia)
+ * fixed docs - calculate distance example (#18 tnx @devnulling)
+
+
 PyHamTools 0.7.5
 ================
 
