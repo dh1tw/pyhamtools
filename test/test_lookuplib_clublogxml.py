@@ -46,7 +46,7 @@ response_Exception_VK9XX_with_end_date = {
            'adif': 35,
            'country': u'CHRISTMAS ISLAND',
            'continent': u'OC',
-           'latitude': -10.40,
+           'latitude': -10.44,
            'longitude': 105.71,
            'cqz': 29,
         }
