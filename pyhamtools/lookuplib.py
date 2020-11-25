@@ -1426,9 +1426,10 @@ class LookupLib(object):
         mapping = None
 
         with open(country_mapping_filename, "r") as f:
-            mapping = json.loads(f.read(),encoding='UTF-8')
+            mapping = json.loads(f.read())
 
-        cty_list = plistlib.readPlist(cty_file)
+        with open(cty_file, 'rb') as f:
+            cty_list = plistlib.load(f)
 
         for item in cty_list:
             entry = {}
@@ -1514,7 +1515,7 @@ class LookupLib(object):
         Deserialize a JSON into a dictionary
         """
 
-        my_dict = json.loads(json_data.decode('utf8'), encoding='UTF-8')
+        my_dict = json.loads(json_data.decode('utf8'))
 
         for item in my_dict:
             if item == const.ADIF:
