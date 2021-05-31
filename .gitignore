@@ -5,3 +5,8 @@ coverage*
 .coverage
 .cache/*
 MANIFEST
+.DS_Store
+__pycache__
+*.pyc
+*.tar.gz
+*.egg-info
