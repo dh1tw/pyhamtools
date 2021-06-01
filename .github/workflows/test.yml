@@ -1,0 +1,99 @@
+name: Linux
+
+on: [push, pull_request]
+
+jobs:
+  test_linux:
+    runs-on: "ubuntu-latest"
+    name: "Ubuntu latest - Python ${{ matrix.python-version }}"
+    env:
+      USING_COVERAGE: '3.9'
+
+    strategy:
+      matrix:
+        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "pypy2"]
+        redis-version: [6]
+
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v2"
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: "Install dependencies"
+        run: |
+          set -xe
+          python -VV
+          python -m pip install --upgrade pip setuptools wheel codecov
+          python -m pip install -e .
+          python -m pip install -r requirements-pytest.txt
+          python -m pip install -r requirements-docs.txt
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.2.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
+
+      - name: "Run tests for ${{ matrix.python-version }}"
+        env: 
+          CLUBLOG_APIKEY: ${{ secrets.CLUBLOG_APIKEY }}
+          QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
+          QRZ_PWD: ${{ secrets.QRZ_PWD }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        # delay the execution randomly by 1-20sec to reduce the
+        # amount of concurrent API calls on Clublog and QRZ.com
+        # when all CI jobs execute simultaniously
+        run: |
+          sleep $[ ( $RANDOM % 20 )  + 1 ]s 
+          pytest --cov=./
+          if [[ $PYTHON_VERSION == 3.9 ]]; then codecov; fi
+          if [[ $PYTHON_VERSION == 3.9 ]]; then cd docs && make html; fi
+
+  # publish_package:
+  #   runs-on: "ubuntu-latest"
+  #   needs: ["test_linux"]
+  #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+  #   steps: 
+  #     - name: Publish package
+  #       uses: pypa/gh-action-pypi-publish@release/v1
+  #       with:
+  #         user: __token__
+  #         password: ${{ secrets.PYPI_API_TOKEN }}
+
+  # test_windows:
+  #   runs-on: "windows-latest"
+  #   name: "Windows latest - Python ${{ matrix.python-version }}"
+  #   env:
+  #     USING_COVERAGE: '3.9'
+
+  #   strategy:
+  #     matrix:
+  #       python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9"]
+  #       redis-version: ["6.2"]
+
+  #   steps:
+  #     - uses: "actions/checkout@v2"
+  #     - uses: "actions/setup-python@v2"
+  #       with:
+  #         python-version: "${{ matrix.python-version }}"
+  #     - name: "Install dependencies"
+  #       run: |
+  #         python -VV
+  #         python -m pip install --upgrade pip setuptools wheel codecov
+  #         python -m pip install -e .
+  #         python -m pip install -r requirements-pytest.txt
+  #         python -m pip install -r requirements-docs.txt
+  #     - name: Setup redis
+  #       uses: shogo82148/actions-setup-redis@v1
+  #       with:
+  #         redis-version: ${{ matrix.redis-version }}
+  #     - name: "Run tests for ${{ matrix.python-version }}"
+  #       env: 
+  #         CLUBLOG_APIKEY: ${{ secrets.CLUBLOG_APIKEY }}
+  #         QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
+  #         QRZ_PWD: ${{ secrets.QRZ_PWD }}
+  #         PYTHON_VERSION: ${{ matrix.python-version }}
+  #       # delay the execution randomly by 1-20sec to reduce the
+  #       # amount of concurrent API calls on Clublog and QRZ.com
+  #       # when all CI jobs execute simultaniously
+  #       run: |
+  #         pytest

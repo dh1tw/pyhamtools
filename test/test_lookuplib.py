@@ -42,4 +42,4 @@ class TestlookupLibHelper:
             fixClublogApi._generate_random_word()
 
         assert type(fixClublogApi._generate_random_word(5)) is unicode
-        assert len(fixClublogApi._generate_random_word(5)) is 5
+        assert len(fixClublogApi._generate_random_word(5)) == 5

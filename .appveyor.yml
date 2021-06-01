@@ -1,4 +1,5 @@
 build: false
+image: "Visual Studio 2019"
 
 environment:
   matrix:
@@ -32,14 +33,15 @@ environment:
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - "%PYTHON%/python.exe -m pip install --upgrade pip"
 
 install:
   - nuget install redis-64 -excludeversion
   - redis-64\tools\redis-server.exe --service-install
   - redis-64\tools\redis-server.exe --service-start
-  - "%PYTHON%/Scripts/pip.exe install -e ."
-  - "%PYTHON%/Scripts/pip.exe install -r requirements-docs.txt"
-  - "%PYTHON%/Scripts/pip.exe install -r requirements-pytest.txt"
+  - "%PYTHON%/python.exe -m pip install -e ."
+  - "%PYTHON%/python.exe -m pip install -r requirements-docs.txt"
+  - "%PYTHON%/python.exe -m pip install -r requirements-pytest.txt"
 
 test_script:
   - "%PYTHON%/Scripts/pytest"

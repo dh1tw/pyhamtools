@@ -1,12 +1,12 @@
 # pyhamtools
 
-[![Build Status](https://travis-ci.com/dh1tw/pyhamtools.svg?branch=master)](https://travis-ci.com/dh1tw/pyhamtools)
-[![Build status](https://ci.appveyor.com/api/projects/status/8rfgr7x6w1arixrh?svg=true)](https://ci.appveyor.com/project/dh1tw/pyhamtools)
+![Build Status](https://github.com/dh1tw/pyhamtools/actions/workflows/test.yml/badge.svg)
+![Build status](https://ci.appveyor.com/api/projects/status/8rfgr7x6w1arixrh/branch/master?svg=true)
 [![codecov](https://codecov.io/gh/dh1tw/pyhamtools/branch/master/graph/badge.svg)](https://codecov.io/gh/dh1tw/pyhamtools)
 [![PyPI version](https://badge.fury.io/py/pyhamtools.svg)](https://badge.fury.io/py/pyhamtools)
 
 Pyhamtools is a set of functions and classes for Amateur Radio purpose.
-Currently the core part is the Callsign Lookup which decodes any amateur radio
+Currently, the core part is the Callsign Lookup which decodes any amateur radio
 callsign string and provides the corresponding information (Country, DXCC
 entity, CQ Zone...etc). This basic functionality is needed for Logbooks,
 DX-Clusters or Log Checking. This and additional convenience features are
@@ -22,8 +22,8 @@ Currently,
 * [eQSL.cc user list](https://www.eqsl.cc)
 * [Clublog & OQRS user list](http://clublog.freshdesk.com/support/solutions/articles/3000064883-list-of-club-log-and-lotw-users)
 
-Other modules include location based calculations (e.g. distance,
-heading between Maidenhead locators) or frequency based calculations
+Other modules include location-based calculations (e.g. distance,
+heading between Maidenhead locators) or frequency-based calculations
 (e.g. frequency to band).
 
 ## References
@@ -33,16 +33,17 @@ This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat
 ## Compatibility
 
 Pyhamtools is since version 0.6.0 compatible with > Python 2.7 and > python 3.3.
-We check compatibility on OSX, Windows and Linux with the following Python
+We check compatibility on OSX, Windows, and Linux with the following Python
 versions:
 
 * Python 2.7
-* Python 3.4
-* Python 3.5
+* Python 3.4 (will be deprecated in 2022)
+* Python 3.5 (will be deprecated in 2022)
 * Python 3.6
 * Python 3.7
 * Python 3.8
-* [pypy](https://pypy.org/) (Python 2)
+* Python 3.9
+* [pypy2](https://pypy.org/) (Python 2)
 
 ## Documentation
 
@@ -56,7 +57,7 @@ Open Source Software licenses, including the MIT license at [choosealicense.com]
 
 ## Installation
 
-Easiest way to install pyhamtools is through the packet manager `pip`:
+The easiest way to install pyhamtools is through the packet manager `pip`:
 
 ```bash
 
@@ -92,11 +93,11 @@ $ pip install pyhamtools
 ## Testing
 
 An extensive set of unit tests has been created for all Classes & Methods.
-In order to be able to perform all tests you need a QRZ.com account and a
+To be able to perform all tests, you need a QRZ.com account and a
 [Clublog API key](http://clublog.freshdesk.com/support/solutions/articles/54910-api-keys).
 
 pyhamtools rely on the [pytest](https://docs.pytest.org/en/latest/) testing
-framework. In order to install it with all the needed dependencies run:
+framework. To install it with all the needed dependencies run:
 
 ```bash
 
@@ -104,7 +105,7 @@ $ pip install -r requirements-pytest.txt
 
 ```
 
-The QRZ.com credentials and the Clublog API key have to be set in environment
+The QRZ.com credentials and the Clublog API key have to be set in the environment
 variables:
 
 ```bash
@@ -115,8 +116,8 @@ $ export QRZ_PWD="<your qrz.com password>"
 
 ```
 
-In order to perform the tests related to the [redis](https://redis.io/) key/value
-store, a redis server has to be up & running.
+To perform the tests related to the [redis](https://redis.io/) key/value
+store, a Redis server has to be up & running.
 
 ```bash
 

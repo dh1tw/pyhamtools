@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamTools 0.7.7
+================
+
+01. June 2021
+
+* Added support for Python 3.9
+* Added deprecation warnings for Python 3.4 and 3.5
+
+
 PyHamTools 0.7.6
 ================
 
