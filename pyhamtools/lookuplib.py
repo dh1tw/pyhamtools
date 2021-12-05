@@ -978,7 +978,7 @@ class LookupLib(object):
         return lookup
 
     def _load_clublogXML(self,
-                        url="https://secure.clublog.org/cty.php",
+                        url="https://cdn.clublog.org/cty.php",
                         apikey=None,
                         cty_file=None):
         """ Load and process the ClublogXML file either as a download or from file
