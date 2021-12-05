@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+PyHamTools 0.7.8
+================
+
+04. December 2021
+
+* Updated Clublog's (CDN based) URL for downloading the Prefixes and Exceptions XML 
+
 PyHamTools 0.7.7
 ================
 
