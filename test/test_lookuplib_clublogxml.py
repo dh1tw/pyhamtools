@@ -119,23 +119,6 @@ def fix_cty_xml_file(request):
 
 #TESTS
 #===========================================================
-
-class TestClublogXML_Constructor:
-
-    def test_with_invalid_api_key(self):
-        with pytest.raises(APIKeyMissingError):
-            lib = LookupLib(lookuptype="clublogxml", apikey="foo")
-            lib.lookup_entity(230)
-
-    def test_with_no_api_key(self):
-        with pytest.raises(APIKeyMissingError):
-            lib = LookupLib(lookuptype="clublogxml")
-            lib.lookup_entity(230)
-
-    def test_with_file(self, fix_cty_xml_file):
-        lib = LookupLib(lookuptype="clublogxml", filename=fix_cty_xml_file)
-        assert lib.lookup_entity(230) == response_Entity_230
-
 class TestclublogXML_Getters:
 
     #lookup_entity(callsign)
@@ -266,14 +249,6 @@ class TestclublogXML_Getters:
         timestamp_before = datetime(year=2012, month=1, day=31).replace(tzinfo=UTC)
         with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("5W1CFN", timestamp_before)
-
-        #Invalid Operation with end date
-        timestamp_before = datetime(year=2004, month=4, day=2).replace(tzinfo=UTC)
-        with pytest.raises(KeyError):
-            fixClublogXML.is_invalid_operation("T33C")
-
-        assert fixClublogXML.is_invalid_operation("T33C", timestamp_before)
-
 
 
     #lookup_zone_exception(callsign, [date])
