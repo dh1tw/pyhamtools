@@ -13,12 +13,12 @@ DX-Clusters or Log Checking. This and additional convenience features are
 provided for the following sources:
 
 Currently,
-* [AD1C's Country-Files.org](http://country-files.org)
+* [AD1C's Amateur Radio Country Files](https://www.country-files.com)
 * [Clublog Prefixes & Exceptions XML File](https://clublog.freshdesk.com/support/articles/54902-downloading-the-prefixes-and-exceptions-as)
 * [Clublog DXCC Query API](http://clublog.freshdesk.com/support/articles/54904-how-to-query-club-log-for-dxcc)
 * [QRZ.com XML API](http://www.qrz.com/XML/current_spec.html)
 * [Redis.io](http://redis.io)
-* [ARRL Logbook of the World (LOTW)](http://https://lotw.arrl.org)
+* [ARRL Logbook of the World (LOTW)](https://lotw.arrl.org)
 * [eQSL.cc user list](https://www.eqsl.cc)
 * [Clublog & OQRS user list](http://clublog.freshdesk.com/support/solutions/articles/3000064883-list-of-club-log-and-lotw-users)
 
