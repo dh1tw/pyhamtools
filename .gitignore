@@ -1,8 +1,11 @@
 docs/build
+build/
+dist/
 settings.json
 apikeysrc
 coverage*
 .coverage
+.python-version
 .cache/*
 MANIFEST
 .DS_Store
