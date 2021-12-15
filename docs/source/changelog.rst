@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamtools 0.7.9
+================
+
+16. December 2021
+
+* Calculating sunrise and sunset close to the artic region raised a ValueError due
+  to a bug in the underlying 3rd party libary ephem. This release upgrades the 
+  dependency to ephem > 4.1.3 which has the bug already fixed.
+
 PyHamTools 0.7.8
 ================
 
