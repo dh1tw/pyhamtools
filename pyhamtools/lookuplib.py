@@ -136,7 +136,8 @@ class LookupLib(object):
         else:
             encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=10)
-        doc = BeautifulSoup(response.text, "html.parser")
+        # doc = BeautifulSoup(response.text, "html.parser")
+        doc = BeautifulSoup(response.text, "lxml")
         session_key = None
         if doc.session.key:
             session_key = doc.session.key.text

@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamtools 0.7.10
+================
+
+12. May 2022
+
+* Using lxml to parse XML messages returned from qrz.com
+* Upgraded dependencies
+
+
 PyHamtools 0.7.9
 ================
 
