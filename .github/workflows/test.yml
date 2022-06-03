@@ -41,7 +41,7 @@ jobs:
           PYTHON_VERSION: ${{ matrix.python-version }}
         # delay the execution randomly by 1-20sec to reduce the
         # amount of concurrent API calls on Clublog and QRZ.com
-        # when all CI jobs execute simultaniously
+        # when all CI jobs execute simultaneously
         run: |
           sleep $[ ( $RANDOM % 20 )  + 1 ]s 
           pytest --cov=./
@@ -94,6 +94,6 @@ jobs:
   #         PYTHON_VERSION: ${{ matrix.python-version }}
   #       # delay the execution randomly by 1-20sec to reduce the
   #       # amount of concurrent API calls on Clublog and QRZ.com
-  #       # when all CI jobs execute simultaniously
+  #       # when all CI jobs execute simultaneously
   #       run: |
   #         pytest
