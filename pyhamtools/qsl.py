@@ -10,7 +10,7 @@ from io import BytesIO
 from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 def get_lotw_users(**kwargs):
-    """Download the latest offical list of `ARRL Logbook of the World (LOTW)`__ users.
+    """Download the latest official list of `ARRL Logbook of the World (LOTW)`__ users.
 
         Args:
             url (str, optional): Download URL
@@ -69,7 +69,7 @@ def get_lotw_users(**kwargs):
     return lotw
 
 def get_clublog_users(**kwargs):
-    """Download the latest offical list of `Clublog`__ users.
+    """Download the latest official list of `Clublog`__ users.
 
         Args:
             url (str, optional): Download URL
@@ -150,7 +150,7 @@ def get_clublog_users(**kwargs):
         except TypeError: #some date fields contain null instead of a valid datetime string - we ignore them
             print("Ignoring invalid type in data:", call, call_data)
             pass
-        except ValueError: #some date fiels are invalid. we ignore them for the moment
+        except ValueError: #some date fields are invalid. we ignore them for the moment
             print("Ignoring invalid data:", call, call_data)
             pass
 
