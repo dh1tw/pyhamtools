@@ -49,7 +49,7 @@ Decode a Callsign and get Country name, ADIF ID, Latitude & Longitude
 
 In this example we will use AD1C's Country-files.com database to perform the lookup.
 
-First we need to instanciate a LookupLib object for Country-files.com database. The latest database will be downloaded automatically.
+First we need to instantiate a LookupLib object for Country-files.com database. The latest database will be downloaded automatically.
 
 .. code-block:: none
 
@@ -57,7 +57,7 @@ First we need to instanciate a LookupLib object for Country-files.com database. 
    >>> my_lookuplib = LookupLib(lookuptype="countryfile")
    
    
-Next, a Callinfo object needs to be instanciated. The lookuplib object will be injected on construction.
+Next, a Callinfo object needs to be instantiated. The lookuplib object will be injected on construction.
 
 .. code-block:: none
 

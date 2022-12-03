@@ -16,7 +16,7 @@ PyHamtools 0.7.9
 16. December 2021
 
 * Calculating sunrise and sunset close to the artic region raised a ValueError due
-  to a bug in the underlying 3rd party libary ephem. This release upgrades the 
+  to a bug in the underlying 3rd party library ephem. This release upgrades the 
   dependency to ephem > 4.1.3 which has the bug already fixed.
 
 PyHamTools 0.7.8
@@ -188,7 +188,7 @@ PyHamTools 0.5.0
 
  * corrected Longitude to General Standard (-180...0° West, 0...180° East) [LookupLib]
 
- * improved callsign decoding alogrithm [CallInfo]
+ * improved callsign decoding algorithm [CallInfo]
 
  * added special case to decode location of VK9 callsigns [CallInfo]
 

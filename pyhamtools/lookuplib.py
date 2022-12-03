@@ -55,7 +55,7 @@ class LookupLib(object):
     lookup against the Clublog API or QRZ.com.
 
     The entire lookup data (where database files are downloaded) can also be copied into Redis, which an extremely
-    fast in-memory Key/Value store. A LookupLib object can be instanciated to perform then all lookups in Redis,
+    fast in-memory Key/Value store. A LookupLib object can be instantiated to perform then all lookups in Redis,
     instead processing and loading the data from Internet / File. This saves some time and allows several instances
     of :py:class:`LookupLib` to query the same data concurrently.
 
@@ -1148,7 +1148,7 @@ class LookupLib(object):
             if len(cty_header) == 2:
                 self._logger.debug("Header successfully retrieved from CTY File")
             elif len(cty_header) < 2:
-                self._logger.warning("Header could only be partically retrieved from CTY File")
+                self._logger.warning("Header could only be partially retrieved from CTY File")
                 self._logger.warning("Content of Header: ")
                 for key in cty_header:
                     self._logger.warning(str(key)+": "+str(cty_header[key]))

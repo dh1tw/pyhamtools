@@ -198,7 +198,7 @@ class Callinfo(object):
                     if len(re.findall(r'\d+', callsign)) == 1: #call has just on digit e.g. DH1TW
                         callsign = re.sub('[\d]+', area_nr, callsign)
                     else: # call has several digits e.g. 7N4AAL
-                        pass # no (two) digit prefix contries known where appendix would change entitiy
+                        pass # no (two) digit prefix countries known where appendix would change entity
                     return self._iterate_prefix(callsign, timestamp)
 
                 else:
