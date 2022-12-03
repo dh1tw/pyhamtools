@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "pypy2"]
+        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "pypy2"]
         redis-version: [6]
 
     steps:
@@ -45,8 +45,8 @@ jobs:
         run: |
           sleep $[ ( $RANDOM % 20 )  + 1 ]s 
           pytest --cov=./
-          if [[ $PYTHON_VERSION == 3.10 ]]; then codecov; fi
-          if [[ $PYTHON_VERSION == 3.10 ]]; then cd docs && make html; fi
+          if [[ $PYTHON_VERSION == 3.11 ]]; then codecov; fi
+          if [[ $PYTHON_VERSION == 3.11 ]]; then cd docs && make html; fi
 
   # publish_package:
   #   runs-on: "ubuntu-latest"
