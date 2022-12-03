@@ -136,14 +136,13 @@ class LookupLib(object):
         else:
             encodeurl = url + "?" + urllib.urlencode(params)
         response = requests.get(encodeurl, timeout=10)
-        # doc = BeautifulSoup(response.text, "html.parser")
-        doc = BeautifulSoup(response.text, "lxml")
+        doc = BeautifulSoup(response.text, "xml")
         session_key = None
-        if doc.session.key:
-            session_key = doc.session.key.text
+        if doc.QRZDatabase.Session.Key:
+            session_key = doc.QRZDatabase.Session.Key.text
         else:
-            if doc.session.error:
-                raise ValueError(doc.session.error.text)
+            if doc.QRZDatabase.Session.Error:
+                raise ValueError(doc.QRZDatabase.Session.Error.text)
             else:
                 raise ValueError("Could not retrieve Session Key from QRZ.com")
 
@@ -770,43 +769,43 @@ class LookupLib(object):
 
         response = self._request_dxcc_info_from_qrz(dxcc_or_callsign, apikey, apiv=apiv)
 
-        root = BeautifulSoup(response.text, "html.parser")
+        root = BeautifulSoup(response.text, "xml")
         lookup = {}
 
-        if root.error: #try to get a new session key and try to request again
+        if root.Error: #try to get a new session key and try to request again
 
-            if re.search('No DXCC Information for', root.error.text, re.I):  #No data available for callsign
-                raise KeyError(root.error.text)
-            elif re.search('Session Timeout', root.error.text, re.I): # Get new session key
+            if re.search('No DXCC Information for', root.Error.text, re.I):  #No data available for callsign
+                raise KeyError(root.Error.text)
+            elif re.search('Session Timeout', root.Error.text, re.I): # Get new session key
                 self._apikey = apikey = self._get_qrz_session_key(self._username, self._pwd)
                 response = self._request_dxcc_info_from_qrz(dxcc_or_callsign, apikey)
-                root = BeautifulSoup(response.text, "html.parser")
+                root = BeautifulSoup(response.text, "xml")
             else:
                 raise AttributeError("Session Key Missing") #most likely session key missing or invalid
 
         if root.dxcc is None:
             raise ValueError
 
-        if root.dxcc.dxcc:
-            lookup[const.ADIF] = int(root.dxcc.dxcc.text)
-        if root.dxcc.cc:
-            lookup['cc'] = root.dxcc.cc.text
-        if root.dxcc.cc:
-            lookup['ccc'] = root.dxcc.ccc.text
+        if root.DXCC.dxcc:
+            lookup[const.ADIF] = int(root.DXCC.dxcc.text)
+        if root.DXCC.cc:
+            lookup['cc'] = root.DXCC.cc.text
+        if root.DXCC.ccc:
+            lookup['ccc'] = root.DXCC.ccc.text
         if root.find('name'):
             lookup[const.COUNTRY] = root.find('name').get_text()
-        if root.dxcc.continent:
-            lookup[const.CONTINENT] = root.dxcc.continent.text
-        if root.dxcc.ituzone:
-            lookup[const.ITUZ] = int(root.dxcc.ituzone.text)
-        if root.dxcc.cqzone:
-            lookup[const.CQZ] = int(root.dxcc.cqzone.text)
-        if root.dxcc.timezone:
-            lookup['timezone'] = float(root.dxcc.timezone.text)
-        if root.dxcc.lat:
-            lookup[const.LATITUDE] = float(root.dxcc.lat.text)
-        if root.dxcc.lon:
-            lookup[const.LONGITUDE] = float(root.dxcc.lon.text)
+        if root.DXCC.continent:
+            lookup[const.CONTINENT] = root.DXCC.continent.text
+        if root.DXCC.ituzone:
+            lookup[const.ITUZ] = int(root.DXCC.ituzone.text)
+        if root.DXCC.cqzone:
+            lookup[const.CQZ] = int(root.DXCC.cqzone.text)
+        if root.DXCC.timezone:
+            lookup['timezone'] = float(root.DXCC.timezone.text)
+        if root.DXCC.lat:
+            lookup[const.LATITUDE] = float(root.DXCC.lat.text)
+        if root.DXCC.lon:
+            lookup[const.LONGITUDE] = float(root.DXCC.lon.text)
 
         return lookup
 
@@ -822,155 +821,157 @@ class LookupLib(object):
 
         response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
 
-        root = BeautifulSoup(response.text, "html.parser")
+        root = BeautifulSoup(response.text, "xml")
         lookup = {}
 
-        if root.error:
+        if root.Error:
 
-            if re.search('Not found', root.error.text, re.I):  #No data available for callsign
-                raise KeyError(root.error.text)
+            if re.search('Not found', root.Error.text, re.I):  #No data available for callsign
+                raise KeyError(root.Error.text)
 
             #try to get a new session key and try to request again
-            elif re.search('Session Timeout', root.error.text, re.I) or re.search('Invalid session key', root.error.text, re.I):
+            elif re.search('Session Timeout', root.Error.text, re.I) or re.search('Invalid session key', root.error.text, re.I):
                 apikey = self._get_qrz_session_key(self._username, self._pwd)
                 response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
-                root = BeautifulSoup(response.text, "html.parser")
+                root = BeautifulSoup(response.text, "xml")
 
                 #if this fails again, raise error
-                if root.error:
+                if root.Error:
 
-                    if re.search('Not found', root.error.text, re.I):  #No data available for callsign
-                        raise KeyError(root.error.text)
+                    if re.search('Not found', root.Error.text, re.I):  #No data available for callsign
+                        raise KeyError(root.Error.text)
                     else:
-                        raise AttributeError(root.error.text) #most likely session key invalid
+                        raise AttributeError(root.Error.text) #most likely session key invalid
                 else:
                     #update API Key ob Lookup object
                     self._apikey = apikey
 
             else:
-                raise AttributeError(root.error.text) #most likely session key missing
+                raise AttributeError(root.Error.text) #most likely session key missing
 
-        if root.callsign is None:
+        print(root)
+
+        if root.Callsign is None:
             raise ValueError
 
-        if root.callsign.call:
-            lookup[const.CALLSIGN] = root.callsign.call.text
-        if root.callsign.xref:
-            lookup[const.XREF] = root.callsign.xref.text
-        if root.callsign.aliases:
-            lookup[const.ALIASES] = root.callsign.aliases.text.split(',')
-        if root.callsign.dxcc:
-            lookup[const.ADIF] = int(root.callsign.dxcc.text)
-        if root.callsign.fname:
-            lookup[const.FNAME] = root.callsign.fname.text
-        if root.callsign.find("name"):
-            lookup[const.NAME] = root.callsign.find('name').get_text()
-        if root.callsign.addr1:
-            lookup[const.ADDR1] = root.callsign.addr1.text
-        if root.callsign.addr2:
-            lookup[const.ADDR2] = root.callsign.addr2.text
-        if root.callsign.state:
-            lookup[const.STATE] = root.callsign.state.text
-        if root.callsign.zip:
-            lookup[const.ZIPCODE] = root.callsign.zip.text
-        if root.callsign.country:
-            lookup[const.COUNTRY] = root.callsign.country.text
-        if root.callsign.ccode:
-            lookup[const.CCODE] = int(root.callsign.ccode.text)
-        if root.callsign.lat:
-            lookup[const.LATITUDE] = float(root.callsign.lat.text)
-        if root.callsign.lon:
-            lookup[const.LONGITUDE] = float(root.callsign.lon.text)
-        if root.callsign.grid:
-            lookup[const.LOCATOR] = root.callsign.grid.text
-        if root.callsign.county:
-            lookup[const.COUNTY] = root.callsign.county.text
-        if root.callsign.fips:
-            lookup[const.FIPS] = int(root.callsign.fips.text) # check type
-        if root.callsign.land:
-            lookup[const.LAND] = root.callsign.land.text
-        if root.callsign.efdate:
+        if root.Callsign.call:
+            lookup[const.CALLSIGN] = root.Callsign.call.text
+        if root.Callsign.xref:
+            lookup[const.XREF] = root.Callsign.xref.text
+        if root.Callsign.aliases:
+            lookup[const.ALIASES] = root.Callsign.aliases.text.split(',')
+        if root.Callsign.dxcc:
+            lookup[const.ADIF] = int(root.Callsign.dxcc.text)
+        if root.Callsign.fname:
+            lookup[const.FNAME] = root.Callsign.fname.text
+        if root.Callsign.find("name"):
+            lookup[const.NAME] = root.Callsign.find('name').get_text()
+        if root.Callsign.addr1:
+            lookup[const.ADDR1] = root.Callsign.addr1.text
+        if root.Callsign.addr2:
+            lookup[const.ADDR2] = root.Callsign.addr2.text
+        if root.Callsign.state:
+            lookup[const.STATE] = root.Callsign.state.text
+        if root.Callsign.zip:
+            lookup[const.ZIPCODE] = root.Callsign.zip.text
+        if root.Callsign.country:
+            lookup[const.COUNTRY] = root.Callsign.country.text
+        if root.Callsign.ccode:
+            lookup[const.CCODE] = int(root.Callsign.ccode.text)
+        if root.Callsign.lat:
+            lookup[const.LATITUDE] = float(root.Callsign.lat.text)
+        if root.Callsign.lon:
+            lookup[const.LONGITUDE] = float(root.Callsign.lon.text)
+        if root.Callsign.grid:
+            lookup[const.LOCATOR] = root.Callsign.grid.text
+        if root.Callsign.county:
+            lookup[const.COUNTY] = root.Callsign.county.text
+        if root.Callsign.fips:
+            lookup[const.FIPS] = int(root.Callsign.fips.text) # check type
+        if root.Callsign.land:
+            lookup[const.LAND] = root.Callsign.land.text
+        if root.Callsign.efdate:
             try:
-                lookup[const.EFDATE] = datetime.strptime(root.callsign.efdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
+                lookup[const.EFDATE] = datetime.strptime(root.Callsign.efdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
             except ValueError:
-                self._logger.debug("[QRZ.com] efdate: Invalid DateTime; " + callsign + " " + root.callsign.efdate.text)
-        if root.callsign.expdate:
+                self._logger.debug("[QRZ.com] efdate: Invalid DateTime; " + callsign + " " + root.Callsign.efdate.text)
+        if root.Callsign.expdate:
             try:
-                lookup[const.EXPDATE] = datetime.strptime(root.callsign.expdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
+                lookup[const.EXPDATE] = datetime.strptime(root.Callsign.expdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
             except ValueError:
-                self._logger.debug("[QRZ.com] expdate: Invalid DateTime; " + callsign + " " + root.callsign.expdate.text)
-        if root.callsign.p_call:
-            lookup[const.P_CALL] = root.callsign.p_call.text
-        if root.callsign.find('class'):
-             lookup[const.LICENSE_CLASS] = root.callsign.find('class').get_text()
-        if root.callsign.codes:
-            lookup[const.CODES] = root.callsign.codes.text
-        if root.callsign.qslmgr:
-            lookup[const.QSLMGR] = root.callsign.qslmgr.text
-        if root.callsign.email:
-            lookup[const.EMAIL] = root.callsign.email.text
-        if root.callsign.url:
-            lookup[const.URL] = root.callsign.url.text
-        if root.callsign.u_views:
-            lookup[const.U_VIEWS] = int(root.callsign.u_views.text)
-        if root.callsign.bio:
-            lookup[const.BIO] = root.callsign.bio.text
-        if root.callsign.biodate:
+                self._logger.debug("[QRZ.com] expdate: Invalid DateTime; " + callsign + " " + root.Callsign.expdate.text)
+        if root.Callsign.p_call:
+            lookup[const.P_CALL] = root.Callsign.p_call.text
+        if root.Callsign.find('class'):
+             lookup[const.LICENSE_CLASS] = root.Callsign.find('class').get_text()
+        if root.Callsign.codes:
+            lookup[const.CODES] = root.Callsign.codes.text
+        if root.Callsign.qslmgr:
+            lookup[const.QSLMGR] = root.Callsign.qslmgr.text
+        if root.Callsign.email:
+            lookup[const.EMAIL] = root.Callsign.email.text
+        if root.Callsign.url:
+            lookup[const.URL] = root.Callsign.url.text
+        if root.Callsign.u_views:
+            lookup[const.U_VIEWS] = int(root.Callsign.u_views.text)
+        if root.Callsign.bio:
+            lookup[const.BIO] = root.Callsign.bio.text
+        if root.Callsign.biodate:
             try:
-                lookup[const.BIODATE] = datetime.strptime(root.callsign.biodate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
+                lookup[const.BIODATE] = datetime.strptime(root.Callsign.biodate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
             except ValueError:
                 self._logger.warning("[QRZ.com] biodate: Invalid DateTime; " + callsign)
-        if root.callsign.image:
-            lookup[const.IMAGE] = root.callsign.image.text
-        if root.callsign.imageinfo:
-            lookup[const.IMAGE_INFO] = root.callsign.imageinfo.text
-        if root.callsign.serial:
-            lookup[const.SERIAL] = long(root.callsign.serial.text)
-        if root.callsign.moddate:
+        if root.Callsign.image:
+            lookup[const.IMAGE] = root.Callsign.image.text
+        if root.Callsign.imageinfo:
+            lookup[const.IMAGE_INFO] = root.Callsign.imageinfo.text
+        if root.Callsign.serial:
+            lookup[const.SERIAL] = long(root.Callsign.serial.text)
+        if root.Callsign.moddate:
             try:
-                lookup[const.MODDATE] = datetime.strptime(root.callsign.moddate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
+                lookup[const.MODDATE] = datetime.strptime(root.Callsign.moddate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
             except ValueError:
                 self._logger.warning("[QRZ.com] moddate: Invalid DateTime; " + callsign)
-        if root.callsign.MSA:
-            lookup[const.MSA] = int(root.callsign.MSA.text)
-        if root.callsign.AreaCode:
-            lookup[const.AREACODE] = int(root.callsign.AreaCode.text)
-        if root.callsign.TimeZone:
-            lookup[const.TIMEZONE] = int(root.callsign.TimeZone.text)
-        if root.callsign.GMTOffset:
-            lookup[const.GMTOFFSET] = float(root.callsign.GMTOffset.text)
-        if root.callsign.DST:
-            if root.callsign.DST.text == "Y":
+        if root.Callsign.MSA:
+            lookup[const.MSA] = int(root.Callsign.MSA.text)
+        if root.Callsign.AreaCode:
+            lookup[const.AREACODE] = int(root.Callsign.AreaCode.text)
+        if root.Callsign.TimeZone:
+            lookup[const.TIMEZONE] = int(root.Callsign.TimeZone.text)
+        if root.Callsign.GMTOffset:
+            lookup[const.GMTOFFSET] = float(root.Callsign.GMTOffset.text)
+        if root.Callsign.DST:
+            if root.Callsign.DST.text == "Y":
                 lookup[const.DST] = True
             else:
                 lookup[const.DST] = False
-        if root.callsign.eqsl:
-            if root.callsign.eqsl.text == "1":
+        if root.Callsign.eqsl:
+            if root.Callsign.eqsl.text == "1":
                 lookup[const.EQSL] = True
             else:
                 lookup[const.EQSL] = False
-        if root.callsign.mqsl:
-            if root.callsign.mqsl.text == "1":
+        if root.Callsign.mqsl:
+            if root.Callsign.mqsl.text == "1":
                 lookup[const.MQSL] = True
             else:
                 lookup[const.MQSL] = False
-        if root.callsign.cqzone:
-            lookup[const.CQZ] = int(root.callsign.cqzone.text)
-        if root.callsign.ituzone:
-            lookup[const.ITUZ] = int(root.callsign.ituzone.text)
-        if root.callsign.born:
-            lookup[const.BORN] = int(root.callsign.born.text)
-        if root.callsign.user:
-            lookup[const.USER_MGR] = root.callsign.user.text
-        if root.callsign.lotw:
-            if root.callsign.lotw.text == "1":
+        if root.Callsign.cqzone:
+            lookup[const.CQZ] = int(root.Callsign.cqzone.text)
+        if root.Callsign.ituzone:
+            lookup[const.ITUZ] = int(root.Callsign.ituzone.text)
+        if root.Callsign.born:
+            lookup[const.BORN] = int(root.Callsign.born.text)
+        if root.Callsign.user:
+            lookup[const.USER_MGR] = root.Callsign.user.text
+        if root.Callsign.lotw:
+            if root.Callsign.lotw.text == "1":
                 lookup[const.LOTW] = True
             else:
                 lookup[const.LOTW] = False
-        if root.callsign.iota:
-            lookup[const.IOTA] = root.callsign.iota.text
-        if root.callsign.geoloc:
-            lookup[const.GEOLOC] = root.callsign.geoloc.text
+        if root.Callsign.iota:
+            lookup[const.IOTA] = root.Callsign.iota.text
+        if root.Callsign.geoloc:
+            lookup[const.GEOLOC] = root.Callsign.geoloc.text
 
         # if sys.version_info >= (2,):
         #     for item in lookup:
