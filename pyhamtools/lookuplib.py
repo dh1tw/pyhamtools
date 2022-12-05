@@ -849,8 +849,6 @@ class LookupLib(object):
             else:
                 raise AttributeError(root.Error.text) #most likely session key missing
 
-        print(root)
-
         if root.Callsign is None:
             raise ValueError
 
