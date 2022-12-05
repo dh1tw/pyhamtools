@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+PyHamtools 0.8.1
+================
+
+05. December 2022
+
+* removed debug print statement from QRZ.com queries
+
+
+
 PyHamtools 0.8.0
 ================
 
