@@ -1,13 +1,20 @@
 Changelog
 ---------
 
+PyHamtools 0.8.2
+================
+
+05. December 2022
+
+* timezone field from QRZ.com casted to str instead of int
+
+
 PyHamtools 0.8.1
 ================
 
 05. December 2022
 
 * removed debug print statement from QRZ.com queries
-
 
 
 PyHamtools 0.8.0

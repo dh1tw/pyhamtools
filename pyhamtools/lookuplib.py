@@ -935,7 +935,7 @@ class LookupLib(object):
         if root.Callsign.AreaCode:
             lookup[const.AREACODE] = int(root.Callsign.AreaCode.text)
         if root.Callsign.TimeZone:
-            lookup[const.TIMEZONE] = int(root.Callsign.TimeZone.text)
+            lookup[const.TIMEZONE] = root.Callsign.TimeZone.text
         if root.Callsign.GMTOffset:
             lookup[const.GMTOFFSET] = float(root.Callsign.GMTOffset.text)
         if root.Callsign.DST:
