@@ -1,6 +1,21 @@
 Changelog
 ---------
 
+PyHamtools 0.8.0
+================
+
+05. December 2022
+
+* Finally switched to XML parser in BeautifulSoup for qrz.com (requires libxml2-dev and libxslt-dev packages!)
+* Fixed minor bug in parsing the CCC field of qrz.com XML messages
+* Fixed VK9XX test fixture (Latitude & Longitude)
+* Added support for CPython 3.10 and 3.11
+* Added support for PyPy 3.7, 3.8, 3.9
+* Dropped support for Python 3.4
+* Fixed regular expression escapings which were marked as deprecated (since Python 3.6)
+* Replaced legacy execfile function in test package to remove the deprecation warning about 'imp'
+
+
 PyHamtools 0.7.10
 ================
 

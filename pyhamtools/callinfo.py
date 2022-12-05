@@ -70,7 +70,7 @@ class Callinfo(object):
         """
 
         callsign = callsign.upper()
-        homecall = re.search('[\d]{0,1}[A-Z]{1,2}\d([A-Z]{1,4}|\d{3,3}|\d{1,3}[A-Z])[A-Z]{0,5}', callsign)
+        homecall = re.search('[\\d]{0,1}[A-Z]{1,2}\\d([A-Z]{1,4}|\\d{3,3}|\\d{1,3}[A-Z])[A-Z]{0,5}', callsign)
         if homecall:
             homecall = homecall.group(0)
             return homecall
@@ -126,10 +126,10 @@ class Callinfo(object):
         if timestamp is None:
             timestamp = datetime.utcnow().replace(tzinfo=UTC)
 
-        if re.search('[/A-Z0-9\-]{3,15}', entire_callsign):  # make sure the call has at least 3 characters
+        if re.search('[/A-Z0-9\\-]{3,15}', entire_callsign):  # make sure the call has at least 3 characters
 
-            if re.search('\-\d{1,3}$', entire_callsign):  # cut off any -10 / -02 appendixes
-                callsign = re.sub('\-\d{1,3}$', '', entire_callsign)
+            if re.search('\\-\\d{1,3}$', entire_callsign):  # cut off any -10 / -02 appendixes
+                callsign = re.sub('\\-\\d{1,3}$', '', entire_callsign)
 
             if re.search('/[A-Z0-9]{1,4}/[A-Z0-9]{1,4}$', callsign):
                 callsign = re.sub('/[A-Z0-9]{1,4}$', '', callsign)  # cut off 2. appendix DH1TW/HC2/P -> DH1TW/HC2
@@ -192,11 +192,11 @@ class Callinfo(object):
                     data[const.BEACON] = True
                     return data
 
-                elif re.search('\d$', appendix):
-                    area_nr = re.search('\d$', appendix).group(0)
-                    callsign = re.sub('/\d$', '', callsign) #remove /number
-                    if len(re.findall(r'\d+', callsign)) == 1: #call has just on digit e.g. DH1TW
-                        callsign = re.sub('[\d]+', area_nr, callsign)
+                elif re.search('\\d$', appendix):
+                    area_nr = re.search('\\d$', appendix).group(0)
+                    callsign = re.sub('/\\d$', '', callsign) #remove /number
+                    if len(re.findall(r'\\d+', callsign)) == 1: #call has just on digit e.g. DH1TW
+                        callsign = re.sub('[\\d]+', area_nr, callsign)
                     else: # call has several digits e.g. 7N4AAL
                         pass # no (two) digit prefix countries known where appendix would change entity
                     return self._iterate_prefix(callsign, timestamp)
@@ -205,7 +205,7 @@ class Callinfo(object):
                     return self._iterate_prefix(callsign, timestamp)
 
             # regular callsigns, without prefix or appendix
-            elif re.match('^[\d]{0,1}[A-Z]{1,2}\d([A-Z]{1,4}|\d{3,3}|\d{1,3}[A-Z])[A-Z]{0,5}$', callsign):
+            elif re.match('^[\\d]{0,1}[A-Z]{1,2}\\d([A-Z]{1,4}|\\d{3,3}|\\d{1,3}[A-Z])[A-Z]{0,5}$', callsign):
                 return self._iterate_prefix(callsign, timestamp)
 
             # callsigns with prefixes (xxx/callsign)
@@ -215,7 +215,7 @@ class Callinfo(object):
                 #make sure that the remaining part is actually a callsign (avoid: OZ/JO81)
                 rest = re.search('/[A-Z0-9]+', entire_callsign)
                 rest = re.sub('/', '', rest.group(0))
-                if re.match('^[\d]{0,1}[A-Z]{1,2}\d([A-Z]{1,4}|\d{3,3}|\d{1,3}[A-Z])[A-Z]{0,5}$', rest):
+                if re.match('^[\\d]{0,1}[A-Z]{1,2}\\d([A-Z]{1,4}|\\d{3,3}|\\d{1,3}[A-Z])[A-Z]{0,5}$', rest):
                     return self._iterate_prefix(pfx)
 
         if entire_callsign in callsign_exceptions:

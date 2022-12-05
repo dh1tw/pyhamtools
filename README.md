@@ -1,7 +1,6 @@
 # pyhamtools
 
 ![Build Status](https://github.com/dh1tw/pyhamtools/actions/workflows/test.yml/badge.svg)
-![Build status](https://ci.appveyor.com/api/projects/status/8rfgr7x6w1arixrh/branch/master?svg=true)
 [![codecov](https://codecov.io/gh/dh1tw/pyhamtools/branch/master/graph/badge.svg)](https://codecov.io/gh/dh1tw/pyhamtools)
 [![PyPI version](https://badge.fury.io/py/pyhamtools.svg)](https://badge.fury.io/py/pyhamtools)
 
@@ -32,18 +31,22 @@ This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat
 
 ## Compatibility
 
-Pyhamtools is since version 0.6.0 compatible with > Python 2.7 and > python 3.3.
+Pyhamtools is compatible with Python 2.7 and Python >=3.6.
 We check compatibility on OSX, Windows, and Linux with the following Python
 versions:
 
-* Python 2.7
-* Python 3.4 (will be deprecated in 2022)
-* Python 3.5 (will be deprecated in 2022)
-* Python 3.6
+* Python 2.7 (will be deprecated in 2023)
+* Python 3.5 (has been deprecated in 2022)
+* Python 3.6 (will be deprecated in 2023)
 * Python 3.7
 * Python 3.8
 * Python 3.9
+* Python 3.10
+* Python 3.11
 * [pypy2](https://pypy.org/) (Python 2)
+* [pypy3.7](https://pypy.org/)
+* [pypy3.8](https://pypy.org/)
+* [pypy3.9](https://pypy.org/)
 
 ## Documentation
 
@@ -55,13 +58,33 @@ Check out the full documentation including the changelog at:
 Pyhamtools is published under the permissive [MIT License](http://choosealicense.com/licenses/mit/). You can find a good comparison of
 Open Source Software licenses, including the MIT license at [choosealicense.com](http://choosealicense.com/licenses/)
 
+## Dependencies
+
+Starting with version 0.8.0, `libxml2-dev` and `libxslt-dev` are required dependencies.
+
 ## Installation
+
+Install the dependencies (e.g. on Debian/Ubuntu):
+
+```bash
+
+$ sudo apt-get install libxml2-dev libxslt-dev
+
+```
 
 The easiest way to install pyhamtools is through the packet manager `pip`:
 
 ```bash
 
 $ pip install pyhamtools
+
+```
+
+Christoph, @df7cb is kindly maintaining a Debian package as an alternative way to install pyhamtools:
+
+```bash
+
+$ sudo apt-get install pyhamtools
 
 ```
 

@@ -7,21 +7,27 @@ jobs:
     runs-on: "ubuntu-latest"
     name: "Ubuntu latest - Python ${{ matrix.python-version }}"
     env:
-      USING_COVERAGE: '3.10'
+      USING_COVERAGE: '3.11'
 
     strategy:
       matrix:
-        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "pypy2"]
+        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "pypy2.7", "pypy3.7", "pypy3.8", "pypy3.9"]
         redis-version: [6]
 
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/checkout@v3"
+      - uses: "actions/setup-python@v4"
         with:
           python-version: "${{ matrix.python-version }}"
+          cache: "pip"
+          cache-dependency-path: |
+            **/setup.py
+            **/requirements*.txt
+
       - name: "Install dependencies"
         run: |
           set -xe
+          sudo apt-get install -y libxml2-dev libxslt-dev
           python -VV
           python -m pip install --upgrade pip setuptools wheel codecov
           python -m pip install -e .
@@ -39,14 +45,13 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution randomly by 1-20sec to reduce the
-        # amount of concurrent API calls on Clublog and QRZ.com
-        # when all CI jobs execute simultaneously
+        # delay the execution randomly by a couple of seconds to reduce the amount 
+        # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          sleep $[ ( $RANDOM % 20 )  + 1 ]s 
+          sleep $[ ( $RANDOM % 10 )  + 1 ]s 
           pytest --cov=./
           if [[ $PYTHON_VERSION == 3.11 ]]; then codecov; fi
-          if [[ $PYTHON_VERSION == 3.11 ]]; then cd docs && make html; fi
+          cd docs && make html
 
   # publish_package:
   #   runs-on: "ubuntu-latest"
@@ -59,41 +64,52 @@ jobs:
   #         user: __token__
   #         password: ${{ secrets.PYPI_API_TOKEN }}
 
-  # test_windows:
-  #   runs-on: "windows-latest"
-  #   name: "Windows latest - Python ${{ matrix.python-version }}"
-  #   env:
-  #     USING_COVERAGE: '3.9'
+  test_windows:
+    runs-on: "windows-latest"
+    name: "Windows latest - Python ${{ matrix.python-version }}"
 
-  #   strategy:
-  #     matrix:
-  #       python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9"]
-  #       redis-version: ["6.2"]
+    strategy:
+      matrix:
+        # lxml support for windows/python3.11 still missing (Dec 2022)
+        # https://github.com/lxml/lxml/pull/360
+        # python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
-  #   steps:
-  #     - uses: "actions/checkout@v2"
-  #     - uses: "actions/setup-python@v2"
-  #       with:
-  #         python-version: "${{ matrix.python-version }}"
-  #     - name: "Install dependencies"
-  #       run: |
-  #         python -VV
-  #         python -m pip install --upgrade pip setuptools wheel codecov
-  #         python -m pip install -e .
-  #         python -m pip install -r requirements-pytest.txt
-  #         python -m pip install -r requirements-docs.txt
-  #     - name: Setup redis
-  #       uses: shogo82148/actions-setup-redis@v1
-  #       with:
-  #         redis-version: ${{ matrix.redis-version }}
-  #     - name: "Run tests for ${{ matrix.python-version }}"
-  #       env: 
-  #         CLUBLOG_APIKEY: ${{ secrets.CLUBLOG_APIKEY }}
-  #         QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
-  #         QRZ_PWD: ${{ secrets.QRZ_PWD }}
-  #         PYTHON_VERSION: ${{ matrix.python-version }}
-  #       # delay the execution randomly by 1-20sec to reduce the
-  #       # amount of concurrent API calls on Clublog and QRZ.com
-  #       # when all CI jobs execute simultaneously
-  #       run: |
-  #         pytest
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "actions/setup-python@v4"
+        with:
+          python-version: "${{ matrix.python-version }}"
+          cache: "pip"
+          cache-dependency-path: |
+                setup.py
+                requirements*.txt
+      - name: "Install dependencies"
+        run: |
+          python -VV
+          python -m pip install --upgrade pip setuptools wheel codecov
+          python -m pip install -e .
+          python -m pip install -r requirements-pytest.txt
+          python -m pip install -r requirements-docs.txt
+      - name: Setup redis
+        # We have to download and install a non-official redis windows port
+        # since there is no official redis version for windows.
+        # 5.0 is good enough for our purposes. After installing the msi, 
+        # redis will startup as a service. 
+        # There are no github-actions supporting redis on windows.
+        # Github Actions Container services are also not available for windows.
+        run: |
+          C:\msys64\usr\bin\wget.exe https://github.com/tporadowski/redis/releases/download/v5.0.14.1/Redis-x64-5.0.14.1.msi
+          msiexec /quiet /i Redis-x64-5.0.14.1.msi
+      - name: "Run tests for ${{ matrix.python-version }}"
+        env: 
+          CLUBLOG_APIKEY: ${{ secrets.CLUBLOG_APIKEY }}
+          QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
+          QRZ_PWD: ${{ secrets.QRZ_PWD }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        # delay the execution randomly by 1-20sec to reduce the
+        # amount of concurrent API calls on Clublog and QRZ.com
+        # when all CI jobs execute simultaneously
+        run: |
+          start-sleep -Seconds (1..10 | get-random)
+          pytest

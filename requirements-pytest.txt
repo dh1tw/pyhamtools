@@ -1,5 +1,5 @@
-pytest>=7.0.0; python_version>='3.6'
-pytest==4.6.11; python_version<='3.5' and python_version>='2.7'
+pytest>=7.0.0; python_version>='3.7'
+pytest==4.6.11; python_version<='3.6' and python_version>='2.7'
 pytest-blockage>=0.2.2
 pytest-localserver>=0.5
 pytest-cov>=2.12

@@ -1,4 +1,4 @@
-from past.builtins import execfile
+from .execfile import execfile
 import os
 import sys
 import datetime
