@@ -80,7 +80,7 @@ $ pip install pyhamtools
 
 ```
 
-Christoph, @df7cb is kindly maintaining a Debian package as an alternative way to install pyhamtools:
+Christoph, [@df7cb](https://github.com/df7cb) is kindly maintaining a Debian package as an alternative way to install pyhamtools:
 
 ```bash
 
