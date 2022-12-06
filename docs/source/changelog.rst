@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamtools 0.8.3
+================
+
+06. December 2022
+
+* fixed XML parsing error in QRZ.com session key renewal
+
+
 PyHamtools 0.8.2
 ================
 

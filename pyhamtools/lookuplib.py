@@ -783,7 +783,7 @@ class LookupLib(object):
             else:
                 raise AttributeError("Session Key Missing") #most likely session key missing or invalid
 
-        if root.dxcc is None:
+        if root.DXCC is None:
             raise ValueError
 
         if root.DXCC.dxcc:
@@ -830,7 +830,7 @@ class LookupLib(object):
                 raise KeyError(root.Error.text)
 
             #try to get a new session key and try to request again
-            elif re.search('Session Timeout', root.Error.text, re.I) or re.search('Invalid session key', root.error.text, re.I):
+            elif re.search('Session Timeout', root.Error.text, re.I) or re.search('Invalid session key', root.Error.text, re.I):
                 apikey = self._get_qrz_session_key(self._username, self._pwd)
                 response = self._request_callsign_info_from_qrz(callsign, apikey, apiv)
                 root = BeautifulSoup(response.text, "xml")
