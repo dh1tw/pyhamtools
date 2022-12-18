@@ -73,7 +73,9 @@ jobs:
         # lxml support for windows/python3.11 still missing (Dec 2022)
         # https://github.com/lxml/lxml/pull/360
         # python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        # python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        # disable python 3.6 on windows due to lxml / bs4 problems on Github Actions
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
       - uses: "actions/checkout@v3"
