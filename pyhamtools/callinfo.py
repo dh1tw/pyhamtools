@@ -215,7 +215,7 @@ class Callinfo(object):
                 #make sure that the remaining part is actually a callsign (avoid: OZ/JO81)
                 rest = re.search('/[A-Z0-9]+', entire_callsign)
                 if rest is None:
-                    self._logger.warning("non latin characters in callsign '{0}'".format(entire_callsign))
+                    self._logger.warning(u"non latin characters in callsign '{0}'".format(entire_callsign))
                     raise KeyError
                 rest = re.sub('/', '', rest.group(0))  
                 if re.match('^[\\d]{0,1}[A-Z]{1,2}\\d([A-Z]{1,4}|\\d{3,3}|\\d{1,3}[A-Z])[A-Z]{0,5}$', rest):
