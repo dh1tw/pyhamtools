@@ -265,6 +265,15 @@ class Test_callinfo_methods:
                 fix_callinfo._dismantle_callsign("OZ/JO85")
 
 
+    def test_dismantle_callsign_with_cyrillic_characters(self, fix_callinfo):
+
+        with pytest.raises(KeyError):
+            fix_callinfo._dismantle_callsign("RД3MAS") #cyrillic letter 'Д' in call
+        with pytest.raises(KeyError):
+            fix_callinfo._dismantle_callsign("RД3/K9MAS") #cyrillic letter 'Д' in prefix
+        with pytest.raises(KeyError):
+            fix_callinfo._dismantle_callsign("R2EA/М") #cyrillic letter 'M' in appendix
+
     def test_dismantle_callsign_with_VK9_special_suffixes(self, fix_callinfo):
 
         if fix_callinfo._lookuplib._lookuptype == "clublog":
