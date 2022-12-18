@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamtools 0.8.4
+================
+
+18. December 2022
+
+* raise KeyError when callsigns contain non-latin characters (e.g. cyrillic letters)
+
+
 PyHamtools 0.8.3
 ================
 
