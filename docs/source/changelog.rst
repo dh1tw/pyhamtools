@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamtools 0.8.5
+================
+
+26. December 2022
+
+* refined regex for decoding callsigns. In particular to better recognize callsigns with one or more digits in the suffix (e.g. TI5N5BEK, DP44N44T)
+
+
 PyHamtools 0.8.4
 ================
 

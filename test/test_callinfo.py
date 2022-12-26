@@ -103,6 +103,24 @@ response_prefix_VK9GMW_clublog = {
     u'longitude': 155.8
 }
 
+response_prefix_8J1H90T_clublog = {
+    u'adif': 339,
+    u'continent': u'AS',
+    u'country': u'JAPAN',
+    u'cqz': 25,
+    u'latitude': 35.7,
+    u'longitude': 139.8
+}
+
+response_prefix_TI5N5BEK_clublog = {
+    u'adif': 308,
+    u'continent': u'NA',
+    u'country': u'COSTA RICA',
+    u'cqz': 7,
+    u'latitude': 9.9,
+    u'longitude': -84.0
+}
+
 response_callsign_exceptions_7N1PRD_0_clublog = {
     u'adif': 339,
     u'continent': u'AS',
@@ -231,12 +249,15 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DH1TW/M") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("DP44N44T") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_clublog
             assert fix_callinfo._dismantle_callsign("C6A/9H5A") == response_prefix_C6A_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/UNI") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/BUX") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/NOT") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("8J1H90T") == response_prefix_8J1H90T_clublog
+            assert fix_callinfo._dismantle_callsign("TI5N5BEK") == response_prefix_TI5N5BEK_clublog
             assert fix_callinfo._dismantle_callsign("VK9DLX/NOT") == response_prefix_VK9DLX_clublog
             assert fix_callinfo._dismantle_callsign("7QAA") == response_callsign_exceptions_7QAA_clublog
             assert fix_callinfo._dismantle_callsign("7N1PRD/0") == response_callsign_exceptions_7N1PRD_0_clublog
