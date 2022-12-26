@@ -18,6 +18,15 @@ response_prefix_DH_clublog = {
     'cqz': 14,
 }
 
+response_prefix_OE_clublog = {
+    'country': 'AUSTRIA',
+    'adif': 206,
+    'continent': 'EU',
+    'latitude': 47.3,
+    'longitude': 13.3,
+    'cqz': 15,
+}
+
 response_prefix_DH_countryfile = {
     'country': 'Fed. Rep. of Germany',
     'adif': 230,
@@ -82,6 +91,33 @@ response_prefix_VK9DLX_clublog = {
     u'cqz': 30,
     u'latitude': -31.6,
     u'longitude': 159.1
+}
+
+response_prefix_TA7I_clublog = {
+    u'adif': 390,
+    u'continent': u'AS',
+    u'country': u'TURKEY',
+    u'cqz': 20,
+    u'latitude': 40.0,
+    u'longitude': 33.0
+}
+
+response_prefix_W2T_clublog = {
+    u'adif': 291,
+    u'continent': u'NA',
+    u'country': u'UNITED STATES OF AMERICA',
+    u'cqz': 5,
+    u'latitude': 43.0,
+    u'longitude': -87.9
+}
+
+response_prefix_V26K_clublog = {
+    u'adif': 94,
+    u'continent': u'NA',
+    u'country': u'ANTIGUA & BARBUDA',
+    u'cqz': 8,
+    u'latitude': 17.1,
+    u'longitude': -61.8
 }
 
 response_prefix_VK9DLX_countryfile = {
@@ -249,6 +285,15 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DH1TW/M") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DH1TW/B")[const.BEACON]
             assert fix_callinfo._dismantle_callsign("DH1TW") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("DA2X") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("DN1BU") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("OE50SPUTNIK") == response_prefix_OE_clublog
+            assert fix_callinfo._dismantle_callsign("DL60LINDAU") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("DP75HILDE") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("DL1640Y") == response_prefix_DH_clublog
+            assert fix_callinfo._dismantle_callsign("V26K") == response_prefix_V26K_clublog
+            assert fix_callinfo._dismantle_callsign("W2T") == response_prefix_W2T_clublog
+            assert fix_callinfo._dismantle_callsign("TA7I") == response_prefix_TA7I_clublog
             assert fix_callinfo._dismantle_callsign("DP44N44T") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("9H5A/C6A") == response_prefix_C6A_clublog
@@ -265,6 +310,8 @@ class Test_callinfo_methods:
 
             with pytest.raises(KeyError):
                 fix_callinfo._dismantle_callsign("OZ/JO85")
+            with pytest.raises(KeyError):
+                fix_callinfo._dismantle_callsign("DL")
 
         if fix_callinfo._lookuplib._lookuptype == "countryfile":
             assert fix_callinfo._dismantle_callsign("DH1TW/QRP") == response_prefix_DH_countryfile

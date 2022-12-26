@@ -205,7 +205,8 @@ class Callinfo(object):
                     return self._iterate_prefix(callsign, timestamp)
 
             # regular callsigns, without prefix or appendix
-            elif re.match('^[\\d]{0,1}[A-Z]{1,2}\\d{1,2}[A-Z]{1,2}([A-Z]{1,4}|\\d{1,3})[A-Z]{0,5}$', callsign):
+            # elif re.match('^[\\d]{0,1}[A-Z]{1,2}\\d{1,2}[A-Z]{1,2}([A-Z]{1,4}|\\d{1,3})[A-Z]{0,5}$', callsign):
+            elif re.match('^[\\d]{0,1}[A-Z]{1,2}\\d{1,4}([A-Z]{1,4}|[A-Z]{1,2}\\d{0,3})[A-Z]{0,5}$', callsign):
                 return self._iterate_prefix(callsign, timestamp)
 
             # callsigns with prefixes (xxx/callsign)

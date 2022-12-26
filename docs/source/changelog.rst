@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+PyHamtools 0.8.6
+================
+
+26. December 2022
+
+* fixed regex regression for detection two-by-one callsigns
+
 PyHamtools 0.8.5
 ================
 
