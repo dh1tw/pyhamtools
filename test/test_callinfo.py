@@ -27,6 +27,15 @@ response_prefix_OE_clublog = {
     'cqz': 15,
 }
 
+response_prefix_RU_clublog = {
+    'country': 'EUROPEAN RUSSIA',
+    'adif': 54,
+    'continent': 'EU',
+    'latitude': 55.8,
+    'longitude': 37.6,
+    'cqz': 16,
+}
+
 response_prefix_DH_countryfile = {
     'country': 'Fed. Rep. of Germany',
     'adif': 230,
@@ -293,6 +302,7 @@ class Test_callinfo_methods:
             assert fix_callinfo._dismantle_callsign("DL1640Y") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("V26K") == response_prefix_V26K_clublog
             assert fix_callinfo._dismantle_callsign("W2T") == response_prefix_W2T_clublog
+            assert fix_callinfo._dismantle_callsign("R2AQH") == response_prefix_RU_clublog
             assert fix_callinfo._dismantle_callsign("TA7I") == response_prefix_TA7I_clublog
             assert fix_callinfo._dismantle_callsign("DP44N44T") == response_prefix_DH_clublog
             assert fix_callinfo._dismantle_callsign("DL/HC2AO") == response_prefix_DH_clublog
