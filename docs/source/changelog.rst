@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamtools 0.8.7
+================
+
+31. December 2022
+
+* Lookuplib/Countryfiles: corrected Brazil to ADIF country id 108
+* Lookuplib/Countryfiles: corrected Domenican Republic to ADIF country if 72
+
 PyHamtools 0.8.6
 ================
 
