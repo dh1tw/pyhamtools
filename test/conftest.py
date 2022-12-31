@@ -1,6 +1,7 @@
 import pytest
 import pkgutil
 import json
+import os
 
 from pyhamtools import LookupLib
 from pyhamtools import Callinfo
