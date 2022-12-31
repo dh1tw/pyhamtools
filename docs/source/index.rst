@@ -25,7 +25,7 @@ with some modules and classes which are frequently needed:
 PyHamTools is used in production at the DXHeat.com DXCluster_, performing several thousand lookups and 
 calculations per day.
 
-.. _Clublog.org: https://secure.clublog.org/
+.. _Clublog.org: https://clublog.org/
 .. _Country-Files.com: http://www.country-files.com/
 .. _QRZ.com: http://qrz.com
 .. _eQSL: http://eqsl.cc

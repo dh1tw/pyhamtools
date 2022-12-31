@@ -8,6 +8,7 @@ PyHamtools 0.8.7
 
 * Lookuplib/Countryfiles: corrected Brazil to ADIF country id 108
 * Lookuplib/Countryfiles: corrected Domenican Republic to ADIF country if 72
+* Changed the remaining Clublog URLs to https://cdn.clublog.org 
 
 PyHamtools 0.8.6
 ================

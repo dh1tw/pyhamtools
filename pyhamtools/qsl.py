@@ -94,7 +94,7 @@ def get_clublog_users(**kwargs):
             'lastupload': datetime.datetime(2013, 5, 8, 15, 0, 6),
             'oqrs': True}
 
-    .. _CLUBLOG: https://secure.clublog.org
+    .. _CLUBLOG: https://clublog.org
     __ CLUBLOG_
 
     """
@@ -106,7 +106,7 @@ def get_clublog_users(**kwargs):
     try:
         url = kwargs['url']
     except KeyError:
-        url = "https://secure.clublog.org/clublog-users.json.zip"
+        url = "https://cdn.clublog.org/clublog-users.json.zip"
 
     try:
         result = requests.get(url)

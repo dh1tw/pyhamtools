@@ -689,7 +689,7 @@ class LookupLib(object):
         #no matching case
         raise KeyError
 
-    def _lookup_clublogAPI(self, callsign=None, timestamp=None, url="https://secure.clublog.org/dxcc", apikey=None):
+    def _lookup_clublogAPI(self, callsign=None, timestamp=None, url="https://cdn.clublog.org/dxcc", apikey=None):
         """ Set up the Lookup object for Clublog Online API
         """
 
