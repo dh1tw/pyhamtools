@@ -1,7 +1,6 @@
 import pytest
-import tempfile
-import os
-import logging
+import pkgutil
+import json
 
 from pyhamtools import LookupLib
 from pyhamtools import Callinfo
@@ -96,3 +95,7 @@ def fix_redis():
 @pytest.fixture(scope="module")
 def fix_qrz():
     return LookupLib(lookuptype="qrz", username=QRZ_USERNAME, pwd=QRZ_PWD)
+
+@pytest.fixture(scope="session")
+def fixCountryMapping():
+        return json.loads(pkgutil.get_data("pyhamtools", "countryfilemapping.json"))
