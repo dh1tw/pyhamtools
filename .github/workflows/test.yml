@@ -4,14 +4,14 @@ on: [push, pull_request]
 
 jobs:
   test_linux:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-22.04"
     name: "Ubuntu latest - Python ${{ matrix.python-version }}"
     env:
       USING_COVERAGE: '3.11'
 
     strategy:
       matrix:
-        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "pypy2.7", "pypy3.7", "pypy3.8", "pypy3.9"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "pypy3.7", "pypy3.8", "pypy3.9"]
         redis-version: [6]
 
     steps:
@@ -75,7 +75,7 @@ jobs:
         # python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
         # python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         # disable python 3.6 on windows due to lxml / bs4 problems on Github Actions
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
       - uses: "actions/checkout@v3"
