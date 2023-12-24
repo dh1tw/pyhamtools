@@ -3,7 +3,6 @@ import sys
 import datetime
 
 import pytest
-from future.utils import iteritems
 
 from pyhamtools.qsl import get_clublog_users
 
@@ -26,7 +25,7 @@ class Test_clublog_methods:
 
         data = get_clublog_users()
         assert isinstance(data, dict)
-        for key, value in iteritems(data):
+        for key, value in data.items():
             assert isinstance(key, unicode)
             assert isinstance(value, dict)
 

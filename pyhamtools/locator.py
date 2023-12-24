@@ -1,4 +1,3 @@
-from __future__ import division
 from math import pi, sin, cos, atan2, sqrt, radians, log, tan, degrees
 from datetime import datetime
 

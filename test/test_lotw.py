@@ -3,7 +3,6 @@ import sys
 import datetime
 
 from .execfile import execfile
-from future.utils import iteritems
 import pytest
 
 def execfile(filepath, globals=None, locals=None):
@@ -38,7 +37,7 @@ class Test_lotw_methods:
 
         data = get_lotw_users()
         assert isinstance(data, dict)
-        for key, value in iteritems(data):
+        for key, value in data.items():
             assert isinstance(key, unicode)
             assert isinstance(value, datetime.datetime )
         assert len(data) > 1000
