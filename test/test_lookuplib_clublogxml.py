@@ -173,7 +173,6 @@ class TestclublogXML_Getters:
         with pytest.raises(KeyError):
             fixClublogXML.lookup_callsign("vk9xx", timestamp)
 
-    @pytest.mark.skip(reason="lat/long is wrong in clublog XML as of 12/2023")
     def test_lookup_callsign_exception_no_start_nor_end_date(self, fixClublogXML):
 
         timestamp = datetime(year=1975, month=9, day=14, tzinfo=UTC)
