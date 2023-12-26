@@ -5,13 +5,13 @@ on: [push, pull_request]
 jobs:
   test_linux:
     runs-on: "ubuntu-20.04"
-    name: "Ubuntu latest - Python ${{ matrix.python-version }}"
+    name: "Ubuntu 20.04 - Python ${{ matrix.python-version }}"
     env:
       USING_COVERAGE: '3.11'
 
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "pypy3.7", "pypy3.8", "pypy3.9"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "pypy3.7", "pypy3.8", "pypy3.9"]
         redis-version: [6]
 
     steps:
@@ -55,7 +55,7 @@ jobs:
 
   test_linux_ubuntu_22:
     runs-on: "ubuntu-22.04"
-    name: "Ubuntu latest - Python ${{ matrix.python-version }}"
+    name: "Ubuntu 22.04 - Python ${{ matrix.python-version }}"
     env:
       USING_COVERAGE: '3.11'
 
@@ -163,5 +163,5 @@ jobs:
         # amount of concurrent API calls on Clublog and QRZ.com
         # when all CI jobs execute simultaneously
         run: |
-          start-sleep -Seconds (1..10 | get-random)
+          start-sleep -Seconds (5..15 | get-random)
           pytest
