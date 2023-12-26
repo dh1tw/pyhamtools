@@ -163,5 +163,5 @@ jobs:
         # amount of concurrent API calls on Clublog and QRZ.com
         # when all CI jobs execute simultaneously
         run: |
-          start-sleep -Seconds (5..15 | get-random)
+          start-sleep -Seconds (10..30 | get-random)
           pytest
