@@ -4,14 +4,12 @@ on: [push, pull_request]
 
 jobs:
   test_linux:
+    # Ubuntu 20.04 is still required for python 3.6; this doesn't work on Ubuntu 22.04 anymore
     runs-on: "ubuntu-20.04"
     name: "Ubuntu 20.04 - Python ${{ matrix.python-version }}"
-    env:
-      USING_COVERAGE: '3.11'
-
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "pypy3.7", "pypy3.8","3.11", "3.10", "3.9", "pypy3.9"]
+        python-version: ["3.6"]
         redis-version: [6]
 
     steps:
@@ -29,10 +27,9 @@ jobs:
           set -xe
           sudo apt-get install -y libxml2-dev libxslt-dev
           python -VV
-          python -m pip install --upgrade pip setuptools wheel codecov
+          python -m pip install --upgrade pip setuptools
           python -m pip install -e .
           python -m pip install -r requirements-pytest.txt
-          python -m pip install -r requirements-docs.txt
 
       - name: Start Redis
         uses: supercharge/redis-github-action@1.2.0
@@ -49,9 +46,7 @@ jobs:
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
           sleep $[ ( $RANDOM % 10 )  + 1 ]s 
-          pytest --cov=./
-          if [[ $PYTHON_VERSION == 3.11 ]]; then codecov; fi
-          cd docs && make html
+          pytest ./test
 
   test_linux_ubuntu_22:
     runs-on: "ubuntu-22.04"
@@ -61,7 +56,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "pypy3.7", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [6]
 
     steps:
@@ -99,7 +94,14 @@ jobs:
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
           sleep $[ ( $RANDOM % 10 )  + 1 ]s 
-          pytest
+          if [[ $PYTHON_VERSION == 3.11 ]]
+          then 
+            pytest --cov=test/
+            codecov
+          else
+            pytest test/
+          fi
+          cd docs && make html
 
   # publish_package:
   #   runs-on: "ubuntu-latest"
