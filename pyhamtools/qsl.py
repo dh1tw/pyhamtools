@@ -1,4 +1,3 @@
-from future.utils import iteritems
 from datetime import datetime
 import re
 
@@ -125,7 +124,7 @@ def get_clublog_users(**kwargs):
 
     error_count = 0
 
-    for call, call_data in iteritems(cl_data):
+    for call, call_data in cl_data.items():
         try:
             data = {}
             if "firstqso" in call_data:

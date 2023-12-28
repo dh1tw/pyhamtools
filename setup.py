@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import sys
 import os
 from distutils.core import setup
 
@@ -16,12 +15,10 @@ setup(name='pyhamtools',
       package_data={'': ['countryfilemapping.json']},
       packages=['pyhamtools'],
       install_requires=[
-          "pytz>=2019.1",
           "requests>=2.21.0",
           "ephem>=4.1.3",
           "beautifulsoup4>=4.7.1",
           "lxml>=4.8.0",
-          "future>=0.18.2",
           "redis>=2.10.6",
       ],
       **kw

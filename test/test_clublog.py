@@ -1,14 +1,8 @@
 import os
-import sys
-import datetime
 
 import pytest
-from future.utils import iteritems
 
 from pyhamtools.qsl import get_clublog_users
-
-if sys.version_info.major == 3:
-    unicode = str
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 fix_dir = os.path.join(test_dir, 'fixtures')
@@ -26,8 +20,8 @@ class Test_clublog_methods:
 
         data = get_clublog_users()
         assert isinstance(data, dict)
-        for key, value in iteritems(data):
-            assert isinstance(key, unicode)
+        for key, value in data.items():
+            assert isinstance(key, str)
             assert isinstance(value, dict)
 
     def test_with_invalid_url(self):

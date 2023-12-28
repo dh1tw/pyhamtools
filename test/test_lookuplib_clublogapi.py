@@ -1,5 +1,5 @@
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 
 from pyhamtools.lookuplib import LookupLib
 
@@ -84,7 +84,7 @@ class TestclublogApi_Getters:
     def test_lookup_callsign(self, fixClublogApi):
         assert fixClublogApi.lookup_callsign("DH1TW") == response_Exception_DH1TW
         assert fixClublogApi.lookup_callsign("VU9KV") == response_Exception_VU9KV
-        d = datetime.utcnow().replace(year=1971, month=4, day=14)
+        d = datetime.now(timezone.utc).replace(year=1971, month=4, day=14)
         assert fixClublogApi.lookup_callsign("VU9KV", d) == response_Exception_VU9KV_with_Date
         assert fixClublogApi.lookup_callsign("DH1TW/MM") == response_Exception_DH1TW_MM
         assert fixClublogApi.lookup_callsign("DH1TW/AM") == response_Exception_DH1TW_AM

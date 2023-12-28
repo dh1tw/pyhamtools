@@ -1,11 +1,7 @@
-from __future__ import division
 from math import pi, sin, cos, atan2, sqrt, radians, log, tan, degrees
-from datetime import datetime
+from datetime import datetime, timezone
 
-import pytz
 import ephem
-
-UTC = pytz.UTC
 
 def latlong_to_locator (latitude, longitude):
     """converts WGS84 coordinates into the corresponding Maidenhead Locator
@@ -283,16 +279,14 @@ def calculate_sunrise_sunset(locator, calc_date=None):
            The following calculates the next sunrise & sunset for JN48QM on the 1./Jan/2014
 
            >>> from pyhamtools.locator import calculate_sunrise_sunset
-           >>> from datetime import datetime
-           >>> import pytz
-           >>> UTC = pytz.UTC
-           >>> myDate = datetime(year=2014, month=1, day=1, tzinfo=UTC)
+           >>> from datetime import datetime, timezone
+           >>> myDate = datetime(year=2014, month=1, day=1, tzinfo=timezone.utc)
            >>> calculate_sunrise_sunset("JN48QM", myDate)
            {
-               'morning_dawn': datetime.datetime(2014, 1, 1, 6, 36, 51, 710524, tzinfo=<UTC>),
-               'sunset': datetime.datetime(2014, 1, 1, 16, 15, 23, 31016, tzinfo=<UTC>),
-               'evening_dawn': datetime.datetime(2014, 1, 1, 15, 38, 8, 355315, tzinfo=<UTC>),
-               'sunrise': datetime.datetime(2014, 1, 1, 7, 14, 6, 162063, tzinfo=<UTC>)
+               'morning_dawn': datetime.datetime(2014, 1, 1, 6, 36, 51, 710524, tzinfo=datetime.timezone.utc),
+               'sunset': datetime.datetime(2014, 1, 1, 16, 15, 23, 31016, tzinfo=datetime.timezone.utc),
+               'evening_dawn': datetime.datetime(2014, 1, 1, 15, 38, 8, 355315, tzinfo=datetime.timezone.utc),
+               'sunrise': datetime.datetime(2014, 1, 1, 7, 14, 6, 162063, tzinfo=datetime.timezone.utc)
            }
 
     """
@@ -304,7 +298,7 @@ def calculate_sunrise_sunset(locator, calc_date=None):
     latitude, longitude = locator_to_latlong(locator)
 
     if calc_date is None:
-        calc_date = datetime.utcnow()
+        calc_date = datetime.now(timezone.utc)
     if type(calc_date) != datetime:
         raise ValueError
 
@@ -350,11 +344,11 @@ def calculate_sunrise_sunset(locator, calc_date=None):
     result['sunset'] = sunset
 
     if morning_dawn:
-        result['morning_dawn'] = morning_dawn.replace(tzinfo=UTC)
+        result['morning_dawn'] = morning_dawn.replace(tzinfo=timezone.utc)
     if sunrise:
-        result['sunrise'] = sunrise.replace(tzinfo=UTC)
+        result['sunrise'] = sunrise.replace(tzinfo=timezone.utc)
     if evening_dawn:
-        result['evening_dawn'] = evening_dawn.replace(tzinfo=UTC)
+        result['evening_dawn'] = evening_dawn.replace(tzinfo=timezone.utc)
     if sunset:
-        result['sunset'] = sunset.replace(tzinfo=UTC)
+        result['sunset'] = sunset.replace(tzinfo=timezone.utc)
     return result

@@ -1,15 +1,11 @@
 import os
 
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 
 from pyhamtools.lookuplib import LookupLib
 from pyhamtools.exceptions import APIKeyMissingError
 from pyhamtools.consts import LookupConventions as const
-
-import pytz
-UTC = pytz.UTC
-
 
 try:
     QRZ_USERNAME = str(os.environ['QRZ_USERNAME'])
@@ -21,10 +17,10 @@ except Exception:
 #===========================================================
 
 response_1A1AB = {
-    u'biodate': datetime(2018, 9, 7, 21, 17, 7, tzinfo=UTC),
+    u'biodate': datetime(2018, 9, 7, 21, 17, 7, tzinfo=timezone.utc),
     u'bio': u'0',
     u'license_class': u'C',
-    u'moddate': datetime(2008, 11, 2, 15, 0, 38, tzinfo=UTC),
+    u'moddate': datetime(2008, 11, 2, 15, 0, 38, tzinfo=timezone.utc),
     u'locator': u'JN61fw',
     u'callsign': u'1A1AB',
     u'addr2': u'00187  Rome',

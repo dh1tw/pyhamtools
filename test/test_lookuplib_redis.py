@@ -1,14 +1,10 @@
 import pytest
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
-import pytz
 import redis
 
 from pyhamtools import LookupLib, Callinfo
-
-
-UTC = pytz.UTC
 
 r = redis.Redis()
 
@@ -44,7 +40,7 @@ class TestStoreDataInRedis:
         with pytest.raises(KeyError):
             fix_redis.is_invalid_operation("VK0MC")
 
-        timestamp = datetime(year=1994, month=12, day=30).replace(tzinfo=UTC)
+        timestamp = datetime(year=1994, month=12, day=30, tzinfo=timezone.utc)
         assert fix_redis.is_invalid_operation("VK0MC", timestamp)
 
         with pytest.raises(KeyError):
@@ -61,7 +57,7 @@ class TestStoreDataInRedis:
         assert lib.lookup_prefix("DH") == fixCountryFile.lookup_prefix("DH")
 
     def test_redis_lookup(self, fixClublogXML, fix_redis):
-        timestamp = datetime(year=2016, month=1, day=20, tzinfo=UTC)
+        timestamp = datetime(year=2016, month=1, day=20, tzinfo=timezone.utc)
         ci = Callinfo(fix_redis)
         assert ci.get_all("VP8STI", timestamp) == response_Exception_VP8STI_with_start_and_stop_date
         assert ci.get_all("tu5pct") == response_TU5PCT

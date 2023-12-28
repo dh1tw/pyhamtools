@@ -1,6 +1,18 @@
 Changelog
 ---------
 
+
+PyHamtools 0.9.0
+================
+
+28. December 2023
+
+* Deprecated support for Python 2.7 and Python 3.5
+* Added Support for Python 3.12
+* Replaced pytz with datetime.timezone
+* Added Continous Integration Jobs for MacOS (now supported by Github Actions)
+
+
 PyHamtools 0.8.7
 ================
 

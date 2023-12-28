@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/dh1tw/pyhamtools/branch/master/graph/badge.svg)](https://codecov.io/gh/dh1tw/pyhamtools)
 [![PyPI version](https://badge.fury.io/py/pyhamtools.svg)](https://badge.fury.io/py/pyhamtools)
 
-Pyhamtools is a set of functions and classes for Amateur Radio purpose.
+Pyhamtools is a set of functions and classes for Amateur Radio purposes.
 Currently, the core part is the Callsign Lookup which decodes any amateur radio
 callsign string and provides the corresponding information (Country, DXCC
 entity, CQ Zone...etc). This basic functionality is needed for Logbooks,
@@ -31,22 +31,22 @@ This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat
 
 ## Compatibility
 
-Pyhamtools is compatible with Python 2.7 and Python >=3.6.
-We check compatibility on OSX, Windows, and Linux with the following Python
-versions:
+Pyhamtools is compatible with Python >=3.6.
+We check compatibility on OSX, Windows, and Linux with the following Python versions:
 
-* Python 2.7 (will be deprecated in 2023)
-* Python 3.5 (has been deprecated in 2022)
-* Python 3.6 (will be deprecated in 2023)
-* Python 3.7
+* Python 3.6 (will be deprecated in 2024)
+* Python 3.7 (will be deprecated in 2024)
 * Python 3.8
 * Python 3.9
 * Python 3.10
 * Python 3.11
-* [pypy2](https://pypy.org/) (Python 2)
-* [pypy3.7](https://pypy.org/)
+* Python 3.12
+* [pypy3.7](https://pypy.org/) (will be deprecated in 2024)
 * [pypy3.8](https://pypy.org/)
 * [pypy3.9](https://pypy.org/)
+* [pypy3.10](https://pypy.org/)
+
+The support for Python 2.7 and 3.5 has been deprecated at the end of 2023. The last version which supports Python 2.7 and Python 3.5 is 0.8.7.
 
 ## Documentation
 

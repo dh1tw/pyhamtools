@@ -1,11 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
-import pytz
 
 from pyhamtools.locator import calculate_sunrise_sunset
-
-UTC = pytz.UTC
 
 class Test_calculate_sunrise_sunset_normal_case():
 
@@ -14,11 +11,11 @@ class Test_calculate_sunrise_sunset_normal_case():
         time_margin = timedelta(minutes=1)
         locator = "JN48QM"
 
-        test_time =  datetime(year=2014, month=1, day=1, tzinfo=UTC)
-        result_JN48QM_1_1_2014_evening_dawn = datetime(2014, 1, 1, 15, 38, tzinfo=UTC)
-        result_JN48QM_1_1_2014_morning_dawn = datetime(2014, 1, 1, 6, 36,  tzinfo=UTC)
-        result_JN48QM_1_1_2014_sunrise = datetime(2014, 1, 1, 7, 14, tzinfo=UTC)
-        result_JN48QM_1_1_2014_sunset = datetime(2014, 1, 1, 16, 15, 23, 31016, tzinfo=UTC)
+        test_time =  datetime(year=2014, month=1, day=1, tzinfo=timezone.utc)
+        result_JN48QM_1_1_2014_evening_dawn = datetime(2014, 1, 1, 15, 38, tzinfo=timezone.utc)
+        result_JN48QM_1_1_2014_morning_dawn = datetime(2014, 1, 1, 6, 36,  tzinfo=timezone.utc)
+        result_JN48QM_1_1_2014_sunrise = datetime(2014, 1, 1, 7, 14, tzinfo=timezone.utc)
+        result_JN48QM_1_1_2014_sunset = datetime(2014, 1, 1, 16, 15, 23, 31016, tzinfo=timezone.utc)
 
         assert calculate_sunrise_sunset(locator, test_time)['morning_dawn'] - result_JN48QM_1_1_2014_morning_dawn < time_margin
         assert calculate_sunrise_sunset(locator, test_time)['evening_dawn'] - result_JN48QM_1_1_2014_evening_dawn < time_margin
@@ -33,7 +30,7 @@ class Test_calculate_sunrise_sunset_normal_case():
         # The sun never rises in winter time close to the north pole (e.g. at Jan Mayen)
         # Therefore we expect no sunrise or sunset. 
 
-        test_time =  datetime(year=2021, month=12, day=15, tzinfo=UTC)
+        test_time =  datetime(year=2021, month=12, day=15, tzinfo=timezone.utc)
 
         assert calculate_sunrise_sunset(locator, test_time)['morning_dawn'] == None
         assert calculate_sunrise_sunset(locator, test_time)['evening_dawn'] == None
@@ -48,7 +45,7 @@ class Test_calculate_sunrise_sunset_normal_case():
         # The sun never sets at the south pole during arctic summer 
         # Therefore we expect no sunrise or sunset. 
 
-        test_time =  datetime(year=2014, month=1, day=1, tzinfo=UTC)
+        test_time =  datetime(year=2014, month=1, day=1, tzinfo=timezone.utc)
 
         assert calculate_sunrise_sunset(locator, test_time)['morning_dawn'] == None
         assert calculate_sunrise_sunset(locator, test_time)['evening_dawn'] == None
