@@ -144,18 +144,14 @@ jobs:
           python -m pip install -r requirements-pytest.txt
           python -m pip install -r requirements-docs.txt
       - name: Setup redis
-        # We have to download and install a non-official redis windows port
-        # since there is no official redis version for windows.
-        # 5.0 is good enough for our purposes. After installing the msi, 
-        # redis will startup as a service. 
         # There are no github-actions supporting redis on windows.
         # Github Actions Container services are also not available for windows.
+        # We have to download and install a non-official redis windows port
+        # since there is no official redis version for windows.
+        # Redis is then installed an run as a service
         run: |
-          # C:\msys64\usr\bin\wget.exe https://github.com/tporadowski/redis/releases/download/v5.0.14.1/Redis-x64-5.0.14.1.msi
-          # msiexec /quiet /i Redis-x64-5.0.14.1.msi
           C:\msys64\usr\bin\wget.exe https://github.com/redis-windows/redis-windows/releases/download/7.0.14/Redis-7.0.14-Windows-x64-with-Service.tar.gz
           C:\msys64\usr\bin\tar.exe -xvzf Redis-7.0.14-Windows-x64-with-Service.tar.gz
-          ls
           sc.exe create Redis binpath=D:\a\pyhamtools\pyhamtools\Redis-7.0.14-Windows-x64-with-Service\RedisService.exe start= auto
           net start Redis
 
