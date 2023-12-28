@@ -156,7 +156,7 @@ jobs:
         # delay the execution randomly by a couple of seconds to reduce the amount 
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          sleep $[ ( $RANDOM % 10 )  + 1 ]s 
+          sleep $[ ( $RANDOM % 10 )  + 1 ]
           pytest ./test
 
   test_windows:
