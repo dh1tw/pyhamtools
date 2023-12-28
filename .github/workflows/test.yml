@@ -153,10 +153,11 @@ jobs:
         run: |
           # C:\msys64\usr\bin\wget.exe https://github.com/tporadowski/redis/releases/download/v5.0.14.1/Redis-x64-5.0.14.1.msi
           # msiexec /quiet /i Redis-x64-5.0.14.1.msi
-          C:\msys64\usr\bin\wget.exe https://github.com/redis-windows/redis-windows/releases/download/7.0.14/Redis-7.0.14-Windows-x64.tar.gz
-          C:\msys64\usr\bin\tar.exe -xvzf Redis-7.0.14-Windows-x64.tar.gz
+          C:\msys64\usr\bin\wget.exe https://github.com/redis-windows/redis-windows/releases/download/7.0.14/Redis-7.0.14-Windows-x64-with-Service.tar.gz
+          C:\msys64\usr\bin\tar.exe -xvzf Redis-7.0.14-Windows-x64-with-Service.tar.gz
           ls
-          Start-Process -NoNewWindow Redis-7.0.14-Windows-x64\start.bat
+          sc.exe create Redis binpath=D:\a\pyhamtools\pyhamtools\Redis-7.0.14-Windows-x64-with-Service\RedisService.exe start= auto
+          net start Redis
 
       - name: "Run tests for ${{ matrix.python-version }}"
         env: 
