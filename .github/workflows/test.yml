@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "pypy3.7", "pypy3.8"]
+        python-version: ["3.6", "3.7", "3.8", "pypy3.7", "pypy3.8","3.11", "3.10", "3.9", "pypy3.9"]
         redis-version: [6]
 
     steps:
@@ -61,7 +61,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.12", "3.11", "3.10", "3.9", "pypy3.9"]
+        python-version: ["3.12"]
         redis-version: [6]
 
     steps:
@@ -99,9 +99,7 @@ jobs:
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
           sleep $[ ( $RANDOM % 10 )  + 1 ]s 
-          pytest --cov=./
-          if [[ $PYTHON_VERSION == 3.11 ]]; then codecov; fi
-          cd docs && make html
+          pytest
 
   # publish_package:
   #   runs-on: "ubuntu-latest"
@@ -120,11 +118,6 @@ jobs:
 
     strategy:
       matrix:
-        # lxml support for windows/python3.11 still missing (Dec 2022)
-        # https://github.com/lxml/lxml/pull/360
-        # python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
-        # python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-        # disable python 3.6 on windows due to lxml / bs4 problems on Github Actions
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
@@ -161,7 +154,8 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution randomly by 1-20sec to reduce the
+        # give redis service time to startup and
+        # delay the execution randomly by 5-20sec to reduce the
         # amount of concurrent API calls on Clublog and QRZ.com
         # when all CI jobs execute simultaneously
         run: |
