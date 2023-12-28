@@ -1,15 +1,11 @@
 import re
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 import sys
-
-import pytz
 
 from pyhamtools.consts import LookupConventions as const
 
 from pyhamtools.callsign_exceptions import callsign_exceptions
-
-UTC = pytz.UTC
 
 if sys.version_info < (2, 7, ):
     class NullHandler(logging.Handler):
@@ -81,10 +77,10 @@ class Callinfo(object):
         """truncate call until it corresponds to a Prefix in the database"""
         prefix = callsign
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         if re.search('(VK|AX|VI)9[A-Z]{3}', callsign): #special rule for VK9 calls
-            if timestamp > datetime(2006,1,1, tzinfo=UTC):
+            if timestamp > datetime(2006,1,1, tzinfo=timezone.utc):
                 prefix = callsign[0:3]+callsign[4:5]
 
         while len(prefix) > 0:
@@ -115,7 +111,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Raises:
             KeyError: Callsign could not be identified
@@ -124,7 +120,7 @@ class Callinfo(object):
         """
         entire_callsign = callsign.upper()
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         if re.search('[/A-Z0-9\\-]{3,15}', entire_callsign):  # make sure the call has at least 3 characters
 
@@ -230,7 +226,7 @@ class Callinfo(object):
 
     def _lookup_callsign(self, callsign, timestamp=None):
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         # Check if operation is invalid
         invalid = False
@@ -278,7 +274,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             dict: Dictionary containing the callsign specific data
@@ -315,7 +311,7 @@ class Callinfo(object):
         callsign = callsign.upper()
 
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         callsign_data = self._lookup_callsign(callsign, timestamp)
 
@@ -332,7 +328,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             bool: True / False
@@ -348,7 +344,7 @@ class Callinfo(object):
 
         """
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         try:
             if self.get_all(callsign, timestamp):
@@ -361,7 +357,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             dict: Containing Latitude and Longitude
@@ -388,7 +384,7 @@ class Callinfo(object):
 
         """
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         callsign_data = self.get_all(callsign, timestamp=timestamp)
         return {
@@ -401,7 +397,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             int: containing the callsign's CQ Zone
@@ -411,7 +407,7 @@ class Callinfo(object):
 
         """
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         return self.get_all(callsign, timestamp)[const.CQZ]
 
@@ -420,7 +416,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             int: containing the callsign's CQ Zone
@@ -433,7 +429,7 @@ class Callinfo(object):
 
         """
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         return self.get_all(callsign, timestamp)[const.ITUZ]
 
@@ -442,7 +438,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             str: name of the Country
@@ -460,7 +456,7 @@ class Callinfo(object):
 
         """
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         return self.get_all(callsign, timestamp)[const.COUNTRY]
 
@@ -469,7 +465,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             int: containing the country ADIF id
@@ -479,7 +475,7 @@ class Callinfo(object):
 
         """
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         return self.get_all(callsign, timestamp)[const.ADIF]
 
@@ -488,7 +484,7 @@ class Callinfo(object):
 
         Args:
             callsign (str): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             str: continent identified
@@ -508,6 +504,6 @@ class Callinfo(object):
             - AN: Antarctica
         """
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         return self.get_all(callsign, timestamp)[const.CONTINENT]

@@ -3,7 +3,7 @@ import logging
 import logging.config
 import re
 import random, string
-from datetime import datetime
+from datetime import datetime, timezone
 import xml.etree.ElementTree as ET
 import urllib
 import json
@@ -14,13 +14,10 @@ import unicodedata
 import requests
 from requests.exceptions import ConnectionError, HTTPError, Timeout
 from bs4 import BeautifulSoup
-import pytz
 
 from . import version
 from .consts import LookupConventions as const
 from .exceptions import APIKeyMissingError
-
-UTC = pytz.UTC
 
 REDIS_LUA_DEL_SCRIPT = "local keys = redis.call('keys', ARGV[1]) \n for i=1,#keys,20000 do \n redis.call('del', unpack(keys, i, math.min(i+19999, #keys))) \n end \n return keys"
 
@@ -333,7 +330,7 @@ class LookupLib(object):
 
         Args:
             callsign (string): Amateur radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             dict: Dictionary containing the country specific data of the callsign
@@ -346,10 +343,9 @@ class LookupLib(object):
            The following code queries the the online Clublog API for the callsign "VK9XO" on a specific date.
 
            >>> from pyhamtools import LookupLib
-           >>> from datetime import datetime
-           >>> import pytz
+           >>> from datetime import datetime, timezone
            >>> my_lookuplib = LookupLib(lookuptype="clublogapi", apikey="myapikey")
-           >>> timestamp = datetime(year=1962, month=7, day=7, tzinfo=pytz.UTC)
+           >>> timestamp = datetime(year=1962, month=7, day=7, tzinfo=timezone.utc)
            >>> print my_lookuplib.lookup_callsign("VK9XO", timestamp)
            {
             'country': u'CHRISTMAS ISLAND',
@@ -373,7 +369,7 @@ class LookupLib(object):
         """
         callsign = callsign.strip().upper()
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         if self._lookuptype == "clublogapi":
             callsign_data =  self._lookup_clublogAPI(callsign=callsign, timestamp=timestamp, apikey=self._apikey)
@@ -498,7 +494,7 @@ class LookupLib(object):
 
         Args:
             prefix (string): Prefix of a Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             dict: Dictionary containing the country specific data of the Prefix
@@ -535,7 +531,7 @@ class LookupLib(object):
 
         prefix = prefix.strip().upper()
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         if self._lookuptype == "clublogxml" or self._lookuptype == "countryfile":
 
@@ -555,7 +551,7 @@ class LookupLib(object):
 
         Args:
             callsign (string): Amateur Radio callsign
-            timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+            timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             bool: True if a record exists for this callsign (at the given time)
@@ -568,13 +564,12 @@ class LookupLib(object):
            The following code checks the Clublog XML database if the operation is valid for two dates.
 
            >>> from pyhamtools import LookupLib
-           >>> from datetime import datetime
-           >>> import pytz
+           >>> from datetime import datetime, timezone
            >>> my_lookuplib = LookupLib(lookuptype="clublogxml", apikey="myapikey")
            >>> print my_lookuplib.is_invalid_operation("5W1CFN")
            True
            >>> try:
-           >>>   timestamp = datetime(year=2012, month=1, day=31).replace(tzinfo=pytz.UTC)
+           >>>   timestamp = datetime(year=2012, month=1, day=31, tzinfo=timezone.utc)
            >>>   my_lookuplib.is_invalid_operation("5W1CFN", timestamp)
            >>> except KeyError:
            >>>   print "Seems to be invalid operation before 31.1.2012"
@@ -590,7 +585,7 @@ class LookupLib(object):
 
         callsign = callsign.strip().upper()
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         if self._lookuptype == "clublogxml":
 
@@ -644,7 +639,7 @@ class LookupLib(object):
 
         Args:
         callsign (string): Amateur radio callsign
-        timestamp (datetime, optional): datetime in UTC (tzinfo=pytz.UTC)
+        timestamp (datetime, optional): datetime in UTC (tzinfo=timezone.utc)
 
         Returns:
             int: Value of the the CQ Zone exception which exists for this callsign (at the given time)
@@ -674,7 +669,7 @@ class LookupLib(object):
 
         callsign = callsign.strip().upper()
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         if self._lookuptype == "clublogxml":
 
@@ -703,7 +698,7 @@ class LookupLib(object):
         }
 
         if timestamp is None:
-            timestamp = datetime.utcnow().replace(tzinfo=UTC)
+            timestamp = datetime.now(timezone.utc)
 
         if sys.version_info.major == 3:
             encodeurl = url + "?" + urllib.parse.urlencode(params)
@@ -889,12 +884,12 @@ class LookupLib(object):
             lookup[const.LAND] = root.Callsign.land.text
         if root.Callsign.efdate:
             try:
-                lookup[const.EFDATE] = datetime.strptime(root.Callsign.efdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
+                lookup[const.EFDATE] = datetime.strptime(root.Callsign.efdate.text, '%Y-%m-%d').replace(tzinfo=timezone.utc)
             except ValueError:
                 self._logger.debug("[QRZ.com] efdate: Invalid DateTime; " + callsign + " " + root.Callsign.efdate.text)
         if root.Callsign.expdate:
             try:
-                lookup[const.EXPDATE] = datetime.strptime(root.Callsign.expdate.text, '%Y-%m-%d').replace(tzinfo=UTC)
+                lookup[const.EXPDATE] = datetime.strptime(root.Callsign.expdate.text, '%Y-%m-%d').replace(tzinfo=timezone.utc)
             except ValueError:
                 self._logger.debug("[QRZ.com] expdate: Invalid DateTime; " + callsign + " " + root.Callsign.expdate.text)
         if root.Callsign.p_call:
@@ -915,7 +910,7 @@ class LookupLib(object):
             lookup[const.BIO] = root.Callsign.bio.text
         if root.Callsign.biodate:
             try:
-                lookup[const.BIODATE] = datetime.strptime(root.Callsign.biodate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
+                lookup[const.BIODATE] = datetime.strptime(root.Callsign.biodate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone.utc)
             except ValueError:
                 self._logger.warning("[QRZ.com] biodate: Invalid DateTime; " + callsign)
         if root.Callsign.image:
@@ -926,7 +921,7 @@ class LookupLib(object):
             lookup[const.SERIAL] = long(root.Callsign.serial.text)
         if root.Callsign.moddate:
             try:
-                lookup[const.MODDATE] = datetime.strptime(root.Callsign.moddate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC)
+                lookup[const.MODDATE] = datetime.strptime(root.Callsign.moddate.text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone.utc)
             except ValueError:
                 self._logger.warning("[QRZ.com] moddate: Invalid DateTime; " + callsign)
         if root.Callsign.MSA:
@@ -1134,7 +1129,7 @@ class LookupLib(object):
             if cty_date:
                 cty_date = cty_date.group(0).replace("date=", "").replace("'", "")
                 cty_date = datetime.strptime(cty_date[:19], '%Y-%m-%dT%H:%M:%S')
-                cty_date.replace(tzinfo=UTC)
+                cty_date.replace(tzinfo=timezone.utc)
                 cty_header["Date"] = cty_date
 
             cty_ns = re.search("xmlns='.+[']", raw_header)
@@ -1233,10 +1228,10 @@ class LookupLib(object):
                             entity[const.LATITUDE] = float(item.text)
                         elif item.tag == "start":
                             dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                            entity[const.START] = dt.replace(tzinfo=UTC)
+                            entity[const.START] = dt.replace(tzinfo=timezone.utc)
                         elif item.tag == "end":
                             dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                            entity[const.END] = dt.replace(tzinfo=UTC)
+                            entity[const.END] = dt.replace(tzinfo=timezone.utc)
                         elif item.tag == "whitelist":
                             if item.text == "TRUE":
                                 entity[const.WHITELIST] = True
@@ -1244,10 +1239,10 @@ class LookupLib(object):
                                 entity[const.WHITELIST] = False
                         elif item.tag == "whitelist_start":
                             dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                            entity[const.WHITELIST_START] = dt.replace(tzinfo=UTC)
+                            entity[const.WHITELIST_START] = dt.replace(tzinfo=timezone.utc)
                         elif item.tag == "whitelist_end":
                             dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                            entity[const.WHITELIST_END] = dt.replace(tzinfo=UTC)
+                            entity[const.WHITELIST_END] = dt.replace(tzinfo=timezone.utc)
                 except AttributeError:
                     self._logger.error("Error while processing: ")
                 entities[int(cty_entity[0].text)] = entity
@@ -1281,10 +1276,10 @@ class LookupLib(object):
                         call_exception[const.LATITUDE] = float(item.text)
                     elif item.tag == "start":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        call_exception[const.START] = dt.replace(tzinfo=UTC)
+                        call_exception[const.START] = dt.replace(tzinfo=timezone.utc)
                     elif item.tag == "end":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        call_exception[const.END] = dt.replace(tzinfo=UTC)
+                        call_exception[const.END] = dt.replace(tzinfo=timezone.utc)
                     call_exceptions[int(cty_exception.attrib["record"])] = call_exception
 
             self._logger.debug(str(len(call_exceptions))+" Exceptions added")
@@ -1322,10 +1317,10 @@ class LookupLib(object):
                         prefix[const.LATITUDE] = float(item.text)
                     elif item.tag == "start":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        prefix[const.START] = dt.replace(tzinfo=UTC)
+                        prefix[const.START] = dt.replace(tzinfo=timezone.utc)
                     elif item.tag == "end":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        prefix[const.END] = dt.replace(tzinfo=UTC)
+                        prefix[const.END] = dt.replace(tzinfo=timezone.utc)
                     prefixes[int(cty_prefix.attrib["record"])] = prefix
 
             self._logger.debug(str(len(prefixes))+" Prefixes added")
@@ -1348,10 +1343,10 @@ class LookupLib(object):
 
                     elif item.tag == "start":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        invalid_operation[const.START] = dt.replace(tzinfo=UTC)
+                        invalid_operation[const.START] = dt.replace(tzinfo=timezone.utc)
                     elif item.tag == "end":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        invalid_operation[const.END] = dt.replace(tzinfo=UTC)
+                        invalid_operation[const.END] = dt.replace(tzinfo=timezone.utc)
                     invalid_operations[int(cty_inv_operation.attrib["record"])] = invalid_operation
 
             self._logger.debug(str(len(invalid_operations))+" Invalid Operations added")
@@ -1377,10 +1372,10 @@ class LookupLib(object):
                         zoneException[const.CQZ] = int(item.text)
                     elif item.tag == "start":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        zoneException[const.START] = dt.replace(tzinfo=UTC)
+                        zoneException[const.START] = dt.replace(tzinfo=timezone.utc)
                     elif item.tag == "end":
                         dt = datetime.strptime(item.text[:19], '%Y-%m-%dT%H:%M:%S')
-                        zoneException[const.END] = dt.replace(tzinfo=UTC)
+                        zoneException[const.END] = dt.replace(tzinfo=timezone.utc)
                     zone_exceptions[int(cty_zone_exception.attrib["record"])] = zoneException
 
             self._logger.debug(str(len(zone_exceptions))+" Zone Exceptions added")
@@ -1533,13 +1528,13 @@ class LookupLib(object):
             elif item == const.LONGITUDE:
                 my_dict[item] = float(my_dict[item])
             elif item == const.START:
-                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=timezone.utc)
             elif item == const.END:
-                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=timezone.utc)
             elif item == const.WHITELIST_START:
-                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=timezone.utc)
             elif item == const.WHITELIST_END:
-                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=UTC)
+                my_dict[item] = datetime.strptime(my_dict[item], '%Y-%m-%d%H:%M:%S').replace(tzinfo=timezone.utc)
             elif item == const.WHITELIST:
                 my_dict[item] = self._str_to_bool(my_dict[item])
             else:

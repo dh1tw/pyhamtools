@@ -1,12 +1,9 @@
 import pytest
-from datetime import datetime
-import pytz
+from datetime import datetime, timezone
 import os
 
 from pyhamtools.lookuplib import LookupLib
 from pyhamtools.exceptions import APIKeyMissingError
-
-UTC = pytz.UTC
 
 
 #Fixtures
@@ -142,40 +139,40 @@ class TestclublogXML_Getters:
     #===============================
 
     def test_lookup_callsign_same_callsign_different_exceptions(self, fixClublogXML):
-        timestamp = datetime(year=1990, month=10, day=12, tzinfo=UTC)
+        timestamp = datetime(year=1990, month=10, day=12, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_callsign("kc6mm", timestamp) == response_Exception_KC6MM_1990
 
-        timestamp = datetime(year=1992, month=3, day=8, tzinfo=UTC)
+        timestamp = datetime(year=1992, month=3, day=8, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_callsign("kc6mm", timestamp) == response_Exception_KC6MM_1992
 
     def test_lookup_callsign_exception_only_with_start_date(self, fixClublogXML):
         #timestamp > startdate
-        timestamp = datetime(year=1962, month=7, day=7, tzinfo=UTC)
+        timestamp = datetime(year=1962, month=7, day=7, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_callsign("vk9xo", timestamp) == response_Exception_VK9XO_with_start_date
         assert fixClublogXML.lookup_callsign("vk9xo") == response_Exception_VK9XO_with_start_date
 
         #timestamp < startdate
-        timestamp = datetime(year=1962, month=7, day=5, tzinfo=UTC)
+        timestamp = datetime(year=1962, month=7, day=5, tzinfo=timezone.utc)
         with pytest.raises(KeyError):
             fixClublogXML.lookup_callsign("vk9xo", timestamp)
 
     def test_lookup_callsign_exception_only_with_end_date(self, fixClublogXML):
 
         #timestamp < enddate
-        timestamp = datetime(year=1975, month=9, day=14, tzinfo=UTC)
+        timestamp = datetime(year=1975, month=9, day=14, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_callsign("vk9xx", timestamp) == response_Exception_VK9XX_with_end_date
 
         # timestamp > enddate
         with pytest.raises(KeyError):
             fixClublogXML.lookup_callsign("vk9xx")
 
-        timestamp = datetime(year=1975, month=9, day=16, tzinfo=UTC)
+        timestamp = datetime(year=1975, month=9, day=16, tzinfo=timezone.utc)
         with pytest.raises(KeyError):
             fixClublogXML.lookup_callsign("vk9xx", timestamp)
 
     def test_lookup_callsign_exception_no_start_nor_end_date(self, fixClublogXML):
 
-        timestamp = datetime(year=1975, month=9, day=14, tzinfo=UTC)
+        timestamp = datetime(year=1975, month=9, day=14, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_callsign("ax9nyg", timestamp) == response_Exception_AX9NYG
         assert fixClublogXML.lookup_callsign("ax9nyg" ) == response_Exception_AX9NYG
 
@@ -196,29 +193,29 @@ class TestclublogXML_Getters:
 
     def test_lookup_prefix_with_changing_entities(self, fixClublogXML):
         #return old entity (PAPUA TERR)
-        timestamp = datetime(year=1975, month=9, day=14).replace(tzinfo=UTC)
+        timestamp = datetime(year=1975, month=9, day=14, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_prefix("VK9", timestamp) == response_Prefix_VK9_until_1975
 
         #return empty dict - Prefix was not assigned at that time
-        timestamp = datetime(year=1975, month=9, day=16).replace(tzinfo=UTC)
+        timestamp = datetime(year=1975, month=9, day=16, tzinfo=timezone.utc)
 
         with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("VK9", timestamp)
 
         #return new entity (Norfolk Island)
-        timestamp = datetime.utcnow().replace(tzinfo=UTC)
+        timestamp = datetime.now(timezone.utc)
         assert fixClublogXML.lookup_prefix("VK9", timestamp ) == response_Prefix_VK9_starting_1976
 
     def test_lookup_prefix_with_entities_having_start_and_stop(self, fixClublogXML):
 
-        timestamp_before = datetime(year=1964, month=11, day=1).replace(tzinfo=UTC)
+        timestamp_before = datetime(year=1964, month=11, day=1, tzinfo=timezone.utc)
         with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("ZD5", timestamp_before)
 
-        timestamp_valid = datetime(year=1964, month=12, day=2).replace(tzinfo=UTC)
+        timestamp_valid = datetime(year=1964, month=12, day=2, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_prefix("ZD5", timestamp_valid) == response_Prefix_ZD5_1964_to_1971
 
-        timestamp_after = datetime(year=1971, month=8, day=1).replace(tzinfo=UTC)
+        timestamp_after = datetime(year=1971, month=8, day=1, tzinfo=timezone.utc)
         with pytest.raises(KeyError):
             fixClublogXML.lookup_prefix("ZD5", timestamp_after)
 
@@ -234,8 +231,8 @@ class TestclublogXML_Getters:
             fixClublogXML.is_invalid_operation("dh1tw")
 
         #Invalid Operation with start and end date
-        timestamp_before = datetime(year=1993, month=12, day=30).replace(tzinfo=UTC)
-        timestamp = datetime(year=1994, month=12, day=30).replace(tzinfo=UTC)
+        timestamp_before = datetime(year=1993, month=12, day=30, tzinfo=timezone.utc)
+        timestamp = datetime(year=1994, month=12, day=30, tzinfo=timezone.utc)
         with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("vk0mc")
 
@@ -246,7 +243,7 @@ class TestclublogXML_Getters:
 
         #Invalid Operation with start date
         assert fixClublogXML.is_invalid_operation("5W1CFN")
-        timestamp_before = datetime(year=2012, month=1, day=31).replace(tzinfo=UTC)
+        timestamp_before = datetime(year=2012, month=1, day=31, tzinfo=timezone.utc)
         with pytest.raises(KeyError):
             fixClublogXML.is_invalid_operation("5W1CFN", timestamp_before)
 
@@ -264,9 +261,9 @@ class TestclublogXML_Getters:
         assert fixClublogXML.lookup_zone_exception("dp0gvn") == 38
 
         #zone exception with start and end date
-        timestamp = datetime(year=1992, month=10, day=2).replace(tzinfo=UTC)
-        timestamp_before = datetime(year=1992, month=9, day=30).replace(tzinfo=UTC)
-        timestamp_after = datetime(year=1993, month=3, day=1).replace(tzinfo=UTC)
+        timestamp = datetime(year=1992, month=10, day=2, tzinfo=timezone.utc)
+        timestamp_before = datetime(year=1992, month=9, day=30, tzinfo=timezone.utc)
+        timestamp_after = datetime(year=1993, month=3, day=1, tzinfo=timezone.utc)
         assert fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp) == 38
 
         with pytest.raises(KeyError):
@@ -276,6 +273,6 @@ class TestclublogXML_Getters:
             fixClublogXML.lookup_zone_exception("dl1kvc/p", timestamp_after)
 
         #zone exception with start date
-        timestamp_before = datetime(year=2013, month=12, day=26).replace(tzinfo=UTC)
+        timestamp_before = datetime(year=2013, month=12, day=26,tzinfo=timezone.utc)
         with pytest.raises(KeyError):
             fixClublogXML.lookup_zone_exception("dh1hb/p", timestamp_before)

@@ -1,14 +1,8 @@
 import pytest
-from datetime import datetime
-
-
-import pytz
-
+from datetime import datetime, timezone
 
 from pyhamtools.consts import LookupConventions as const
 from pyhamtools.dxcluster import decode_char_spot, decode_pc11_message, decode_pc61_message
-
-UTC = pytz.UTC
 
 fix_spot1 = "DX de CT3FW:     21004.8  HC2AO        599 TKS(CW)QSL READ,QRZ.COM    2132Z"
 fix_spot1_broken_spotter_call = "DX de $QRM:     21004.8  HC2AO        599 TKS(CW)QSL READ,QRZ.COM    2132Z"
@@ -34,7 +28,7 @@ response_spot1 = {
     const.BAND: 15,
     const.MODE: "CW",
     const.COMMENT: "599 TKS(CW)QSL READ,QRZ.COM",
-    const.TIME: datetime.utcnow().replace( hour=21, minute=32, second=0, microsecond = 0, tzinfo=UTC)
+    const.TIME: datetime.now(timezone.utc).replace(hour=21, minute=32, second=0, microsecond = 0)
 }
 
 

@@ -1,17 +1,10 @@
 __author__ = 'dh1tw'
 
-from datetime import datetime
+from datetime import datetime, timezone
 from time import strptime, mktime
 import re
 
-import pytz
-
 from pyhamtools.consts import LookupConventions as const
-
-
-UTC = pytz.UTC
-
-
 
 def decode_char_spot(raw_string):
     """Chop Line from DX-Cluster into pieces and return a dict with the spot data"""
@@ -31,7 +24,7 @@ def decode_char_spot(raw_string):
 
     data[const.DX] = re.sub(r'[^A-Za-z0-9\/]+', '', raw_string[26:38])
     data[const.COMMENT] = re.sub(r'[^\sA-Za-z0-9\.,;\#\+\-!\?\$\(\)@\/]+', ' ', raw_string[39:69]).strip()
-    data[const.TIME] = datetime.now().replace(tzinfo=UTC)
+    data[const.TIME] = datetime.now(timezone.utc)
 
     return data
 

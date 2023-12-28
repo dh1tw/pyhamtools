@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*- 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
-import pytz
 
 from pyhamtools.consts import LookupConventions as const
-
-UTC = pytz.UTC
-
 
 response_prefix_DH_clublog = {
     'country': 'FEDERAL REPUBLIC OF GERMANY',
@@ -389,7 +385,7 @@ class Test_callinfo_methods:
         if fix_callinfo._lookuplib._lookuptype == "clublogxml" or fix_callinfo._lookuplib._lookuptype == "clublogapi":
             assert fix_callinfo.get_all("DH1TW") == response_prefix_DH_clublog
             assert fix_callinfo.get_all("ci8aw") == response_zone_exception_ci8aw
-            timestamp = datetime(year=2016, month=1, day=20, tzinfo=UTC)
+            timestamp = datetime(year=2016, month=1, day=20, tzinfo=timezone.utc)
             assert fix_callinfo.get_all("VP8STI", timestamp) == response_Exception_VP8STI_with_start_and_stop_date
 
         elif fix_callinfo._lookuplib._lookuptype == "countryfile":
