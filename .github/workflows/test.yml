@@ -141,9 +141,9 @@ jobs:
           python -m pip install --upgrade pip setuptools
           python -m pip install -e .
           python -m pip install -r requirements-pytest.txt
-
+      
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.2.0
+        uses: shogo82148/actions-setup-redis@v1.31.1
         with:
           redis-version: ${{ matrix.redis-version }}
 
