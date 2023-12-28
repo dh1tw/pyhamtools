@@ -1,17 +1,10 @@
 import re
 import logging
 from datetime import datetime, timezone
-import sys
 
 from pyhamtools.consts import LookupConventions as const
 
 from pyhamtools.callsign_exceptions import callsign_exceptions
-
-if sys.version_info < (2, 7, ):
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
-
 
 class Callinfo(object):
     """
@@ -33,10 +26,7 @@ class Callinfo(object):
             self._logger = logger
         else:
             self._logger = logging.getLogger(__name__)
-            if sys.version_info[:2] == (2, 6):
-                self._logger.addHandler(NullHandler())
-            else:
-                self._logger.addHandler(logging.NullHandler())
+            self._logger.addHandler(logging.NullHandler())
 
         self._lookuplib = lookuplib
         self._callsign_info = None

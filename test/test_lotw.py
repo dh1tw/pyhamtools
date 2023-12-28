@@ -1,5 +1,4 @@
 import os
-import sys
 import datetime
 
 from .execfile import execfile
@@ -18,9 +17,6 @@ def execfile(filepath, globals=None, locals=None):
 
 from pyhamtools.qsl import get_lotw_users
 
-if sys.version_info.major == 3:
-    unicode = str
-
 test_dir = os.path.dirname(os.path.abspath(__file__))
 fix_dir = os.path.join(test_dir, 'fixtures')
 
@@ -38,7 +34,7 @@ class Test_lotw_methods:
         data = get_lotw_users()
         assert isinstance(data, dict)
         for key, value in data.items():
-            assert isinstance(key, unicode)
+            assert isinstance(key, str)
             assert isinstance(value, datetime.datetime )
         assert len(data) > 1000
 

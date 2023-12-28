@@ -8,8 +8,6 @@ import xml.etree.ElementTree as ET
 import urllib
 import json
 import copy
-import sys
-import unicodedata
 
 import requests
 from requests.exceptions import ConnectionError, HTTPError, Timeout
@@ -20,14 +18,6 @@ from .consts import LookupConventions as const
 from .exceptions import APIKeyMissingError
 
 REDIS_LUA_DEL_SCRIPT = "local keys = redis.call('keys', ARGV[1]) \n for i=1,#keys,20000 do \n redis.call('del', unpack(keys, i, math.min(i+19999, #keys))) \n end \n return keys"
-
-if sys.version_info < (2, 7,):
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
-
-if sys.version_info.major == 3:
-    unicode = str
 
 class LookupLib(object):
     """
@@ -76,10 +66,7 @@ class LookupLib(object):
             self._logger = logger
         else:
             self._logger = logging.getLogger(__name__)
-            if sys.version_info[:2] == (2, 6):
-                self._logger.addHandler(NullHandler())
-            else:
-                self._logger.addHandler(logging.NullHandler())
+            self._logger.addHandler(logging.NullHandler())
 
         self._apikey = apikey
         self._apiv = apiv
@@ -127,10 +114,7 @@ class LookupLib(object):
             "agent" : agent
         }
 
-        if sys.version_info.major == 3:
-            encodeurl = url + "?" + urllib.parse.urlencode(params)
-        else:
-            encodeurl = url + "?" + urllib.urlencode(params)
+        encodeurl = url + "?" + urllib.parse.urlencode(params)
         response = requests.get(encodeurl, timeout=10)
         doc = BeautifulSoup(response.text, "xml")
         session_key = None
@@ -700,10 +684,7 @@ class LookupLib(object):
         if timestamp is None:
             timestamp = datetime.now(timezone.utc)
 
-        if sys.version_info.major == 3:
-            encodeurl = url + "?" + urllib.parse.urlencode(params)
-        else:
-            encodeurl = url + "?" + urllib.urlencode(params)
+        encodeurl = url + "?" + urllib.parse.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
 
         if not self._check_html_response(response):
@@ -734,10 +715,7 @@ class LookupLib(object):
             "callsign" : callsign,
         }
 
-        if sys.version_info.major == 3:
-            encodeurl = url + "?" + urllib.parse.urlencode(params)
-        else:
-            encodeurl = url + "?" + urllib.urlencode(params)
+        encodeurl = url + "?" + urllib.parse.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
         return response
 
@@ -750,10 +728,7 @@ class LookupLib(object):
             "dxcc" : str(dxcc_or_callsign),
         }
 
-        if sys.version_info.major == 3:
-            encodeurl = url + "?" + urllib.parse.urlencode(params)
-        else:
-            encodeurl = url + "?" + urllib.urlencode(params)
+        encodeurl = url + "?" + urllib.parse.urlencode(params)
         response = requests.get(encodeurl, timeout=5)
         return response
 
@@ -965,10 +940,6 @@ class LookupLib(object):
         if root.Callsign.geoloc:
             lookup[const.GEOLOC] = root.Callsign.geoloc.text
 
-        # if sys.version_info >= (2,):
-        #     for item in lookup:
-        #         if isinstance(lookup[item], unicode):
-        #             print item, repr(lookup[item])
         return lookup
 
     def _load_clublogXML(self,
@@ -1209,10 +1180,10 @@ class LookupLib(object):
                     entity = {}
                     for item in cty_entity:
                         if item.tag == "name":
-                            entity[const.COUNTRY] = unicode(item.text)
-                            self._logger.debug(unicode(item.text))
+                            entity[const.COUNTRY] = str(item.text)
+                            self._logger.debug(str(item.text))
                         elif item.tag == "prefix":
-                            entity[const.PREFIX] = unicode(item.text)
+                            entity[const.PREFIX] = str(item.text)
                         elif item.tag == "deleted":
                             if item.text == "TRUE":
                                 entity[const.DELETED] = True
@@ -1221,7 +1192,7 @@ class LookupLib(object):
                         elif item.tag == "cqz":
                             entity[const.CQZ] = int(item.text)
                         elif item.tag == "cont":
-                            entity[const.CONTINENT] = unicode(item.text)
+                            entity[const.CONTINENT] = str(item.text)
                         elif item.tag == "long":
                             entity[const.LONGITUDE] = float(item.text)
                         elif item.tag == "lat":
@@ -1263,13 +1234,13 @@ class LookupLib(object):
                         else:
                             call_exceptions_index[call] = [int(cty_exception.attrib["record"])]
                     elif item.tag == "entity":
-                        call_exception[const.COUNTRY] = unicode(item.text)
+                        call_exception[const.COUNTRY] = str(item.text)
                     elif item.tag == "adif":
                         call_exception[const.ADIF] = int(item.text)
                     elif item.tag == "cqz":
                         call_exception[const.CQZ] = int(item.text)
                     elif item.tag == "cont":
-                        call_exception[const.CONTINENT] = unicode(item.text)
+                        call_exception[const.CONTINENT] = str(item.text)
                     elif item.tag == "long":
                         call_exception[const.LONGITUDE] = float(item.text)
                     elif item.tag == "lat":
@@ -1304,13 +1275,13 @@ class LookupLib(object):
                         else:
                             prefixes_index[call] = [int(cty_prefix.attrib["record"])]
                     if item.tag == "entity":
-                        prefix[const.COUNTRY] = unicode(item.text)
+                        prefix[const.COUNTRY] = str(item.text)
                     elif item.tag == "adif":
                         prefix[const.ADIF] = int(item.text)
                     elif item.tag == "cqz":
                         prefix[const.CQZ] = int(item.text)
                     elif item.tag == "cont":
-                        prefix[const.CONTINENT] = unicode(item.text)
+                        prefix[const.CONTINENT] = str(item.text)
                     elif item.tag == "long":
                         prefix[const.LONGITUDE] = float(item.text)
                     elif item.tag == "lat":
@@ -1431,12 +1402,12 @@ class LookupLib(object):
         for item in cty_list:
             entry = {}
             call = str(item)
-            entry[const.COUNTRY] = unicode(cty_list[item]["Country"])
+            entry[const.COUNTRY] = str(cty_list[item]["Country"])
             if mapping:
                  entry[const.ADIF] = int(mapping[cty_list[item]["Country"]])
             entry[const.CQZ] = int(cty_list[item]["CQZone"])
             entry[const.ITUZ] = int(cty_list[item]["ITUZone"])
-            entry[const.CONTINENT] = unicode(cty_list[item]["Continent"])
+            entry[const.CONTINENT] = str(cty_list[item]["Continent"])
             entry[const.LATITUDE] = float(cty_list[item]["Latitude"])
             entry[const.LONGITUDE] = float(cty_list[item]["Longitude"])*(-1)
 
@@ -1538,7 +1509,7 @@ class LookupLib(object):
             elif item == const.WHITELIST:
                 my_dict[item] = self._str_to_bool(my_dict[item])
             else:
-                my_dict[item] = unicode(my_dict[item])
+                my_dict[item] = str(my_dict[item])
 
         return my_dict
 

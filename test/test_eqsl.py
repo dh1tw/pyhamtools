@@ -1,14 +1,9 @@
 from .execfile import execfile
 import os
-import sys
-import datetime
 
 import pytest
 
 from pyhamtools.qsl import get_eqsl_users
-
-if sys.version_info.major == 3:
-    unicode = str
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 fix_dir = os.path.join(test_dir, 'fixtures')
@@ -26,7 +21,7 @@ class Test_eqsl_methods:
         data = get_eqsl_users()
         assert isinstance(data, list)
         for el in data:
-            assert isinstance(el, unicode)
+            assert isinstance(el, str)
         assert len(data) > 1000
 
     def test_with_invalid_url(self):
