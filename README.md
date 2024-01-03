@@ -62,15 +62,19 @@ Open Source Software licenses, including the MIT license at [choosealicense.com]
 
 Starting with version 0.8.0, `libxml2-dev` and `libxslt-dev` are required dependencies.
 
-## Installation
-
-Install the dependencies (e.g. on Debian/Ubuntu):
+There is a good change that the libraries are already installed on your system. If not, you can install them with the package manager of your distro. For example on Debian / Ubuntu based distros the corresponding command is:
 
 ```bash
 
 $ sudo apt-get install libxml2-dev libxslt-dev
 
 ```
+
+You don't need to install these libraries manually on Windows / MacOS.
+
+
+## Installation
+
 
 The easiest way to install pyhamtools is through the packet manager `pip`:
 
