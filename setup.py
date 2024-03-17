@@ -18,7 +18,7 @@ setup(name='pyhamtools',
           "requests>=2.21.0",
           "ephem>=4.1.3",
           "beautifulsoup4>=4.7.1",
-          "lxml>=4.8.0",
+          "lxml>=4.8.0,<5.0.0",
           "redis>=2.10.6",
       ],
       **kw
