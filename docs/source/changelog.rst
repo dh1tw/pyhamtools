@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+PyHamtools 0.9.1
+================
+
+17. March 2024
+
+* switched from distutils to setuptools. No impact for endusers.
+
 
 PyHamtools 0.9.0
 ================
