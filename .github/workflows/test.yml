@@ -191,6 +191,7 @@ jobs:
         # Redis is then installed an run as a service
         run: |
           C:\msys64\usr\bin\wget.exe https://github.com/redis-windows/redis-windows/releases/download/7.0.14/Redis-7.0.14-Windows-x64-msys2-with-Service.zip
+          C:\msys64\usr\bin\pacman.exe -Ss unzip
           C:\msys64\usr\bin\unzip.exe Redis-7.0.14-Windows-x64-msys2-with-Service.zip
           sc.exe create Redis binpath=D:\a\pyhamtools\pyhamtools\Redis-7.0.14-Windows-x64-msys2-with-Service\RedisService.exe start= auto
           net start Redis
