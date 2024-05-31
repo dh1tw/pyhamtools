@@ -21,7 +21,7 @@ class Test_latlong_to_locator():
 
     def test_latlong_to_locator_8chars_precision(self):
         assert latlong_to_locator(48.51760, 9.40345, precision=8) == "JN48QM84"
-        assert latlong_to_locator(39.222916, -86.45416, 4) == "EM69SF53"
+        assert latlong_to_locator(39.222916, -86.45416, 8) == "EM69SF53"
 
     def test_latlong_to_locator_invalid_characters(self):
 
