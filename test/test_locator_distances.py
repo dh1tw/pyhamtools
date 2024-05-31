@@ -14,7 +14,12 @@ class Test_calculate_distance():
 
         assert abs(calculate_distance("JN48QM", "FN44AB") - 5965) < 1
         assert abs(calculate_distance("FN44AB", "JN48QM") - 5965) < 1
-        assert abs(calculate_distance("JN48QM", "QF67bf") - 16467) < 1
+        assert abs(calculate_distance("JN48QM", "QF67BF") - 16467) < 1
+        assert abs(calculate_distance("JN48QM84", "QF67BF84") - 16467) < 1
+        assert abs(calculate_distance("JN48QM84", "QF67BF") - 16464) < 1
+        assert abs(calculate_distance("JN48QM84", "QF67") - 16506) < 1
+        assert abs(calculate_distance("JN48QM", "QF67") - 16508) < 1
+        assert abs(calculate_distance("JN48", "QF67") - 16535) < 1
 
     def test_calculate_distance_invalid_inputs(self):
         with pytest.raises(AttributeError):

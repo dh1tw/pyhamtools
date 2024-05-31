@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamtools 0.10.0
+================
+
+01. June 2024
+
+* full support for 4, 6, 8 characters Maidenhead locator conversions
+
+
 PyHamtools 0.9.1
 ================
 

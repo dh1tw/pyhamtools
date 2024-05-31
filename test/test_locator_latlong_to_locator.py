@@ -8,10 +8,20 @@ class Test_latlong_to_locator():
         assert latlong_to_locator(-89.97916, -179.95833) == "AA00AA"
         assert latlong_to_locator(89.97916, 179.9583) == "RR99XX"
 
-    def test_latlong_to_locator_normal_case(self):
+    def test_latlong_to_locator_4chars_precision(self):
+
+        assert latlong_to_locator(48.52083, 9.3750000, precision=4) == "JN48"
+        assert latlong_to_locator(39.222916, -86.45416, 4) == "EM69"
+
+    def test_latlong_to_locator_6chars_precision(self):
 
         assert latlong_to_locator(48.52083, 9.3750000) == "JN48QM"
         assert latlong_to_locator(48.5, 9.0) == "JN48MM" #center of the square
+        assert latlong_to_locator(39.222916, -86.45416, 6) == "EM69SF"
+
+    def test_latlong_to_locator_8chars_precision(self):
+        assert latlong_to_locator(48.51760, 9.40345, precision=8) == "JN48QM84"
+        assert latlong_to_locator(39.222916, -86.45416, 4) == "EM69SF53"
 
     def test_latlong_to_locator_invalid_characters(self):
 
