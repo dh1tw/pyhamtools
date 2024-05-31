@@ -29,6 +29,7 @@ class Test_lotw_methods:
         execfile(os.path.join(fix_dir,"lotw_fixture.py"), namespace)
         assert get_lotw_users(url=httpserver.url) == namespace['lotw_fixture']
 
+    @pytest.mark.skip("ARRL has been hacked in May 2024; skipping until LOTW is again up")
     def test_download_lotw_list_and_check_types(self):
 
         data = get_lotw_users()
