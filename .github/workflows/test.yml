@@ -190,9 +190,9 @@ jobs:
         # since there is no official redis version for windows.
         # Redis is then installed an run as a service
         run: |
-          C:\msys64\usr\bin\wget.exe https://github.com/redis-windows/redis-windows/releases/download/7.0.14/Redis-7.0.14-Windows-x64-with-Service.tar.gz
+          C:\msys64\usr\bin\wget.exe https://github.com/redis-windows/redis-windows/releases/download/7.0.14/Redis-7.0.14-Windows-x64-msys2-with-Service.zip
           C:\msys64\usr\bin\tar.exe -xvzf Redis-7.0.14-Windows-x64-with-Service.tar.gz
-          sc.exe create Redis binpath=D:\a\pyhamtools\pyhamtools\Redis-7.0.14-Windows-x64-with-Service\RedisService.exe start= auto
+          sc.exe create Redis binpath=D:\a\pyhamtools\pyhamtools\Redis-7.0.14-Windows-x64-msys2-with-Service\RedisService.exe start= auto
           net start Redis
 
       - name: "Run tests for ${{ matrix.python-version }}"
