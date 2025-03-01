@@ -90,12 +90,12 @@ response_prefix_VK9DWX_clublog = {
 }
 
 response_prefix_VK9DLX_clublog = {
-    u'adif': 147,
+    u'adif': 189,
     u'continent': u'OC',
-    u'country': u'LORD HOWE ISLAND',
-    u'cqz': 30,
-    u'latitude': -31.6,
-    u'longitude': 159.1
+    u'country': u'NORFOLK ISLAND',
+    u'cqz': 32,
+    u'latitude': -29.0,
+    u'longitude': 168.0
 }
 
 response_prefix_TA7I_clublog = {
@@ -126,13 +126,13 @@ response_prefix_V26K_clublog = {
 }
 
 response_prefix_VK9DLX_countryfile = {
-     u'adif': 147,
+     u'adif': 189,
      u'continent': u'OC',
-     u'country': u'Lord Howe Island',
-     u'cqz': 30,
+     u'country': u'Norfolk Island',
+     u'cqz': 32,
      u'ituz': 60,
-     u'latitude': -31.55,
-     u'longitude': 159.08
+     u'latitude': -29.03,
+     u'longitude': 167.93
 }
 
 response_prefix_VK9GMW_clublog = {
@@ -195,7 +195,7 @@ response_Exception_VK9XO_with_start_date = {
            'country': 'CHRISTMAS ISLAND',
            'continent': 'OC',
            'latitude': -10.48,
-           'longitude': 105.71,
+           'longitude': 105.62,
            'cqz': 29
         }
 
