@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+PyHamtools 0.11.0
+================
+
+02. March 2025
+
+* added support for Python 3.13 
+
 PyHamtools 0.10.0
 ================
 
