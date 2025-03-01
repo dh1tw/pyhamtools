@@ -25,8 +25,8 @@ response_Exception_KC6MM_1990 = {
            'adif': 22,
            'country': u'PALAU',
            'continent': u'OC',
-           'latitude': 9.50,
-           'longitude': 138.20,
+           'latitude': 9.52,
+           'longitude': 138.21,
            'cqz': 27,
         }
 
@@ -34,8 +34,8 @@ response_Exception_KC6MM_1992 = {
            'adif': 22,
            'country': u'PALAU',
            'continent': u'OC',
-           'latitude': 9.50,
-           'longitude': 138.20,
+           'latitude': 9.52,
+           'longitude': 138.21,
            'cqz': 27,
         }
 
@@ -53,7 +53,7 @@ response_Exception_VK9XO_with_start_date = {
            'country': u'CHRISTMAS ISLAND',
            'continent': u'OC',
            'latitude': -10.48,
-           'longitude': 105.71,
+           'longitude': 105.62,
            'cqz': 29,
         }
 

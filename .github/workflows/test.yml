@@ -3,52 +3,52 @@ name: Linux
 on: [push, pull_request]
 
 jobs:
+  test_linux_legacy:
+      # Ubuntu 20.04 is still required for python 3.6; this doesn't work on Ubuntu 22.04 anymore
+      runs-on: "ubuntu-20.04"
+      name: "Ubuntu 20.04 - Python ${{ matrix.python-version }}"
+      strategy:
+        matrix:
+          python-version: ["3.6"]
+          redis-version: [6]
+  
+      steps:
+        - uses: "actions/checkout@v3"
+        - uses: "actions/setup-python@v4"
+          with:
+            python-version: "${{ matrix.python-version }}"
+            cache: "pip"
+            cache-dependency-path: |
+              **/setup.py
+              **/requirements*.txt
+  
+        - name: "Install dependencies"
+          run: |
+            set -xe
+            sudo apt-get install -y libxml2-dev libxslt-dev
+            python -VV
+            python -m pip install --upgrade pip setuptools
+            python -m pip install -e .
+            python -m pip install -r requirements-pytest.txt
+  
+        - name: Start Redis
+          uses: supercharge/redis-github-action@1.2.0
+          with:
+            redis-version: ${{ matrix.redis-version }}
+  
+        - name: "Run tests for ${{ matrix.python-version }}"
+          env: 
+            CLUBLOG_APIKEY: ${{ secrets.CLUBLOG_APIKEY }}
+            QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
+            QRZ_PWD: ${{ secrets.QRZ_PWD }}
+            PYTHON_VERSION: ${{ matrix.python-version }}
+          # delay the execution randomly by a couple of seconds to reduce the amount 
+          # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
+          run: |
+            sleep $[ ( $RANDOM % 10 )  + 1 ]s 
+            pytest ./test
+
   test_linux:
-    # Ubuntu 20.04 is still required for python 3.6; this doesn't work on Ubuntu 22.04 anymore
-    runs-on: "ubuntu-20.04"
-    name: "Ubuntu 20.04 - Python ${{ matrix.python-version }}"
-    strategy:
-      matrix:
-        python-version: ["3.6"]
-        redis-version: [6]
-
-    steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
-        with:
-          python-version: "${{ matrix.python-version }}"
-          cache: "pip"
-          cache-dependency-path: |
-            **/setup.py
-            **/requirements*.txt
-
-      - name: "Install dependencies"
-        run: |
-          set -xe
-          sudo apt-get install -y libxml2-dev libxslt-dev
-          python -VV
-          python -m pip install --upgrade pip setuptools
-          python -m pip install -e .
-          python -m pip install -r requirements-pytest.txt
-
-      - name: Start Redis
-        uses: supercharge/redis-github-action@1.2.0
-        with:
-          redis-version: ${{ matrix.redis-version }}
-
-      - name: "Run tests for ${{ matrix.python-version }}"
-        env: 
-          CLUBLOG_APIKEY: ${{ secrets.CLUBLOG_APIKEY }}
-          QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
-          QRZ_PWD: ${{ secrets.QRZ_PWD }}
-          PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution randomly by a couple of seconds to reduce the amount 
-        # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
-        run: |
-          sleep $[ ( $RANDOM % 10 )  + 1 ]s 
-          pytest ./test
-
-  test_linux_ubuntu_22:
     runs-on: "ubuntu-22.04"
     name: "Ubuntu 22.04 - Python ${{ matrix.python-version }}"
     env:
@@ -56,7 +56,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "pypy3.7", "pypy3.8", "pypy3.9", "pypy3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [6]
 
     steps:
@@ -121,7 +121,7 @@ jobs:
     name: "MacOS 12 - Python ${{ matrix.python-version }}"
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "pypy3.8", "pypy3.9", "pypy3.10"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [6]
 
     steps:
@@ -165,7 +165,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - uses: "actions/checkout@v3"
