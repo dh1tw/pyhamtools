@@ -34,14 +34,14 @@ This Library is used in production at the [DXHeat.com DX Cluster](https://dxheat
 Pyhamtools is compatible with Python >=3.6.
 We check compatibility on OSX, Windows, and Linux with the following Python versions:
 
-* Python 3.6 (will be deprecated in 2024)
-* Python 3.7 (will be deprecated in 2024)
+* Python 3.6 (will be deprecated in 2025)
+* Python 3.7 (will be deprecated in 2025)
 * Python 3.8
 * Python 3.9
 * Python 3.10
 * Python 3.11
 * Python 3.12
-* [pypy3.7](https://pypy.org/) (will be deprecated in 2024)
+* Python 3.13
 * [pypy3.8](https://pypy.org/)
 * [pypy3.9](https://pypy.org/)
 * [pypy3.10](https://pypy.org/)
