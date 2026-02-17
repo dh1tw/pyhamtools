@@ -57,17 +57,23 @@ def fixApiKey(request):
 @pytest.fixture(scope="module", params=["clublogapi", "clublogxml", "countryfile"])
 def fixGeneralApi(request, fixApiKey):
     """Fixture returning all possible instances of LookupLib"""
+    if request.param in ("clublogapi", "clublogxml") and not fixApiKey:
+        pytest.skip("CLUBLOG_APIKEY not set; skipping Clublog-backed tests")
     Lib = LookupLib(request.param, fixApiKey)
     # pytest.skip("better later")
     return(Lib)
 
 @pytest.fixture(scope="module")
 def fixClublogApi(request, fixApiKey):
+    if not fixApiKey:
+        pytest.skip("CLUBLOG_APIKEY not set; skipping clublogapi tests")
     Lib = LookupLib("clublogapi", fixApiKey)
     return(Lib)
 
 @pytest.fixture(scope="module")
 def fixClublogXML(request, fixApiKey):
+    if not fixApiKey:
+        pytest.skip("CLUBLOG_APIKEY not set; skipping clublogxml tests")
     Lib = LookupLib("clublogxml", fixApiKey)
     return(Lib)
 
@@ -78,6 +84,8 @@ def fixCountryFile(request):
 
 @pytest.fixture(scope="module", params=["clublogxml", "countryfile"])
 def fix_callinfo(request, fixApiKey):
+    if request.param == "clublogxml" and not fixApiKey:
+        pytest.skip("CLUBLOG_APIKEY not set; skipping clublogxml-based callinfo tests")
     lib = LookupLib(request.param, fixApiKey)
     callinfo = Callinfo(lib)
     return(callinfo)
