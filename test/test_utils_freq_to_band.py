@@ -7,7 +7,9 @@ class Test_utils_freq_to_band():
     def test_hf_frequencies(self):
         assert freq_to_band(137) == {"band" : 2190, "adif": "2190m", "itu": "LF", "mode":const.CW}
 
-        assert freq_to_band(472) == {"band" : 560, "adif": "560m", "itu": "MF", "mode":None}
+        assert freq_to_band(472) == {"band" : 630, "adif": "630m", "itu": "MF", "mode":None}
+
+        assert freq_to_band(502) == {"band" : 560, "adif": "560m", "itu": "MF", "mode":None}
 
         assert freq_to_band(1805) == {"band" : 160, "adif": "160m", "itu": "MF", "mode":const.CW}
         assert freq_to_band(1838) == {"band" : 160, "adif": "160m", "itu": "MF", "mode":const.DIGITAL}

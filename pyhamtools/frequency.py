@@ -45,7 +45,11 @@ def freq_to_band(freq):
         adif = "2190m"
         itu = "LF"
         mode = const.CW
-    elif ((freq >= 450 ) and (freq <= 504)):
+    elif ((freq >= 472 ) and (freq <= 479)):
+        band = 630
+        adif = "630m"
+        itu = "MF"
+    elif ((freq >= 501 ) and (freq <= 504)):
         band = 560
         adif = "560m"
         itu = "MF"
