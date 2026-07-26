@@ -272,8 +272,22 @@ class Test_callinfo_methods:
         assert not fix_callinfo.check_if_beacon("DH1TW")
 
     def test_get_homecall(self, fix_callinfo):
-        assert fix_callinfo.get_homecall("HB9/DH1TW") == "DH1TW"
-        assert fix_callinfo.get_homecall("SM3/DH1TW/P") == "DH1TW"
+        cases = [
+            ("HB9/DH1TW", "DH1TW"),
+            ("SM3/DH1TW/P", "DH1TW"),
+            ("SP5ABC", "SP5ABC"),
+            ("SP/SP5ABC", "SP5ABC"),
+            ("SP5ABC/W5", "SP5ABC"),
+            ("DL/SQ5FOX/M/DL", "SQ5FOX"),
+            ("3z3z3z", "3Z3Z3Z"),
+            ("DL/3z3z3z", "3Z3Z3Z"),
+            ("DL/3z3z3z/am/m/ok", "3Z3Z3Z"),
+            ("N0CALL/P", "N0CALL"),
+            ("W5/N0CALL", "N0CALL"),
+        ]
+
+        for input_call, expected in cases:
+            assert fix_callinfo.get_homecall(input_call) == expected
         with pytest.raises(ValueError):
             fix_callinfo.get_homecall("QRM")
 
@@ -395,6 +409,7 @@ class Test_callinfo_methods:
 
     def test_is_valid_callsign(self, fix_callinfo):
         assert fix_callinfo.is_valid_callsign("DH1TW")
+        assert fix_callinfo.is_valid_callsign("3Z3Z3Z")
         assert not fix_callinfo.is_valid_callsign("QRM")
 
     def test_get_lat_long(self, fix_callinfo):

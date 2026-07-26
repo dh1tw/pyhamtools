@@ -56,12 +56,24 @@ class Callinfo(object):
         """
 
         callsign = callsign.upper()
-        homecall = re.search('[\\d]{0,1}[A-Z]{1,2}\\d([A-Z]{1,4}|\\d{3,3}|\\d{1,3}[A-Z])[A-Z]{0,5}', callsign)
+
+        # Prefer splitting on '/', as portable calls often appear as chains like DL/SQ5FOX/M/DL.
+        # Pick the first token that looks like a real callsign and let higher-level logic validate it.
+        token_candidates = [token.strip() for token in callsign.split('/') if token.strip()]
+        token_candidates = [re.sub(r'-\d{1,3}$', '', token) for token in token_candidates]
+
+        # Accept typical callsigns and special patterns with digits in the suffix (e.g. 3Z3Z3Z).
+        token_pattern = re.compile(r'^[\d]{0,1}[A-Z]{1,2}\d{1,4}[A-Z0-9]{1,8}$')
+        for token in token_candidates:
+            if token_pattern.match(token):
+                return token
+
+        # Fallback: search inside the string for a callsign-like pattern.
+        homecall = re.search(r'[\d]{0,1}[A-Z]{1,2}\d{1,4}[A-Z0-9]{1,8}', callsign)
         if homecall:
-            homecall = homecall.group(0)
-            return homecall
-        else:
-            raise ValueError
+            return homecall.group(0)
+
+        raise ValueError
 
     def _iterate_prefix(self, callsign, timestamp=None):
         """truncate call until it corresponds to a Prefix in the database"""
@@ -193,6 +205,11 @@ class Callinfo(object):
             # regular callsigns, without prefix or appendix
             # elif re.match('^[\\d]{0,1}[A-Z]{1,2}\\d{1,2}[A-Z]{1,2}([A-Z]{1,4}|\\d{1,3})[A-Z]{0,5}$', callsign):
             elif re.match('^[\\d]{0,1}[A-Z]{1,2}\\d{1,4}([A-Z]{1,4}|[A-Z]{1,2}\\d{0,3})[A-Z]{0,5}$', callsign):
+                return self._iterate_prefix(callsign, timestamp)
+
+            # Some special callsigns contain digits in the suffix (e.g. 3Z3Z3Z).
+            # Fall back to a more permissive pattern and let the prefix database decide.
+            elif re.match('^[\\d]{0,1}[A-Z]{1,2}\\d{1,4}[A-Z0-9]{1,8}$', callsign):
                 return self._iterate_prefix(callsign, timestamp)
 
             # callsigns with prefixes (xxx/callsign)
