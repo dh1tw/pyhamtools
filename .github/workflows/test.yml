@@ -50,17 +50,17 @@ jobs:
         # delay the execution by a couple of seconds to reduce the amount 
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-            case "$PYTHON_VERSION" in
-            "3.8")      delay=10 ;;
-            "3.9")      delay=20 ;;
-            "3.10")     delay=30 ;;
-            "3.11")     delay=40 ;;
-            "3.12")     delay=50 ;;
-            "3.13")     delay=60 ;;
-            "3.14")     delay=70 ;;
-            "pypy3.8")  delay=80 ;;
-            "pypy3.9")  delay=90 ;;
-            "pypy3.10") delay=100 ;;
+            case "$MATRIX_PYTHON_VERSION" in
+            "3.8")      delay=5 ;;
+            "3.9")      delay=10 ;;
+            "3.10")     delay=15 ;;
+            "3.11")     delay=20 ;;
+            "3.12")     delay=25 ;;
+            "3.13")     delay=30 ;;
+            "3.14")     delay=35 ;;
+            "pypy3.8")  delay=40 ;;
+            "pypy3.9")  delay=45 ;;
+            "pypy3.10") delay=50 ;;
             *)          delay=0 ;;
             esac
             sleep "$delay"
@@ -125,18 +125,18 @@ jobs:
         # delay the execution by a couple of seconds to reduce the amount 
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-            case "$PYTHON_VERSION" in
-            "3.8")      delay=130 ;;
-            "3.9")      delay=140 ;;
-            "3.10")     delay=150 ;;
-            "3.11")     delay=160 ;;
-            "3.12")     delay=170 ;;
-            "3.13")     delay=180 ;;
-            "3.14")     delay=190 ;;
-            "pypy3.8")  delay=200 ;;
-            "pypy3.9")  delay=210 ;;
-            "pypy3.10") delay=220 ;;
-            *)          delay=230 ;;
+            case "$MATRIX_PYTHON_VERSION" in
+            "3.8")      delay=60 ;;
+            "3.9")      delay=70 ;;
+            "3.10")     delay=80 ;;
+            "3.11")     delay=90 ;;
+            "3.12")     delay=100 ;;
+            "3.13")     delay=110 ;;
+            "3.14")     delay=120 ;;
+            "pypy3.8")  delay=130 ;;
+            "pypy3.9")  delay=140 ;;
+            "pypy3.10") delay=150 ;;
+            *)          delay=160 ;;
             esac
             sleep "$delay"
             pytest test/
@@ -193,16 +193,16 @@ jobs:
         # when all CI jobs execute simultaneously
         run: |
           $delays = @{
-            '3.8'      = 270
-            '3.9'      = 280
-            '3.10'     = 290
-            '3.11'     = 300
-            '3.12'     = 310
-            '3.13'     = 320
-            '3.14'     = 330
-            'pypy3.8'  = 340
-            'pypy3.9'  = 350
-            'pypy3.10' = 360
+            '3.8'      = 200
+            '3.9'      = 210
+            '3.10'     = 220
+            '3.11'     = 230
+            '3.12'     = 240
+            '3.13'     = 250
+            '3.14'     = 260
+            'pypy3.8'  = 270
+            'pypy3.9'  = 280
+            'pypy3.10' = 290
           }
           Start-Sleep -Seconds $delays[$env:PYTHON_VERSION]
           pytest
