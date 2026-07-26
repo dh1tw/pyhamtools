@@ -12,7 +12,8 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
+        # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7]
 
     steps:
@@ -50,6 +51,8 @@ jobs:
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
             case "$PYTHON_VERSION" in
+            "3.8")      delay=10 ;;
+            "3.9")      delay=20 ;;
             "3.10")     delay=30 ;;
             "3.11")     delay=40 ;;
             "3.12")     delay=50 ;;
