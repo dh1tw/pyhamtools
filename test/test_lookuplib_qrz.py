@@ -7,10 +7,9 @@ from pyhamtools.lookuplib import LookupLib
 from pyhamtools.exceptions import APIKeyMissingError
 from pyhamtools.consts import LookupConventions as const
 
-try:
-    QRZ_USERNAME = str(os.environ['QRZ_USERNAME'])
-    QRZ_PWD = str(os.environ['QRZ_PWD'])
-except Exception:
+QRZ_USERNAME = str(os.getenv('QRZ_USERNAME', '')).strip()
+QRZ_PWD = str(os.getenv('QRZ_PWD', '')).strip()
+if not QRZ_USERNAME or not QRZ_PWD:
     pytestmark = pytest.mark.skip("Environment variables with QRZ.com credentials not set")
 
 #Fixtures
