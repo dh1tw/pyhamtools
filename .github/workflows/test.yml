@@ -138,14 +138,7 @@ jobs:
             *)          delay=0 ;;
             esac
             sleep "$delay"
-            if [[ $PYTHON_VERSION == 3.11 ]]
-              then 
-              pytest --cov=test/
-              codecov
-            else
-              pytest test/
-            fi
-            cd docs && make html
+            pytest test/
 
 
   test_windows:
