@@ -12,6 +12,8 @@ QRZ_PWD = str(os.getenv('QRZ_PWD', '')).strip()
 HAS_CLUBLOG_APIKEY = bool(APIKEY)
 HAS_QRZ_CREDENTIALS = bool(QRZ_USERNAME and QRZ_PWD)
 
+CTY_FIXTURE_FILE = os.path.join(os.path.dirname(__file__), "fixtures", "cty.plist")
+
 if not HAS_CLUBLOG_APIKEY or not HAS_QRZ_CREDENTIALS:
     print("WARNING: Environment variables with API keys not set; some tests will be skipped")
 
@@ -57,8 +59,7 @@ def fixGeneralApi(request, fixApiKey):
     if request.param in ("clublogapi", "clublogxml") and not HAS_CLUBLOG_APIKEY:
         pytest.skip("Environment variable CLUBLOG_APIKEY not set")
     if request.param == "countryfile":
-        cty_file_abs = os.path.join(os.path.dirname(__file__), "./fixtures/cty.plist")
-        Lib = LookupLib(request.param, fixApiKey, filename=cty_file_abs)
+        Lib = LookupLib(request.param, fixApiKey, filename=CTY_FIXTURE_FILE)
     else:
         Lib = LookupLib(request.param, fixApiKey)
     # pytest.skip("better later")
@@ -80,8 +81,7 @@ def fixClublogXML(request, fixApiKey):
 
 @pytest.fixture(scope="module")
 def fixCountryFile(request):
-    cty_file_abs = os.path.join(os.path.dirname(__file__), "./fixtures/cty.plist")
-    Lib = LookupLib("countryfile", filename=cty_file_abs)
+    Lib = LookupLib("countryfile", filename=CTY_FIXTURE_FILE)
     return(Lib)
 
 @pytest.fixture(scope="module", params=["clublogxml", "countryfile"])
@@ -89,8 +89,7 @@ def fix_callinfo(request, fixApiKey):
     if request.param == "clublogxml" and not HAS_CLUBLOG_APIKEY:
         pytest.skip("Environment variable CLUBLOG_APIKEY not set")
     if request.param == "countryfile":
-        cty_file_abs = os.path.join(os.path.dirname(__file__), "./fixtures/cty.plist")
-        lib = LookupLib(request.param, fixApiKey, filename=cty_file_abs)
+        lib = LookupLib(request.param, fixApiKey, filename=CTY_FIXTURE_FILE)
     else:
         lib = LookupLib(request.param, fixApiKey)
     callinfo = Callinfo(lib)
