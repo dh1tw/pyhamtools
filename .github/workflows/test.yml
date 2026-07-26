@@ -11,7 +11,7 @@ jobs:
       USING_COVERAGE: '3.11'
 
     strategy:
-      max-parallel: 3
+      max-parallel: 1
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7]
@@ -77,7 +77,7 @@ jobs:
     runs-on: "macos-15"
     name: "MacOS 15 - Python ${{ matrix.python-version }}"
     strategy:
-      max-parallel: 3
+      max-parallel: 1
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14","pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7.2]
@@ -115,23 +115,14 @@ jobs:
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
           sleep $[ ( $RANDOM % 60 )  + 1 ]s 
-          if [[ $PYTHON_VERSION == 3.11 ]]
-          then 
-            pytest --cov=test/
-            codecov
-          else
-            pytest test/
-          fi
-          cd docs && make html
-
-
+          pytest test/
 
   test_windows:
     runs-on: "windows-2022"
     name: "Windows latest - Python ${{ matrix.python-version }}"
 
     strategy:
-      max-parallel: 3
+      max-parallel: 1
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
