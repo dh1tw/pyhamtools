@@ -11,8 +11,8 @@ jobs:
       USING_COVERAGE: '3.11'
 
     strategy:
+      max-parallel: 3
       matrix:
-        max-parallel: 3
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7]
 
@@ -77,9 +77,9 @@ jobs:
     runs-on: "macos-15"
     name: "MacOS 15 - Python ${{ matrix.python-version }}"
     strategy:
+      max-parallel: 3
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14","pypy3.8", "pypy3.9", "pypy3.10"]
-        max-parallel: 3
         redis-version: [7.2]
 
     steps:
@@ -131,9 +131,9 @@ jobs:
     name: "Windows latest - Python ${{ matrix.python-version }}"
 
     strategy:
+      max-parallel: 3
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        max-parallel: 3
 
     steps:
       - uses: "actions/checkout@v6"
