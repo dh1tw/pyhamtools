@@ -56,7 +56,11 @@ def fixGeneralApi(request, fixApiKey):
     """Fixture returning all possible instances of LookupLib"""
     if request.param in ("clublogapi", "clublogxml") and not HAS_CLUBLOG_APIKEY:
         pytest.skip("Environment variable CLUBLOG_APIKEY not set")
-    Lib = LookupLib(request.param, fixApiKey)
+    if request.param == "countryfile":
+        cty_file_abs = os.path.join(os.path.dirname(__file__), "./fixtures/cty.plist")
+        Lib = LookupLib(request.param, fixApiKey, filename=cty_file_abs)
+    else:
+        Lib = LookupLib(request.param, fixApiKey)
     # pytest.skip("better later")
     return(Lib)
 
@@ -76,14 +80,19 @@ def fixClublogXML(request, fixApiKey):
 
 @pytest.fixture(scope="module")
 def fixCountryFile(request):
-    Lib = LookupLib("countryfile")
+    cty_file_abs = os.path.join(os.path.dirname(__file__), "./fixtures/cty.plist")
+    Lib = LookupLib("countryfile", filename=cty_file_abs)
     return(Lib)
 
 @pytest.fixture(scope="module", params=["clublogxml", "countryfile"])
 def fix_callinfo(request, fixApiKey):
     if request.param == "clublogxml" and not HAS_CLUBLOG_APIKEY:
         pytest.skip("Environment variable CLUBLOG_APIKEY not set")
-    lib = LookupLib(request.param, fixApiKey)
+    if request.param == "countryfile":
+        cty_file_abs = os.path.join(os.path.dirname(__file__), "./fixtures/cty.plist")
+        lib = LookupLib(request.param, fixApiKey, filename=cty_file_abs)
+    else:
+        lib = LookupLib(request.param, fixApiKey)
     callinfo = Callinfo(lib)
     return(callinfo)
 

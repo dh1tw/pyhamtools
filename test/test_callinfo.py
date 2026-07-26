@@ -126,13 +126,13 @@ response_prefix_V26K_clublog = {
 }
 
 response_prefix_VK9DLX_countryfile = {
-     u'adif': 189,
+     u'adif': 147,
      u'continent': u'OC',
-     u'country': u'Norfolk Island',
-     u'cqz': 32,
+     u'country': u'Lord Howe Island',
+     u'cqz': 30,
      u'ituz': 60,
-     u'latitude': -29.03,
-     u'longitude': 167.93
+     u'latitude': -31.55,
+     u'longitude': 159.08
 }
 
 response_prefix_VK9GMW_clublog = {
