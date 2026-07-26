@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        #python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
+        max-parallel: 3
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7]
 
@@ -50,28 +50,16 @@ jobs:
         # delay the execution by a couple of seconds to reduce the amount 
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-            case "$MATRIX_PYTHON_VERSION" in
-            "3.8")      delay=5 ;;
-            "3.9")      delay=10 ;;
-            "3.10")     delay=15 ;;
-            "3.11")     delay=20 ;;
-            "3.12")     delay=25 ;;
-            "3.13")     delay=30 ;;
-            "3.14")     delay=35 ;;
-            "pypy3.8")  delay=40 ;;
-            "pypy3.9")  delay=45 ;;
-            "pypy3.10") delay=50 ;;
-            *)          delay=0 ;;
-            esac
-            sleep "$delay"
-            if [[ $PYTHON_VERSION == 3.14 ]]
-              then 
-              pytest --cov=test/
-              codecov
-            else
-              pytest test/
-            fi
-            cd docs && make html
+          sleep $[ ( $RANDOM % 60 )  + 1 ]s 
+          if [[ $PYTHON_VERSION == 3.11 ]]
+          then 
+            pytest --cov=test/
+            codecov
+          else
+            pytest test/
+          fi
+          cd docs && make html
+
 
   # publish_package:
   #   runs-on: "ubuntu-latest"
@@ -91,6 +79,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14","pypy3.8", "pypy3.9", "pypy3.10"]
+        max-parallel: 3
         redis-version: [7.2]
 
     steps:
@@ -125,21 +114,16 @@ jobs:
         # delay the execution by a couple of seconds to reduce the amount 
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-            case "$MATRIX_PYTHON_VERSION" in
-            "3.8")      delay=60 ;;
-            "3.9")      delay=70 ;;
-            "3.10")     delay=80 ;;
-            "3.11")     delay=90 ;;
-            "3.12")     delay=100 ;;
-            "3.13")     delay=110 ;;
-            "3.14")     delay=120 ;;
-            "pypy3.8")  delay=130 ;;
-            "pypy3.9")  delay=140 ;;
-            "pypy3.10") delay=150 ;;
-            *)          delay=160 ;;
-            esac
-            sleep "$delay"
+          sleep $[ ( $RANDOM % 60 )  + 1 ]s 
+          if [[ $PYTHON_VERSION == 3.11 ]]
+          then 
+            pytest --cov=test/
+            codecov
+          else
             pytest test/
+          fi
+          cd docs && make html
+
 
 
   test_windows:
@@ -149,6 +133,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        max-parallel: 3
 
     steps:
       - uses: "actions/checkout@v6"
@@ -192,17 +177,5 @@ jobs:
         # amount of concurrent API calls on Clublog and QRZ.com
         # when all CI jobs execute simultaneously
         run: |
-          $delays = @{
-            '3.8'      = 200
-            '3.9'      = 210
-            '3.10'     = 220
-            '3.11'     = 230
-            '3.12'     = 240
-            '3.13'     = 250
-            '3.14'     = 260
-            'pypy3.8'  = 270
-            'pypy3.9'  = 280
-            'pypy3.10' = 290
-          }
-          Start-Sleep -Seconds $delays[$env:PYTHON_VERSION]
+          start-sleep -Seconds (5..60 | get-random)
           pytest
