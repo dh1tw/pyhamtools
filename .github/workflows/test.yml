@@ -12,8 +12,8 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
-        # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
+        #python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7]
 
     steps:
@@ -64,7 +64,7 @@ jobs:
             *)          delay=0 ;;
             esac
             sleep "$delay"
-            if [[ $PYTHON_VERSION == 3.11 ]]
+            if [[ $PYTHON_VERSION == 3.14 ]]
               then 
               pytest --cov=test/
               codecov
@@ -126,17 +126,17 @@ jobs:
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
             case "$PYTHON_VERSION" in
-            "3.8")      delay=5 ;;
-            "3.9")      delay=15 ;;
-            "3.10")     delay=25 ;;
-            "3.11")     delay=35 ;;
-            "3.12")     delay=45 ;;
-            "3.13")     delay=55 ;;
-            "3.14")     delay=65 ;;
-            "pypy3.8")  delay=75 ;;
-            "pypy3.9")  delay=85 ;;
-            "pypy3.10") delay=95 ;;
-            *)          delay=0 ;;
+            "3.8")      delay=130 ;;
+            "3.9")      delay=140 ;;
+            "3.10")     delay=150 ;;
+            "3.11")     delay=160 ;;
+            "3.12")     delay=170 ;;
+            "3.13")     delay=180 ;;
+            "3.14")     delay=190 ;;
+            "pypy3.8")  delay=200 ;;
+            "pypy3.9")  delay=210 ;;
+            "pypy3.10") delay=220 ;;
+            *)          delay=230 ;;
             esac
             sleep "$delay"
             pytest test/
@@ -193,16 +193,16 @@ jobs:
         # when all CI jobs execute simultaneously
         run: |
           $delays = @{
-            '3.8'      = 100
-            '3.9'      = 105
-            '3.10'     = 110
-            '3.11'     = 115
-            '3.12'     = 120
-            '3.13'     = 125
-            '3.14'     = 130
-            'pypy3.8'  = 135
-            'pypy3.9'  = 140
-            'pypy3.10' = 145
+            '3.8'      = 270
+            '3.9'      = 280
+            '3.10'     = 290
+            '3.11'     = 300
+            '3.12'     = 310
+            '3.13'     = 320
+            '3.14'     = 330
+            'pypy3.8'  = 340
+            'pypy3.9'  = 350
+            'pypy3.10' = 360
           }
           Start-Sleep -Seconds $delays[$env:PYTHON_VERSION]
           pytest
