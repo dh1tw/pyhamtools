@@ -7,59 +7,56 @@ from pyhamtools.lookuplib import LookupLib
 from pyhamtools.exceptions import APIKeyMissingError
 from pyhamtools.consts import LookupConventions as const
 
-try:
-    QRZ_USERNAME = str(os.environ['QRZ_USERNAME'])
-    QRZ_PWD = str(os.environ['QRZ_PWD'])
-except Exception:
+QRZ_USERNAME = str(os.getenv("QRZ_USERNAME", "")).strip()
+QRZ_PWD = str(os.getenv("QRZ_PWD", "")).strip()
+if not QRZ_USERNAME or not QRZ_PWD:
     pytestmark = pytest.mark.skip("Environment variables with QRZ.com credentials not set")
 
-#Fixtures
-#===========================================================
+# Fixtures
+# ===========================================================
 
 response_1A1AB = {
-    u'biodate': datetime(2018, 9, 7, 21, 17, 7, tzinfo=timezone.utc),
-    u'bio': u'0',
-    u'license_class': u'C',
-    u'moddate': datetime(2008, 11, 2, 15, 0, 38, tzinfo=timezone.utc),
-    u'locator': u'JN61fw',
-    u'callsign': u'1A1AB',
-    u'addr2': u'00187  Rome',
-    u'user': u'1A1AB',
-    u'adif': 246,
-    u'addr1': u'Via Condotti, 68',
-    u'mqsl': True,
-    u'ccode': 128,
-    u'land': u'SMO Malta',
-    u'codes': u'HVB',
-    u'name': u'Morgan',
-    u'geoloc': u'user',
-    u'country': u'Italy',
-    u'lotw': True,
-    u'longitude': 12.456779,
-    u'eqsl': True,
-    u'fname': u'Jonas',
-    u'latitude': 41.94417
-    }
+    "biodate": datetime(2018, 9, 7, 21, 17, 7, tzinfo=timezone.utc),
+    "bio": "0",
+    "license_class": "C",
+    "moddate": datetime(2008, 11, 2, 15, 0, 38, tzinfo=timezone.utc),
+    "locator": "JN61fw",
+    "callsign": "1A1AB",
+    "addr2": "00187  Rome",
+    "adif": 246,
+    "addr1": "Via Condotti, 68",
+    "mqsl": True,
+    "ccode": 128,
+    "land": "SMO Malta",
+    "codes": "HVB",
+    "name": "Morgan",
+    "geoloc": "user",
+    "country": "Italy",
+    "lotw": True,
+    "longitude": 12.456779,
+    "eqsl": True,
+    "fname": "Jonas",
+    "latitude": 41.94417,
+}
 
 response_333 = {
-    const.COUNTRY: u'Iraq',
-    u'cc': u'IQ',
+    const.COUNTRY: "Iraq",
+    "cc": "IQ",
     const.LONGITUDE: 44.362793,
     const.CQZ: 21,
     const.ITUZ: 39,
     const.LATITUDE: 33.358062,
-    u'timezone': 3.0,
+    "timezone": 3.0,
     const.ADIF: 333,
-    const.CONTINENT: u'AS',
-    u'ccc': u'IRQ'
+    const.CONTINENT: "AS",
+    "ccc": "IRQ",
 }
 
-#TESTS
-#===========================================================
+# TESTS
+# ===========================================================
 
 
 class TestQrzConstructur:
-
     def test_get_session_key(self):
         lib = LookupLib(lookuptype="qrz", username=QRZ_USERNAME, pwd=QRZ_PWD)
         assert len(lib._apikey) == 32
@@ -78,17 +75,16 @@ class TestQrzConstructur:
 
 
 class TestQrz_Callsign_Lookup:
-
     def test_lookup_callsign(self, fix_qrz):
 
         data = fix_qrz._lookup_qrz_callsign("1A1AB", fix_qrz._apikey)
-        data.pop('u_views', None)
+        data.pop("u_views", None)
         assert data == response_1A1AB
         assert len(data) == len(response_1A1AB)
 
     def test_lookup_callsign_with_unicode_escaping(self, fix_qrz):
         data = fix_qrz._lookup_qrz_callsign("1A1AB", fix_qrz._apikey)
-        data.pop('u_views', None)
+        data.pop("u_views", None)
         assert data == response_1A1AB
 
     def test_lookup_callsign_does_not_exist(self, fix_qrz):
@@ -105,25 +101,24 @@ class TestQrz_Callsign_Lookup:
 
 
 class TestQrz_DXCC_Lookup:
-
     def test_lookup_dxcc_with_int(self, fix_qrz):
         data = fix_qrz._lookup_qrz_dxcc(333, fix_qrz._apikey)
-        assert data == response_333 #check content
-        assert len(data) == len(response_333) #ensure all fields are included
+        assert data == response_333  # check content
+        assert len(data) == len(response_333)  # ensure all fields are included
 
     def test_lookup_dxcc_with_string(self, fix_qrz):
         data = fix_qrz._lookup_qrz_dxcc("333", fix_qrz._apikey)
-        assert data == response_333 #check content
-        assert len(data) == len(response_333) #ensure all fields are included
+        assert data == response_333  # check content
+        assert len(data) == len(response_333)  # ensure all fields are included
 
     def test_lookup_dxcc_does_not_exist(self, fix_qrz):
         with pytest.raises(KeyError):
-            fix_qrz._lookup_qrz_dxcc('854', fix_qrz._apikey)
+            fix_qrz._lookup_qrz_dxcc("854", fix_qrz._apikey)
 
     def test_lookup_dxcc_wrong_input(self, fix_qrz):
         with pytest.raises(ValueError):
-            fix_qrz._lookup_qrz_dxcc('', fix_qrz._apikey)
+            fix_qrz._lookup_qrz_dxcc("", fix_qrz._apikey)
 
     def test_lookup_dxcc(self, fix_qrz):
         data = fix_qrz.lookup_entity(333)
-        assert data == response_333 #check content
+        assert data == response_333  # check content

@@ -90,7 +90,7 @@ Christoph, [@df7cb](https://github.com/df7cb) is kindly maintaining a Debian pac
 
 ```bash
 
-$ sudo apt-get install pyhamtools
+$ sudo apt-get install python3-pyhamtools
 
 ```
 
