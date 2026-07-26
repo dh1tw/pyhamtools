@@ -46,19 +46,31 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution randomly by a couple of seconds to reduce the amount 
+        # delay the execution by a couple of seconds to reduce the amount 
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          declare -A delays=(["3.8"]=0 ["3.9"]=10 ["3.10"]=20 ["3.11"]=30 ["3.12"]=40 ["3.13"]=50 ["3.14"]=60 ["pypy3.8"]=70 ["pypy3.9"]=80 ["pypy3.10"]=90)
-          sleep ${delays[$PYTHON_VERSION]}
-          if [[ $PYTHON_VERSION == 3.11 ]]
-          then 
-            pytest --cov=test/
-            codecov
-          else
-            pytest test/
-          fi
-          cd docs && make html
+            case "$PYTHON_VERSION" in
+            "3.8")      delay=10 ;;
+            "3.9")      delay=20 ;;
+            "3.10")     delay=30 ;;
+            "3.11")     delay=40 ;;
+            "3.12")     delay=50 ;;
+            "3.13")     delay=60 ;;
+            "3.14")     delay=70 ;;
+            "pypy3.8")  delay=80 ;;
+            "pypy3.9")  delay=90 ;;
+            "pypy3.10") delay=100 ;;
+            *)          delay=0 ;;
+            esac
+            sleep "$delay"
+            if [[ $PYTHON_VERSION == 3.11 ]]
+              then 
+              pytest --cov=test/
+              codecov
+            else
+              pytest test/
+            fi
+            cd docs && make html
 
   # publish_package:
   #   runs-on: "ubuntu-latest"
@@ -109,12 +121,32 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution randomly by a couple of seconds to reduce the amount 
+        # delay the execution by a couple of seconds to reduce the amount 
         # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          declare -A delays=(["3.8"]=5 ["3.9"]=15 ["3.10"]=25 ["3.11"]=35 ["3.12"]=45 ["3.13"]=55 ["3.14"]=65 ["pypy3.8"]=75 ["pypy3.9"]=85 ["pypy3.10"]=95)
-          sleep ${delays[$PYTHON_VERSION]}
-          pytest ./test
+            case "$PYTHON_VERSION" in
+            "3.8")      delay=5 ;;
+            "3.9")      delay=15 ;;
+            "3.10")     delay=25 ;;
+            "3.11")     delay=35 ;;
+            "3.12")     delay=45 ;;
+            "3.13")     delay=55 ;;
+            "3.14")     delay=65 ;;
+            "pypy3.8")  delay=75 ;;
+            "pypy3.9")  delay=85 ;;
+            "pypy3.10") delay=95 ;;
+            *)          delay=0 ;;
+            esac
+            sleep "$delay"
+            if [[ $PYTHON_VERSION == 3.11 ]]
+              then 
+              pytest --cov=test/
+              codecov
+            else
+              pytest test/
+            fi
+            cd docs && make html
+
 
   test_windows:
     runs-on: "windows-2022"
