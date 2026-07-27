@@ -47,10 +47,7 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution by a couple of seconds to reduce the amount 
-        # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          sleep $[ ( $RANDOM % 60 )  + 1 ]s 
           if [[ $PYTHON_VERSION == 3.11 ]]
           then 
             pytest --cov=test/
@@ -74,6 +71,7 @@ jobs:
 
 
   test_macos:
+    needs: ["test_linux"]
     runs-on: "macos-15"
     name: "MacOS 15 - Python ${{ matrix.python-version }}"
     strategy:
@@ -111,14 +109,12 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution by a couple of seconds to reduce the amount 
-        # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          sleep $[ ( $RANDOM % 60 )  + 1 ]s 
           pytest test/
 
   test_windows:
     runs-on: "windows-2022"
+    needs: ["test_linux", "test_macos"]
     name: "Windows latest - Python ${{ matrix.python-version }}"
 
     strategy:
@@ -163,10 +159,7 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # give redis service time to startup and
-        # delay the execution randomly by 5-20sec to reduce the
-        # amount of concurrent API calls on Clublog and QRZ.com
-        # when all CI jobs execute simultaneously
+        # give redis service time to startup
         run: |
-          start-sleep -Seconds (5..60 | get-random)
+          start-sleep -Seconds 5
           pytest
