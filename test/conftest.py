@@ -6,16 +6,13 @@ import os
 from pyhamtools import LookupLib
 from pyhamtools import Callinfo
 
-APIKEY = ""
-QRZ_USERNAME = ""
-QRZ_PWD = ""
+APIKEY = str(os.getenv('CLUBLOG_APIKEY', '')).strip()
+QRZ_USERNAME = str(os.getenv('QRZ_USERNAME', '')).strip()
+QRZ_PWD = str(os.getenv('QRZ_PWD', '')).strip()
+HAS_CLUBLOG_APIKEY = bool(APIKEY)
+HAS_QRZ_CREDENTIALS = bool(QRZ_USERNAME and QRZ_PWD)
 
-try:
-    APIKEY = str(os.environ['CLUBLOG_APIKEY'])
-    QRZ_USERNAME = str(os.environ['QRZ_USERNAME'])
-    QRZ_PWD = str(os.environ['QRZ_PWD'])
-
-except Exception as ex:
+if not HAS_CLUBLOG_APIKEY or not HAS_QRZ_CREDENTIALS:
     print("WARNING: Environment variables with API keys not set; some tests will be skipped")
 
 @pytest.fixture(scope="session", params=["a", "", 12.5, -5, {"foo" : "bar"}, [5, "foo"]])
@@ -57,17 +54,23 @@ def fixApiKey(request):
 @pytest.fixture(scope="module", params=["clublogapi", "clublogxml", "countryfile"])
 def fixGeneralApi(request, fixApiKey):
     """Fixture returning all possible instances of LookupLib"""
+    if request.param in ("clublogapi", "clublogxml") and not HAS_CLUBLOG_APIKEY:
+        pytest.skip("Environment variable CLUBLOG_APIKEY not set")
     Lib = LookupLib(request.param, fixApiKey)
     # pytest.skip("better later")
     return(Lib)
 
 @pytest.fixture(scope="module")
 def fixClublogApi(request, fixApiKey):
+    if not HAS_CLUBLOG_APIKEY:
+        pytest.skip("Environment variable CLUBLOG_APIKEY not set")
     Lib = LookupLib("clublogapi", fixApiKey)
     return(Lib)
 
 @pytest.fixture(scope="module")
 def fixClublogXML(request, fixApiKey):
+    if not HAS_CLUBLOG_APIKEY:
+        pytest.skip("Environment variable CLUBLOG_APIKEY not set")
     Lib = LookupLib("clublogxml", fixApiKey)
     return(Lib)
 
@@ -78,6 +81,8 @@ def fixCountryFile(request):
 
 @pytest.fixture(scope="module", params=["clublogxml", "countryfile"])
 def fix_callinfo(request, fixApiKey):
+    if request.param == "clublogxml" and not HAS_CLUBLOG_APIKEY:
+        pytest.skip("Environment variable CLUBLOG_APIKEY not set")
     lib = LookupLib(request.param, fixApiKey)
     callinfo = Callinfo(lib)
     return(callinfo)
@@ -95,6 +100,8 @@ def fix_redis():
 
 @pytest.fixture(scope="module")
 def fix_qrz():
+    if not HAS_QRZ_CREDENTIALS:
+        pytest.skip("Environment variables with QRZ.com credentials not set")
     return LookupLib(lookuptype="qrz", username=QRZ_USERNAME, pwd=QRZ_PWD)
 
 @pytest.fixture(scope="session")

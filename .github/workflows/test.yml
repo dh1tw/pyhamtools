@@ -11,13 +11,14 @@ jobs:
       USING_COVERAGE: '3.11'
 
     strategy:
+      max-parallel: 1
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "pypy3.8", "pypy3.9", "pypy3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7]
 
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v6"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: "${{ matrix.python-version }}"
           cache: "pip"
@@ -36,7 +37,7 @@ jobs:
           python -m pip install -r requirements-docs.txt
 
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.2.0
+        uses: supercharge/redis-github-action@1.8.1
         with:
           redis-version: ${{ matrix.redis-version }}
 
@@ -46,10 +47,7 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution randomly by a couple of seconds to reduce the amount 
-        # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          sleep $[ ( $RANDOM % 60 )  + 1 ]s 
           if [[ $PYTHON_VERSION == 3.11 ]]
           then 
             pytest --cov=test/
@@ -58,6 +56,7 @@ jobs:
             pytest test/
           fi
           cd docs && make html
+
 
   # publish_package:
   #   runs-on: "ubuntu-latest"
@@ -72,16 +71,18 @@ jobs:
 
 
   test_macos:
+    needs: ["test_linux"]
     runs-on: "macos-15"
     name: "MacOS 15 - Python ${{ matrix.python-version }}"
     strategy:
+      max-parallel: 1
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "pypy3.8", "pypy3.9", "pypy3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14","pypy3.8", "pypy3.9", "pypy3.10"]
         redis-version: [7.2]
 
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v6"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: "${{ matrix.python-version }}"
           cache: "pip"
@@ -108,23 +109,22 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # delay the execution randomly by a couple of seconds to reduce the amount 
-        # of concurrent API calls on Clublog and QRZ.com when all CI jobs execute simultaneously
         run: |
-          sleep $[ ( $RANDOM % 60 )  + 1 ]
-          pytest ./test
+          pytest test/
 
   test_windows:
     runs-on: "windows-2022"
+    needs: ["test_linux", "test_macos"]
     name: "Windows latest - Python ${{ matrix.python-version }}"
 
     strategy:
+      max-parallel: 1
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v6"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: "${{ matrix.python-version }}"
           cache: "pip"
@@ -159,10 +159,7 @@ jobs:
           QRZ_USERNAME: ${{ secrets.QRZ_USERNAME }}
           QRZ_PWD: ${{ secrets.QRZ_PWD }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-        # give redis service time to startup and
-        # delay the execution randomly by 5-20sec to reduce the
-        # amount of concurrent API calls on Clublog and QRZ.com
-        # when all CI jobs execute simultaneously
+        # give redis service time to startup
         run: |
-          start-sleep -Seconds (5..60 | get-random)
+          start-sleep -Seconds 5
           pytest

@@ -1,6 +1,19 @@
 Changelog
 ---------
 
+PyHamtools 0.13.0
+================
+
+27. July 2026
+
+* added support for Python 3.14
+* fixed callsign decoding for callsigns with multiple digits followed by letters e.g. 3Z3Z3Z (tnx @Irytacja)
+* added ITU band names, ADIF band names and 560m band (tnx @sq6emm)
+* skip clublog/qrz tests when no api key is available
+* corrected pyhamtools package name for Debian in readme (tnx @gsker)
+* updated CI pipeline
+
+
 PyHamtools 0.12.0
 ================
 
