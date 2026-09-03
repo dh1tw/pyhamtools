@@ -244,7 +244,7 @@ def freq_to_band(freq):
         adif = "9cm"
         itu = "SHF"
         mode = None
-    elif ((freq >= 5650000) and (freq <= 5850000)):
+    elif ((freq >= 5650000) and (freq <= 5925000)):
         band = 0.053  #5.3cm
         adif = "6cm"
         itu = "SHF"
@@ -254,7 +254,7 @@ def freq_to_band(freq):
         adif = "3cm"
         itu = "SHF"
         mode = None
-    elif ((freq >= 24000000) and (freq <= 24050000)):
+    elif ((freq >= 24000000) and (freq <= 24250000)):
         band = 0.0125  #1,25cm
         adif = "1.25cm"
         itu = "SHF"
