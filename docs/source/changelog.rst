@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+PyHamtools 0.13.2
+================
+
+09. September 2026
+
+* Country-files.com renamed 'Cape Verde' to 'Cabo Verde' (tnx @sq6emm)
+
+
 PyHamtools 0.13.1
 ================
 
