@@ -28,13 +28,13 @@ def latlong_to_locator (latitude, longitude, precision=6):
            'JN48QM'
 
         Note:
-             Latitude (negative = West, positive = East)
-             Longitude (negative = South, positive = North)
+             Longitude (negative = West, positive = East)
+             Latitude (negative = South, positive = North)
 
     """
 
     if precision < 4 or precision == 5 or precision == 7 or precision == 9 or precision > 10:
-        return ValueError
+        raise ValueError
 
     if longitude >= 180 or longitude <= -180:
         raise ValueError
@@ -92,8 +92,8 @@ def locator_to_latlong (locator, center=True):
            48.5208333333 9.375
 
         Note:
-             Latitude (negative = West, positive = East)
-             Longitude (negative = South, positive = North)
+             Longitude (negative = West, positive = East)
+             Latitude (negative = South, positive = North)
 
     """
 
